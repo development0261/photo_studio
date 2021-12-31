@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-@w-#n4j7!rj_u2-i55)q31#zcz8s6h4*xco@w&x*(z3z&szc@=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -121,9 +121,9 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'Photo_edit',
-       'USER': 'postgres',
-       'PASSWORD': 'Logix@123',
+       'NAME': 'photo_editor',
+       'USER': 'admin',
+       'PASSWORD': 'Admin@123$',
        'HOST': 'localhost',
        'PORT': '5432',
    }
