@@ -29,3 +29,4 @@ class Registration(models.Model):
     website = models.CharField(max_length=100)
     avatar = models.ImageField(null=True)
     bitmoji = models.ImageField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)

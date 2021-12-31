@@ -16,7 +16,7 @@ import re
 
 custom_user = get_user_model()
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
-
+for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -72,16 +72,20 @@ def register(request):
             user_mat = re.search(user_pat, Username)
             if user_mat:
                 if not custom_user.objects.filter(email=Email).exists():
-                    pat = re.compile(reg)
-                    mat = re.search(pat, Username)
-                    if mat:
-                        user = custom_user.objects.create_user(username=Username, password=Password, email=Email)
-                        user.save()
-                        data = Registration(username=user, name=Name, mobile=Mobile, gender=Gender, dob=Date_of_Birth, city=City, country=Country, lat=User_Latitude, long=User_Longitude, snap=Snapchat, fb=Facebook, insta=Instagram, website=website, profile=Profile_image, avatar=Avatar_image, bitmoji=Bitmoji)
-                        data.save()
-                        return Response({"Result": "Registration Successfully"})                        
+                    print(Email)
+                    if(re.fullmatch(for_email, Email)):
+                        pat = re.compile(reg)
+                        mat = re.search(pat, Password)
+                        if mat:
+                            user = custom_user.objects.create_user(username=Username, password=Password, email=Email)
+                            user.save()
+                            data = Registration(username=user, name=Name, mobile=Mobile, gender=Gender, dob=Date_of_Birth, city=City, country=Country, lat=User_Latitude, long=User_Longitude, snap=Snapchat, fb=Facebook, insta=Instagram, website=website, profile=Profile_image, avatar=Avatar_image, bitmoji=Bitmoji)
+                            data.save()
+                            return Response({"Result": "Registration Successfully"})                        
+                        else:
+                            return Response({"Result": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
                     else:
-                        return Response({"Result": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
+                        return Response({"Result": "Enter valid Email address"}) 
                 else:
                     return Response({"Result": "User Already Exist with this Email address"})
             else:
@@ -156,6 +160,7 @@ def update_password(request):
         new_pass = request.POST['new_pass']
         confirm_pass = request.POST['confirm_pass']
         if custom_user.objects.filter(username=username).exists():
+            print("yes")
             user = authenticate(username=username, password=password)
             if user:                
                 pat = re.compile(reg)
