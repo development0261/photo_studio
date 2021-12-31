@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 class custom_user(AbstractUser):
@@ -9,7 +10,7 @@ class Registration(models.Model):
     uid = models.AutoField(primary_key=True,auto_created = True)
     username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
-    mobile = models.IntegerField()
+    mobile = PhoneNumberField(unique=True)
     GENDER_CHOICES = (
         ('Male', 'Male'),
         ('Female', 'Female'),

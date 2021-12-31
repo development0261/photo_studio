@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model, login, logout, authenticate
-from .models import Registration,custom_user
+from .models import Registration, custom_user
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -11,23 +11,28 @@ from rest_framework.views import APIView
 from django.core.mail import send_mail
 import random
 import string
+import re
 
 
 custom_user = get_user_model()
+reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
 
-@api_view(['GET','POST'])
+
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def index(request):
-    return Response({"Message":"Welcome"})
+    return Response({"Message": "Welcome"})
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
         serializer = UserSerializerWithToken(self.user).data
 
-        for k,v in serializer.items():
+        for k, v in serializer.items():
             data[k] = v
         return data
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -37,10 +42,10 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @permission_classes([IsAuthenticated])
 def logoutProcess(request):
     logout(request)
-    return Response({"Message":"Successfully Logged Out"})
+    return Response({"Message": "Successfully Logged Out"})
 
 
-@api_view(['GET','POST'])
+@api_view(['GET', 'POST'])
 def register(request):
     if request.method == "POST":
         Username = request.POST['username']
@@ -61,30 +66,33 @@ def register(request):
         website = request.POST['website']
         Avatar_image = request.FILES['avatar']
         Bitmoji = request.FILES['bitmoji']
+
         if not custom_user.objects.filter(username=Username).exists():
-            if not custom_user.objects.filter(email=Email).exists():
-                special = '!#$%&()*+,-./:;<=>?@[\]^_`{|}~'
-                special_list=[]
-                for i in Password:
-                    if i in special:
-                        special_list.append(i)
-                if len(special_list) != 0:
-                    user = custom_user(username=Username, password=Password, email=Email)
-                    user.save()
-                    data = Registration(username=user, name=Name, mobile=Mobile, gender=Gender, dob=Date_of_Birth, city=City, country=Country,
-                                    lat=User_Latitude, long=User_Longitude, snap=Snapchat, fb=Facebook, insta=Instagram, website=website, profile=Profile_image, avatar=Avatar_image, bitmoji=Bitmoji)
-                    data.save()
-                    return Response({"Result":"Registration Successfully"})
+            user_pat = re.compile(reg)
+            user_mat = re.search(user_pat, Username)
+            if user_mat:
+                if not custom_user.objects.filter(email=Email).exists():
+                    pat = re.compile(reg)
+                    mat = re.search(pat, Username)
+                    if mat:
+                        user = custom_user.objects.create_user(username=Username, password=Password, email=Email)
+                        user.save()
+                        data = Registration(username=user, name=Name, mobile=Mobile, gender=Gender, dob=Date_of_Birth, city=City, country=Country, lat=User_Latitude, long=User_Longitude, snap=Snapchat, fb=Facebook, insta=Instagram, website=website, profile=Profile_image, avatar=Avatar_image, bitmoji=Bitmoji)
+                        data.save()
+                        return Response({"Result": "Registration Successfully"})                        
+                    else:
+                        return Response({"Result": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
                 else:
-                    return Response({"Result":"Please use one Special character for Password"})
+                    return Response({"Result": "User Already Exist with this Email address"})
             else:
-                return Response({"Result":"User Already Exist with this Email address"})
+                return Response({"Result": "Username must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
         else:
-            return Response({"Result":"User Already Exist with this username"})
+            return Response({"Result": "User Already Exist with this username"})
     else:
         queryset = Registration.objects.all()
         serializer_class = RegistrationSerializer(queryset, many=True)
-        return Response({'data':serializer_class.data})
+        return Response({'data': serializer_class.data})
+
 
 @api_view(['POST'])
 def send_link(request):
@@ -98,16 +106,17 @@ def send_link(request):
             user.confirm_token = token
             user.save()
 
-            send_mail( 
-                    'Forgot Password',
-                    "Go to Link : " + Link + " and enter token : " + token ,
-                    'demo.logixbuiltinfo@gmail.com',
-                    ['hegeha3495@saturdata.com'],
-                    fail_silently=False,
-                )
-            return Response({"Result":"Check Your Email-Box"})
+            send_mail(
+                'Forgot Password',
+                "Go to Link : " + Link + " and enter token : " + token,
+                'demo.logixbuiltinfo@gmail.com',
+                ['hegeha3495@saturdata.com'],
+                fail_silently=False,
+            )
+            return Response({"Result": "Check Your Email-Box"})
         else:
-            return Response({"Result":"User Not Exist with this Email address"})
+            return Response({"Result": "User Not Exist with this Email address"})
+
 
 @api_view(['POST'])
 def forgot_password(request):
@@ -119,18 +128,23 @@ def forgot_password(request):
 
         if custom_user.objects.filter(email=email).exists():
             if custom_user.objects.filter(confirm_token=user_token).exists():
-                if new_pass == confirm_pass:
-                    user = custom_user.objects.get(confirm_token=user_token)
-                    user.set_password(new_pass)
-                    user.save()
-                    return Response({"Result":"Update Password Successfully"})
+                reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
+                pat = re.compile(reg)
+                mat = re.search(pat, new_pass)
+                if mat:
+                    if new_pass == confirm_pass :
+                        u = custom_user.objects.get(confirm_token=user_token)
+                        u.set_password(new_pass)
+                        u.save()
+                        return Response({"Result": "Password updated Successfully."})
+                    else:
+                        return Response({"Result": "new password and confirm password doesnot matched."})
                 else:
-                    return Response({"Result":"New Password and Confirm Password Doesnot matched."})
+                    return Response({"Result": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
             else:
-                    return Response({"Result":"Oops!! Please check your Token"})
-
+                return Response({"Result": "Oops!! Please check your Token"})
         else:
-            return Response({"Result":"User Not Exist with this Email address"})
+            return Response({"Result": "User Not Exist with this Email address"})
 
 
 @api_view(['POST'])
@@ -141,17 +155,23 @@ def update_password(request):
         password = request.POST['password']
         new_pass = request.POST['new_pass']
         confirm_pass = request.POST['confirm_pass']
-
         if custom_user.objects.filter(username=username).exists():
-            user = authenticate(username = username, password = password)
-            if not user:
-                return Response({"Result":"Username and Password doesnot matched."})
-            elif new_pass != confirm_pass:
-                return Response({"Result":"New Password and Confirm Password Doesnot matched."})
+            user = authenticate(username=username, password=password)
+            if user:                
+                pat = re.compile(reg)
+                mat = re.search(pat, new_pass)
+                if mat:
+                    if new_pass == confirm_pass :
+                        u = custom_user.objects.get(username=username)
+                        u.set_password(new_pass)
+                        u.save()
+                        return Response({"Result": "Password updated Successfully."})
+                    else:
+                        return Response({"Result": "new password and confirm password doesnot matched."})
+                else:
+                    return Response({"Result": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
             else:
-                u = custom_user.objects.get(username=username)
-                u.set_password(new_pass)
-                u.save()
-            return Response({"Result":"Update Password Successfully"})
+                return Response({"Result": "Username and Password doesnot matched."})
         else:
-            return Response({"Result":"User Not Exist with this username"})
+            return Response({"Result": "User Not Exist with this username"})
+
