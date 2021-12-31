@@ -103,7 +103,8 @@ def send_link(request):
     if request.method == "POST":
         email = request.POST['email']
         if custom_user.objects.filter(email=email).exists():
-            Link = 'http://127.0.0.1:8001/forgot_password/'
+            # Link = 'http://127.0.0.1:8001/forgot_password/'
+            Link = 'http://3.144.89.49/forgot_password/'
             characters = string.ascii_letters + string.digits + string.punctuation
             token = ''.join(random.choice(characters) for i in range(50))
             user = custom_user.objects.get(email=email)
@@ -114,7 +115,7 @@ def send_link(request):
                 'Forgot Password',
                 "Go to Link : " + Link + " and enter token : " + token,
                 'demo.logixbuiltinfo@gmail.com',
-                ['hegeha3495@saturdata.com'],
+                # ['hegeha3495@saturdata.com'],
                 fail_silently=False,
             )
             return Response({"Result": "Check Your Email-Box"})
