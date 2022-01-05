@@ -118,15 +118,16 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 #     }
 # }
 
+
 # DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'photo_editor',
-#        'USER': 'admin',
-#        'PASSWORD': 'Logix@123',
-#        'HOST': 'localhost',
-#        'PORT': '5432',
-#    }
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'Photo_edit',
+#         'USER': 'postgres',
+#         'PASSWORD': 'Logix@123',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
 # }
 
 DATABASES = {
@@ -178,7 +179,7 @@ STATIC_URL = 'static/'
 # STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, "static")
 # ]
-STATIC_ROOT= os.path.join(BASE_DIR,'static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -191,7 +192,7 @@ MESSAGE_TAGS = {
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-#abstract user
+# abstract user
 AUTH_USER_MODEL = "home.custom_user"
 
 # email verification

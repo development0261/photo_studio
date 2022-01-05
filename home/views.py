@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model, login, logout, authenticate
-from .models import Registration, custom_user
+
+from NewProject.settings import TIME_ZONE
+from .models import custom_user, Profile, user_detail
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -12,11 +14,13 @@ from django.core.mail import send_mail
 import random
 import string
 import re
+from datetime import datetime, timezone
 
 
 custom_user = get_user_model()
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
 for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -45,64 +49,57 @@ def logoutProcess(request):
     return Response({"Message": "Successfully Logged Out"})
 
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 def register(request):
     if request.method == "POST":
-        Username = request.POST['username']
-        Email = request.POST['email']
-        Password = request.POST['password']
-        Name = request.POST['name']
-        Mobile = request.POST['mobile']
-        Gender = request.POST['gender']
-        Date_of_Birth = request.POST['dob']
-        City = request.POST['city']
-        Country = request.POST['country']
-        User_Latitude = request.POST['lat']
-        User_Longitude = request.POST['long']
-        Snapchat = request.POST['snap']
-        Facebook = request.POST['fb']
-        Instagram = request.POST['insta']
-        Profile_image = request.FILES['profile']
-        website = request.POST['website']
-        Avatar_image = request.FILES['avatar']
-        Bitmoji = request.FILES['bitmoji']
-
-        if not custom_user.objects.filter(username=Username).exists():
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        name = request.POST['name']
+        mobile = request.POST['mobile']
+        gender = request.POST['gender']
+        profile_image = request.FILES['profile_image']
+        print(f"..{len(name)}..")
+        if not custom_user.objects.filter(username=username).exists():
             user_pat = re.compile(reg)
-            user_mat = re.search(user_pat, Username)
+            user_mat = re.search(user_pat, username)
             if user_mat:
-                if not custom_user.objects.filter(email=Email).exists():
-                    print(Email)
-                    if(re.fullmatch(for_email, Email)):
+                if not custom_user.objects.filter(email=email).exists():
+                    if(re.fullmatch(for_email, email)):
                         pat = re.compile(reg)
-                        mat = re.search(pat, Password)
+                        mat = re.search(pat, password)
                         if mat:
-                            user = custom_user.objects.create_user(username=Username, password=Password, email=Email)
-                            user.save()
-                            data = Registration(username=user, name=Name, mobile=Mobile, gender=Gender, dob=Date_of_Birth, city=City, country=Country, lat=User_Latitude, long=User_Longitude, snap=Snapchat, fb=Facebook, insta=Instagram, website=website, profile=Profile_image, avatar=Avatar_image, bitmoji=Bitmoji)
-                            data.save()
-                            return Response({"Result": "Registration Successfully"})                        
+                            if len(name) > 0 and len(mobile) > 0 and len(gender) > 0 and len(profile_image) > 0:
+                                user = custom_user.objects.create_user(
+                                    username=username, password=password, email=email)
+                                user.save()
+                                data = Profile(
+                                    username=user, name=name, mobile=mobile, gender=gender, profile_image=profile_image)
+                                data.save()
+                                return Response({"Result": "Registration Successfully"})
+                            else:
+                                return Response({"Result": "Any field cannot be empty!!!"})
                         else:
-                            return Response({"Result": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
+                            return Response({"Result": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
                     else:
-                        return Response({"Result": "Enter valid Email address"}) 
+                        return Response({"Result": "Enter valid email address"})
                 else:
-                    return Response({"Result": "User Already Exist with this Email address"})
+                    return Response({"Result": "User Already Exist with this email address"})
             else:
                 return Response({"Result": "Username must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
         else:
             return Response({"Result": "User Already Exist with this username"})
-    else:
-        queryset = Registration.objects.all()
-        serializer_class = RegistrationSerializer(queryset, many=True)
-        return Response({'data': serializer_class.data})
 
 
 @api_view(['POST'])
 def send_link(request):
     if request.method == "POST":
         email = request.POST['email']
+        recipient_list = []
         if custom_user.objects.filter(email=email).exists():
+            user_with_email = custom_user.objects.get(email=email)
+            recipient_list.append(user_with_email.email)
+            print(recipient_list)
             # Link = 'http://127.0.0.1:8001/forgot_password/'
             Link = 'http://3.144.89.49/forgot_password/'
             characters = string.ascii_letters + string.digits + string.punctuation
@@ -112,15 +109,15 @@ def send_link(request):
             user.save()
 
             send_mail(
-                'Forgot Password',
+                'Forgot password',
                 "Go to Link : " + Link + " and enter token : " + token,
                 'demo.logixbuiltinfo@gmail.com',
-                # ['hegeha3495@saturdata.com'],
                 fail_silently=False,
+                recipient_list=recipient_list
             )
-            return Response({"Result": "Check Your Email-Box"})
+            return Response({"Result": "Check Your email-Box"})
         else:
-            return Response({"Result": "User Not Exist with this Email address"})
+            return Response({"Result": "User Not Exist with this email address"})
 
 
 @api_view(['POST'])
@@ -137,19 +134,24 @@ def forgot_password(request):
                 pat = re.compile(reg)
                 mat = re.search(pat, new_pass)
                 if mat:
-                    if new_pass == confirm_pass :
-                        u = custom_user.objects.get(confirm_token=user_token)
-                        u.set_password(new_pass)
-                        u.save()
-                        return Response({"Result": "Password updated Successfully."})
+                    if new_pass == confirm_pass:
+                        obj1 = custom_user.objects.get(
+                            confirm_token=user_token)
+                        obj1.set_password(new_pass)
+                        obj2 = custom_user.objects.get(
+                            confirm_token=user_token).profile
+                        obj2.pass_forgot = datetime.now()
+                        obj1.save()
+                        obj2.save()
+                        return Response({"Result": "password updated Successfully."})
                     else:
                         return Response({"Result": "new password and confirm password doesnot matched."})
                 else:
-                    return Response({"Result": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
+                    return Response({"Result": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
             else:
                 return Response({"Result": "Oops!! Please check your Token"})
         else:
-            return Response({"Result": "User Not Exist with this Email address"})
+            return Response({"Result": "User Not Exist with this email address"})
 
 
 @api_view(['POST'])
@@ -163,21 +165,168 @@ def update_password(request):
         if custom_user.objects.filter(username=username).exists():
             print("yes")
             user = authenticate(username=username, password=password)
-            if user:                
+            if user:
                 pat = re.compile(reg)
                 mat = re.search(pat, new_pass)
                 if mat:
-                    if new_pass == confirm_pass :
-                        u = custom_user.objects.get(username=username)
-                        u.set_password(new_pass)
-                        u.save()
-                        return Response({"Result": "Password updated Successfully."})
+                    if new_pass == confirm_pass:
+                        obj1 = custom_user.objects.get(username=username)
+                        obj1.set_password(new_pass)
+                        obj2 = custom_user.objects.get(
+                            username=username).profile
+                        obj2.pass_update = datetime.now()
+                        obj1.save()
+                        obj2.save()
+                        return Response({"Result": "password updated Successfully."})
                     else:
                         return Response({"Result": "new password and confirm password doesnot matched."})
                 else:
-                    return Response({"Result": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
+                    return Response({"Result": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
             else:
-                return Response({"Result": "Username and Password doesnot matched."})
+                return Response({"Result": "username and password doesnot matched."})
         else:
             return Response({"Result": "User Not Exist with this username"})
 
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def profile(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        name = request.POST['name']
+        mobile = request.POST['mobile']
+        gender = request.POST['gender']
+        profile_image = request.FILES['profile_image']
+        date_of_Birth = request.POST['dob']
+        city = request.POST['city']
+        country = request.POST['country']
+        user_Latitude = request.POST['lat']
+        user_Longitude = request.POST['long']
+        snapchat = request.POST['snap']
+        facebook = request.POST['fb']
+        instagram = request.POST['insta']
+        website = request.POST['website']
+        avatar_image = request.FILES['avatar']
+        bitmoji = request.FILES['bitmoji']
+
+        user1 = authenticate(username=username, password=password)
+        if user1:
+            user = custom_user.objects.get(username=username).profile
+            user.name = name
+            user.mobile = mobile
+            user.gender = gender
+            user.profile_image = profile_image
+            user.dob = date_of_Birth
+            user.city = city
+            user.country = country
+            user.lat = user_Latitude
+            user.long = user_Longitude
+            user.snap = snapchat
+            user.fb = facebook
+            user.insta = instagram
+            user.website = website
+            user.avatar = avatar_image
+            user.bitmoji = bitmoji
+            user.updated_at = datetime.now()
+            user.save()
+            return Response({"Result": "Profile Updated"})
+        else:
+            return Response({"Result": "User Not Exist with this username and password"})
+
+    elif request.method == "GET":
+        queryset = Profile.objects.all()
+        serializer_class = RegistrationSerializer(queryset, many=True)
+        return Response({'data': serializer_class.data})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def user_count(request):
+    queryset = Profile.objects.all()
+    print(queryset)
+    serializer_class = RegistrationSerializer(queryset, many=True)
+    return Response({'Total users': len(serializer_class.data)})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def genderwise(request):
+    gen = request.GET['gender']
+    obj1 = Profile.objects.filter(gender=gen)
+    serializer_class = RegistrationSerializer(obj1, many=True)
+    return Response({f'Total users with {gen} gender': len(serializer_class.data)})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def countrywise(request):
+    con = request.GET['country']
+    obj1 = Profile.objects.filter(country=con)
+    serializer_class = RegistrationSerializer(obj1, many=True)
+    return Response({'Total users': serializer_class.data})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def details(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        signature = request.FILES['signature']
+        export_quality = request.POST['export_quality']
+        Language = request.POST['Language']
+        user_stared_templates = request.POST['user_stared_templates']
+        user_stared_backgrounds = request.POST['user_stared_backgrounds']
+        user_stared_stickers = request.POST['user_stared_stickers']
+        user_stared_Textart = request.POST['user_stared_Textart']
+        user_stared_colors = request.POST['user_stared_colors']
+        user_stared_fonts = request.POST['user_stared_fonts']
+        most_used_fonts = request.POST['most_used_fonts']
+        user_custom_colors = request.POST['user_custom_colors']
+        instagram_follower = request.POST['instagram_follower']
+        grid_snapping = request.POST['grid_snapping']
+        user_recent_text = request.POST['user_recent_text']
+        appearance_mode = request.POST['appearance_mode']
+        enable_iCloud_backup = request.POST['enable_iCloud_backup']
+        save_projects_automatically = request.POST['save_projects_automatically']
+        save_projects_on_export = request.POST['save_projects_on_export']
+        notifications_permission = request.POST['notifications_permission']
+        inApp_notifications_permission = request.POST['inApp_notifications_permission']
+        photo_library_permission = request.POST['photo_library_permission']
+        digital_riyals_rewards = request.POST['digital_riyals_rewards']
+        enable_touch = request.POST['enable_touch']
+        app_theme = request.POST['app_theme']
+        always_crop = request.POST['always_crop']
+
+        user = custom_user.objects.get(username=username)
+        if user:
+            data = user_detail(username=user,
+                               signature=signature,
+                               export_quality=export_quality,
+                               Language=Language,
+                               user_stared_templates=user_stared_templates,
+                               user_stared_backgrounds=user_stared_backgrounds,
+                               user_stared_stickers=user_stared_stickers,
+                               user_stared_Textart=user_stared_Textart,
+                               user_stared_colors=user_stared_colors,
+                               user_stared_fonts=user_stared_fonts,
+                               most_used_fonts=most_used_fonts,
+                               user_custom_colors=user_custom_colors,
+                               instagram_follower=instagram_follower,
+                               grid_snapping=grid_snapping,
+                               user_recent_text=user_recent_text,
+                               appearance_mode=appearance_mode,
+                               enable_iCloud_backup=enable_iCloud_backup,
+                               save_projects_automatically=save_projects_automatically,
+                               save_projects_on_export=save_projects_on_export,
+                               notifications_permission=notifications_permission,
+                               inApp_notifications_permission=inApp_notifications_permission,
+                               photo_library_permission=photo_library_permission,
+                               digital_riyals_rewards=digital_riyals_rewards,
+                               enable_touch=enable_touch,
+                               app_theme=app_theme,
+                               always_crop=always_crop)
+            data.save()
+            return Response({"Result": "Details Added."})
+        else:
+            return Response({"Result": "User not Found!!!"})

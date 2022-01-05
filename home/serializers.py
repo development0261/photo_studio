@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Registration,custom_user
+from .models import Profile,custom_user
 
 class UserSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(read_only=True)
@@ -44,5 +44,5 @@ class RegistrationSerializer(serializers.ModelSerializer):
             "password":register.username.password,
         }
     class Meta:
-        model = Registration
+        model = Profile
         fields = "__all__"
