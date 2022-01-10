@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model, login, logout, authenticate
 
 from NewProject.settings import TIME_ZONE
-from .models import custom_user, Profile, user_detail
+from .models import custom_user, Profile, user_detail, application_data
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -61,9 +61,7 @@ def register(request):
         profile_image = request.FILES['profile_image']
         print(f"..{len(name)}..")
         if not custom_user.objects.filter(username=username).exists():
-            user_pat = re.compile(reg)
-            user_mat = re.search(user_pat, username)
-            if user_mat:
+            if len(username) > 5:
                 if not custom_user.objects.filter(email=email).exists():
                     if(re.fullmatch(for_email, email)):
                         pat = re.compile(reg)
@@ -74,7 +72,7 @@ def register(request):
                                     username=username, password=password, email=email)
                                 user.save()
                                 data = Profile(
-                                    username=user, name=name, mobile=mobile, gender=gender, profile_image=profile_image)
+                                    username=user, name=name, mobile=mobile, gender=gender.upper(), profile_image=profile_image)
                                 data.save()
                                 return Response({"Result": "Registration Successfully"})
                             else:
@@ -86,7 +84,7 @@ def register(request):
                 else:
                     return Response({"Result": "User Already Exist with this email address"})
             else:
-                return Response({"Result": "Username must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
+                return Response({"Result": "Username length must be greater than 6"})
         else:
             return Response({"Result": "User Already Exist with this username"})
 
@@ -115,7 +113,7 @@ def send_link(request):
                 fail_silently=False,
                 recipient_list=recipient_list
             )
-            return Response({"Result": "Check Your email-Box"})
+            return Response({"Result": "Check Your email for Forgot Password"})
         else:
             return Response({"Result": "User Not Exist with this email address"})
 
@@ -163,7 +161,6 @@ def update_password(request):
         new_pass = request.POST['new_pass']
         confirm_pass = request.POST['confirm_pass']
         if custom_user.objects.filter(username=username).exists():
-            print("yes")
             user = authenticate(username=username, password=password)
             if user:
                 pat = re.compile(reg)
@@ -219,7 +216,7 @@ def profile(request):
             user.profile_image = profile_image
             user.dob = date_of_Birth
             user.city = city
-            user.country = country
+            user.country = country.upper()
             user.lat = user_Latitude
             user.long = user_Longitude
             user.snap = snapchat
@@ -253,7 +250,7 @@ def user_count(request):
 @permission_classes([IsAuthenticated])
 def genderwise(request):
     gen = request.GET['gender']
-    obj1 = Profile.objects.filter(gender=gen)
+    obj1 = Profile.objects.filter(gender=gen.upper())
     serializer_class = RegistrationSerializer(obj1, many=True)
     return Response({f'Total users with {gen} gender': len(serializer_class.data)})
 
@@ -262,9 +259,9 @@ def genderwise(request):
 @permission_classes([IsAuthenticated])
 def countrywise(request):
     con = request.GET['country']
-    obj1 = Profile.objects.filter(country=con)
+    obj1 = Profile.objects.filter(country=con.upper())
     serializer_class = RegistrationSerializer(obj1, many=True)
-    return Response({'Total users': serializer_class.data})
+    return Response({f'Users with {con} country': serializer_class.data})
 
 
 @api_view(['POST'])
@@ -326,6 +323,63 @@ def details(request):
                                enable_touch=enable_touch,
                                app_theme=app_theme,
                                always_crop=always_crop)
+            data.save()
+            return Response({"Result": "Details Added."})
+        else:
+            return Response({"Result": "User not Found!!!"})
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def app_data(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        UID = request.POST['UID']
+        inApp_Products = request.POST['inApp_Products']
+        Purchase_date = request.POST['Purchase_date']
+        Purchased_product = request.POST['Purchased_product']
+        Device_Model = request.POST['Device_Model']
+        iOS = request.POST['iOS']
+        Device_Storage = request.POST['Device_Storage']
+        Lunch_count = request.POST['Lunch_count']
+        Push_Notification_Status = request.POST['Push_Notification_Status']
+        Library_permission_Status = request.POST['Library_permission_Status']
+        Latest_Geolocation = request.POST['Latest_Geolocation']
+        Carrier = request.POST['Carrier']
+        App_Last_Opened = request.POST['App_Last_Opened']
+        Purchase_attempts = request.POST['Purchase_attempts']
+        Grace_Period = request.POST['Grace_Period']
+        Remaining_grace_period_days = request.POST['Remaining_grace_period_days']
+        Number_of_projects = request.POST['Number_of_projects']
+        Total_time_spent = request.POST['Total_time_spent']
+        total_ads_served = request.POST['total_ads_served']
+        Registered_user = request.POST['Registered_user']
+        Push_Notification_token = request.POST['Push_Notification_token']
+
+        user = custom_user.objects.get(username=username)
+        if user:
+            data = application_data(username=user,
+                                    UID=UID,
+                                    inApp_Products=inApp_Products,
+                                    Purchase_date=Purchase_date,
+                                    Purchased_product=Purchased_product,
+                                    Device_Model=Device_Model,
+                                    iOS=iOS,
+                                    Device_Storage=Device_Storage,
+                                    Lunch_count=Lunch_count,
+                                    Push_Notification_Status=Push_Notification_Status,
+                                    Library_permission_Status=Library_permission_Status,
+                                    Latest_Geolocation=Latest_Geolocation,
+                                    Carrier=Carrier,
+                                    App_Last_Opened=App_Last_Opened,
+                                    Purchase_attempts=Purchase_attempts,
+                                    Grace_Period=Grace_Period,
+                                    Remaining_grace_period_days=Remaining_grace_period_days,
+                                    Number_of_projects=Number_of_projects,
+                                    Total_time_spent=Total_time_spent,
+                                    total_ads_served=total_ads_served,
+                                    Registered_user=Registered_user,
+                                    Push_Notification_token=Push_Notification_token)
             data.save()
             return Response({"Result": "Details Added."})
         else:

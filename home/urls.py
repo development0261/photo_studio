@@ -25,6 +25,7 @@ urlpatterns = [
     path('genderwise/', views.genderwise, name='genderwise'),
     path('countrywise/', views.countrywise, name='countrywise'),
     path('details/', views.details, name='details'),
+    path('app_data/', views.app_data, name='app_data'),
     path('send_link/', views.send_link, name='send_link'),
     path('forgot_password/', views.forgot_password, name="forgot_password"),
     path('update_password/', views.update_password, name="update_password"),
