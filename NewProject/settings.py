@@ -119,27 +119,27 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 # }
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'Photo_edit',
-#         'USER': 'postgres',
-#         'PASSWORD': 'Logix@123',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'photo_editor',
-       'USER': 'admin',
-       'PASSWORD': 'Admin@123$',
-       'HOST': 'localhost',
-       'PORT': '5432',
-   }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Photo_edit',
+        'USER': 'postgres',
+        'PASSWORD': 'Logix@123',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
+
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'photo_editor',
+#        'USER': 'admin',
+#        'PASSWORD': 'Admin@123$',
+#        'HOST': 'localhost',
+#        'PORT': '5432',
+#    }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -202,4 +202,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'demo.logixbuiltinfo@gmail.com'
 EMAIL_HOST_PASSWORD = '7mRL~mqU#JsM\E-F'
-# RECIPIENT_ADDRESS='hegeha3495@saturdata.com'

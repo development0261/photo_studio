@@ -384,3 +384,23 @@ def app_data(request):
             return Response({"Result": "Details Added."})
         else:
             return Response({"Result": "User not Found!!!"})
+
+@api_view(['POST'])
+def email_verification(request):
+    if request.method == "POST":
+        email = request.GET['email']
+        user = custom_user.objects.filter(email=email)
+        if user:
+            return Response({"Result":"Email already in use"})
+        else:
+            return Response({"Result":"Email successfully added"})
+
+@api_view(['POST'])
+def username_verification(request):
+    if request.method == "POST":
+        username = request.GET['username']
+        user = custom_user.objects.filter(username=username)
+        if user:
+            return Response({"Result":"Username already in use"})
+        else:
+            return Response({"Result":"Username successfully added"})           
