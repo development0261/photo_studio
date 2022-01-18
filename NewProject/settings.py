@@ -133,7 +133,7 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'photo_editor',
+       'NAME': 'pho_ed',
        'USER': 'admin',
        'PASSWORD': 'Admin@123$',
        'HOST': 'localhost',
