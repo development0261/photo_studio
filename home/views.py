@@ -236,6 +236,16 @@ def profile(request):
         serializer_class = RegistrationSerializer(queryset, many=True)
         return Response({'data': serializer_class.data})
 
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def specific_user(request):
+#     if request.method == "POST":
+#         username = request.POST['username']
+#         password = request.POST['password']
+#         queryset = Profile.objects.all()
+#         serializer_class = RegistrationSerializer(queryset, many=True)
+#         return Response({'data': serializer_class.data})
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
