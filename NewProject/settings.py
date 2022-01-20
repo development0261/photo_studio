@@ -136,7 +136,7 @@ DATABASES = {
        'NAME': 'rabappco_photoedit',
        'USER': 'rabappco_backend',
        'PASSWORD': 'photo_edit@123',
-       'HOST': 'localhost',
+       'HOST': '185.146.21.235',
        'PORT': '5432',
    }
 }
