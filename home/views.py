@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model, login, logout, authenticate
-
 from NewProject.settings import TIME_ZONE
 from .models import custom_user, Profile, user_detail, application_data
 from rest_framework.decorators import api_view, permission_classes
@@ -236,15 +235,16 @@ def profile(request):
         serializer_class = RegistrationSerializer(queryset, many=True)
         return Response({'data': serializer_class.data})
 
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def specific_user(request):
-#     if request.method == "POST":
-#         username = request.POST['username']
-#         password = request.POST['password']
-#         queryset = Profile.objects.all()
-#         serializer_class = RegistrationSerializer(queryset, many=True)
-#         return Response({'data': serializer_class.data})
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def specific_user(request):
+    if request.method == "GET":
+        username = request.GET['username']
+        queryset = Profile.objects.filter(username__username=username)
+        print(queryset)
+        serializer_class = RegistrationSerializer(queryset, many=True)
+        # print(serializer_class)
+        return Response({'data': serializer_class.data})
 
 
 @api_view(['POST'])
