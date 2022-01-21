@@ -420,27 +420,33 @@ def username_verification(request):
 @permission_classes([IsAuthenticated])
 def purchase_history(request):
     if request.method == "POST":
-        username = request.POST['username']
-        status = request.POST['status']
-        auto_renew_status = request.POST['auto_renew_status']
-        is_in_billing_retry_period = request.POST['is_in_billing_retry_period']
-        is_in_intro_offer_period = request.POST['is_in_intro_offer_period']
-        is_trial_period = request.POST['is_trial_period']
+        try:
+            username = request.POST['username']
+            status = request.POST['status']
+            auto_renew_status = request.POST['auto_renew_status']
+            is_in_billing_retry_period = request.POST['is_in_billing_retry_period']
+            is_in_intro_offer_period = request.POST['is_in_intro_offer_period']
+            is_trial_period = request.POST['is_trial_period']
 
-        user = custom_user.objects.get(username=username)
-        if user:
-            obj = Purchase(
-                username=user,
-                status=status,
-                auto_renew_status=auto_renew_status,
-                is_in_billing_retry_period=is_in_billing_retry_period,
-                is_in_intro_offer_period=is_in_intro_offer_period,
-                is_trial_period=is_trial_period
-            )
-            obj.save()
-            return Response({"Result": "Data Added"})
-        else:
-            return Response({"Result": "User Not Exist!!!"})
+            user = custom_user.objects.get(username=username)
+            if user:
+                obj = Purchase(
+                    username=user,
+                    status=status,
+                    auto_renew_status=auto_renew_status,
+                    is_in_billing_retry_period=is_in_billing_retry_period,
+                    is_in_intro_offer_period=is_in_intro_offer_period,
+                    is_trial_period=is_trial_period
+                )
+                obj.save()
+                return Response({"Result": "Data Added"})
+            else:
+                return Response({"Result": "User Not Exist!!!"})
+
+        except:
+            return Response({
+                "Error" : "Record with same user exists"
+            })
 
     elif request.method == "PUT":
         username = request.POST['username']
