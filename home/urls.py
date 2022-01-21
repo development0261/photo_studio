@@ -33,6 +33,7 @@ urlpatterns = [
     path('forgot_password/', views.forgot_password, name="forgot_password"),
     path('update_password/', views.update_password, name="update_password"),
     path('logout/', views.logoutProcess, name='logout'),
+    path('purchase_history/', views.purchase_history, name='purchase_history'),
 
 ]
 

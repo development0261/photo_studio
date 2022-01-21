@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from NewProject.settings import TIME_ZONE
-from .models import custom_user, Profile, user_detail, application_data
+from .models import custom_user, Profile, user_detail, application_data, Purchase
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -235,15 +235,14 @@ def profile(request):
         serializer_class = RegistrationSerializer(queryset, many=True)
         return Response({'data': serializer_class.data})
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def specific_user(request):
     if request.method == "GET":
         username = request.GET['username']
         queryset = Profile.objects.filter(username__username=username)
-        print(queryset)
         serializer_class = RegistrationSerializer(queryset, many=True)
-        # print(serializer_class)
         return Response({'data': serializer_class.data})
 
 
@@ -251,7 +250,6 @@ def specific_user(request):
 @permission_classes([IsAuthenticated])
 def user_count(request):
     queryset = Profile.objects.all()
-    print(queryset)
     serializer_class = RegistrationSerializer(queryset, many=True)
     return Response({'Total users': len(serializer_class.data)})
 
@@ -395,15 +393,17 @@ def app_data(request):
         else:
             return Response({"Result": "User not Found!!!"})
 
+
 @api_view(['POST'])
 def email_verification(request):
     if request.method == "POST":
         email = request.GET['email']
         user = custom_user.objects.filter(email=email)
         if user:
-            return Response({"Result":"Email already in use"})
+            return Response({"Result": "Email already in use"})
         else:
-            return Response({"Result":"Email successfully added"})
+            return Response({"Result": "Email successfully added"})
+
 
 @api_view(['POST'])
 def username_verification(request):
@@ -411,6 +411,54 @@ def username_verification(request):
         username = request.GET['username']
         user = custom_user.objects.filter(username=username)
         if user:
-            return Response({"Result":"Username already in use"})
+            return Response({"Result": "Username already in use"})
         else:
-            return Response({"Result":"Username successfully added"})           
+            return Response({"Result": "Username successfully added"})
+
+
+@api_view(['PUT','POST'])
+@permission_classes([IsAuthenticated])
+def purchase_history(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        status = request.POST['status']
+        auto_renew_status = request.POST['auto_renew_status']
+        is_in_billing_retry_period = request.POST['is_in_billing_retry_period']
+        is_in_intro_offer_period = request.POST['is_in_intro_offer_period']
+        is_trial_period = request.POST['is_trial_period']
+
+        user = custom_user.objects.get(username=username)
+        if user:
+            obj = Purchase(
+                username=user,
+                status=status,
+                auto_renew_status=auto_renew_status,
+                is_in_billing_retry_period=is_in_billing_retry_period,
+                is_in_intro_offer_period=is_in_intro_offer_period,
+                is_trial_period=is_trial_period
+            )
+            obj.save()
+            return Response({"Result": "Data Added"})
+        else:
+            return Response({"Result": "User Not Exist!!!"})
+
+    elif request.method == "PUT":
+        username = request.POST['username']
+        status = request.POST['status']
+        auto_renew_status = request.POST['auto_renew_status']
+        is_in_billing_retry_period = request.POST['is_in_billing_retry_period']
+        is_in_intro_offer_period = request.POST['is_in_intro_offer_period']
+        is_trial_period = request.POST['is_trial_period']
+
+        user = custom_user.objects.get(username=username)
+        if user:
+            purchase_obj = custom_user.objects.get(username=username).purchase
+            purchase_obj.status=status
+            purchase_obj.auto_renew_status=auto_renew_status
+            purchase_obj.is_in_billing_retry_period=is_in_billing_retry_period
+            purchase_obj.is_in_intro_offer_period=is_in_intro_offer_period
+            purchase_obj.is_trial_period=is_trial_period
+            purchase_obj.save()
+            return Response({"Result": "Data Updated"})
+        else:
+            return Response({"Result": "User Not Exist!!!"})
