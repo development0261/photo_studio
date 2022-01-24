@@ -1,0 +1,9 @@
+*/migrations/*
+*/migrations/
+*/migrations
+*/000*.py
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+home/migrations
+home/migrations/*
