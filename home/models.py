@@ -120,3 +120,13 @@ class application_data(models.Model):
     total_ads_served = models.IntegerField()
     Registered_user = models.BooleanField(default=False)
     Push_Notification_token = models.BooleanField(default=False)
+
+class Purchase(models.Model):
+    pid = models.AutoField(primary_key=True, auto_created=True)
+    username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
+    status = models.CharField(max_length=20)
+    auto_renew_status = models.BooleanField(default=False)
+    is_in_billing_retry_period = models.BooleanField(default=False)
+    is_in_intro_offer_period = models.BooleanField(default=False)
+    is_trial_period = models.BooleanField(default=False)
+

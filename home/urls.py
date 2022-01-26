@@ -25,6 +25,7 @@ urlpatterns = [
     path('genderwise/', views.genderwise, name='genderwise'),
     path('countrywise/', views.countrywise, name='countrywise'),
     path('details/', views.details, name='details'),
+    path('specific_user/', views.specific_user, name='specific_user'),
     path('email_verification/', views.email_verification, name='email_verification'),
     path('username_verification/', views.username_verification, name='username_verification'),
     path('app_data/', views.app_data, name='app_data'),
@@ -32,6 +33,7 @@ urlpatterns = [
     path('forgot_password/', views.forgot_password, name="forgot_password"),
     path('update_password/', views.update_password, name="update_password"),
     path('logout/', views.logoutProcess, name='logout'),
+    path('purchase_history/', views.purchase_history, name='purchase_history'),
 
 ]
 
