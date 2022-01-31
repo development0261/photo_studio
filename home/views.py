@@ -13,7 +13,7 @@ from django.core.mail import send_mail
 import random
 import string
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from rest_framework import status
 
 
@@ -21,6 +21,10 @@ custom_user = get_user_model()
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
 for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
+users_obj = custom_user.objects.filter(is_active = False)
+for row in users_obj:
+    if row.delete_date + timedelta(days= 30):
+        users_obj.delete()
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -59,7 +63,7 @@ def register(request):
         mobile = request.POST['mobile']
         gender = request.POST['gender']
         profile_image = request.FILES['profile_image']
-        print(f"..{len(name)}..")
+
         if not custom_user.objects.filter(username=username).exists():
             if len(username) > 5:
                 if not custom_user.objects.filter(email=email).exists():
@@ -94,7 +98,7 @@ def send_link(request):
         if custom_user.objects.filter(email=email).exists():
             user_with_email = custom_user.objects.get(email=email)
             recipient_list.append(user_with_email.email)
-            print(recipient_list)
+
             # Link = 'http://127.0.0.1:8001/forgot_password/'
             Link = 'http://3.144.89.49/forgot_password/'
             characters = string.ascii_letters + string.digits + string.punctuation
@@ -507,7 +511,10 @@ def delete_account(request):
         username= request.POST['username']
         user_obj = custom_user.objects.get(username=username)
         if user_obj:
-            user_obj.delete()
-            return Response({"Success": "User Deleted"}, status=status.HTTP_200_OK)
+            user_obj.is_active = False
+            user_obj.delete_date = datetime.now()
+            user_obj.save()
+
+            return Response({"Success": "Your account is under deleting process and deleted in 30 days."}, status=status.HTTP_200_OK)
         else:
             return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)

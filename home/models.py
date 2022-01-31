@@ -7,6 +7,7 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class custom_user(AbstractUser):
+    delete_date = models.DateTimeField(null=True, blank=True)
     confirm_token = models.CharField(null=True, max_length=50)
 
 
