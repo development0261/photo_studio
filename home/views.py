@@ -14,6 +14,7 @@ import random
 import string
 import re
 from datetime import datetime, timezone
+from rest_framework import status
 
 
 custom_user = get_user_model()
@@ -24,7 +25,7 @@ for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def index(request):
-    return Response({"Message": "Welcome"})
+    return Response({"Message": "Welcome"}, status=status.HTTP_200_OK)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -45,7 +46,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @permission_classes([IsAuthenticated])
 def logoutProcess(request):
     logout(request)
-    return Response({"Message": "Successfully Logged Out"})
+    return Response({"Message": "Successfully Logged Out"}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -66,26 +67,23 @@ def register(request):
                         pat = re.compile(reg)
                         mat = re.search(pat, password)
                         if mat:
-                            if len(name) > 0 and len(mobile) > 0 and len(gender) > 0 and len(profile_image) > 0:
-                                user = custom_user.objects.create_user(
-                                    username=username, password=password, email=email)
-                                user.save()
-                                data = Profile(
-                                    username=user, name=name, mobile=mobile, gender=gender.upper(), profile_image=profile_image)
-                                data.save()
-                                return Response({"Result": "Registration Successfully"})
-                            else:
-                                return Response({"Result": "Any field cannot be empty!!!"})
+                            user = custom_user.objects.create_user(
+                                username=username, password=password, email=email)
+                            user.save()
+                            data = Profile(
+                                username=user, name=name, mobile=mobile, gender=gender.upper(), profile_image=profile_image)
+                            data.save()
+                            return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
                         else:
-                            return Response({"Result": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
+                            return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                     else:
-                        return Response({"Result": "Enter valid email address"})
+                        return Response({"Error": "Enter valid email address"}, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return Response({"Result": "User Already Exist with this email address"})
+                    return Response({"Error": "User Already Exist with this email address"}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response({"Result": "Username length must be greater than 6"})
+                return Response({"Error": "Username length must be greater than 6"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"Result": "User Already Exist with this username"})
+            return Response({"Error": "User Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -112,9 +110,9 @@ def send_link(request):
                 fail_silently=False,
                 recipient_list=recipient_list
             )
-            return Response({"Result": "Check Your email for Forgot Password"})
+            return Response({"Success": "Check Your email for Forgot Password"}, status=status.HTTP_200_OK)
         else:
-            return Response({"Result": "User Not Exist with this email address"})
+            return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
@@ -140,15 +138,15 @@ def forgot_password(request):
                         obj2.pass_forgot = datetime.now()
                         obj1.save()
                         obj2.save()
-                        return Response({"Result": "password updated Successfully."})
+                        return Response({"Success": "password updated Successfully."}, status=status.HTTP_200_OK)
                     else:
-                        return Response({"Result": "new password and confirm password doesnot matched."})
+                        return Response({"Error": "new password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return Response({"Result": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
+                    return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response({"Result": "Oops!! Please check your Token"})
+                return Response({"Error": "Oops!! Please check your Token"}, status=status.HTTP_401_UNAUTHORIZED)
         else:
-            return Response({"Result": "User Not Exist with this email address"})
+            return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
@@ -173,15 +171,15 @@ def update_password(request):
                         obj2.pass_update = datetime.now()
                         obj1.save()
                         obj2.save()
-                        return Response({"Result": "password updated Successfully."})
+                        return Response({"Success": "password updated Successfully."}, status=status.HTTP_200_OK)
                     else:
-                        return Response({"Result": "new password and confirm password doesnot matched."})
+                        return Response({"Error": "new password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return Response({"Result": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."})
+                    return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response({"Result": "username and password doesnot matched."})
+                return Response({"Error": "username and password doesnot matched."}, status=status.HTTP_401_UNAUTHORIZED)
         else:
-            return Response({"Result": "User Not Exist with this username"})
+            return Response({"Error": "User Not Exist with this username"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET', 'POST'])
@@ -226,15 +224,20 @@ def profile(request):
             user.bitmoji = bitmoji
             user.updated_at = datetime.now()
             user.save()
-            return Response({"Result": "Profile Updated"})
+            return Response({"Success": "Profile Updated"}, status=status.HTTP_200_OK)
         else:
-            return Response({"Result": "User Not Exist with this username and password"})
+            return Response({"Error": "User Not Exist with this username and password"}, status=status.HTTP_401_UNAUTHORIZED)
 
     elif request.method == "GET":
-        queryset = Profile.objects.all()
-        serializer_class = RegistrationSerializer(queryset, many=True)
-        return Response({'data': serializer_class.data})
-
+        username = request.GET['username']
+        password = request.GET['password']
+        user1 = authenticate(username=username, password=password)
+        if user1.is_superuser:
+            queryset = Profile.objects.all()
+            serializer_class = RegistrationSerializer(queryset, many=True)
+            return Response({'data': serializer_class.data}, status=status.HTTP_200_OK)
+        else:
+            return Response({'Error': "You are not admin user"}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -243,7 +246,7 @@ def specific_user(request):
         username = request.GET['username']
         queryset = Profile.objects.filter(username__username=username)
         serializer_class = RegistrationSerializer(queryset, many=True)
-        return Response({'data': serializer_class.data})
+        return Response({'data': serializer_class.data}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -251,7 +254,7 @@ def specific_user(request):
 def user_count(request):
     queryset = Profile.objects.all()
     serializer_class = RegistrationSerializer(queryset, many=True)
-    return Response({'Total users': len(serializer_class.data)})
+    return Response({'Total users': len(serializer_class.data)}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -260,7 +263,7 @@ def genderwise(request):
     gen = request.GET['gender']
     obj1 = Profile.objects.filter(gender=gen.upper())
     serializer_class = RegistrationSerializer(obj1, many=True)
-    return Response({f'Total users with {gen} gender': len(serializer_class.data)})
+    return Response({f'Total users with {gen} gender': len(serializer_class.data)}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -269,7 +272,7 @@ def countrywise(request):
     con = request.GET['country']
     obj1 = Profile.objects.filter(country=con.upper())
     serializer_class = RegistrationSerializer(obj1, many=True)
-    return Response({f'Users with {con} country': serializer_class.data})
+    return Response({f'Users with {con} country': serializer_class.data}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -304,37 +307,67 @@ def details(request):
         always_crop = request.POST['always_crop']
 
         user = custom_user.objects.get(username=username)
-        if user:
-            data = user_detail(username=user,
-                               signature=signature,
-                               export_quality=export_quality,
-                               Language=Language,
-                               user_stared_templates=user_stared_templates,
-                               user_stared_backgrounds=user_stared_backgrounds,
-                               user_stared_stickers=user_stared_stickers,
-                               user_stared_Textart=user_stared_Textart,
-                               user_stared_colors=user_stared_colors,
-                               user_stared_fonts=user_stared_fonts,
-                               most_used_fonts=most_used_fonts,
-                               user_custom_colors=user_custom_colors,
-                               instagram_follower=instagram_follower,
-                               grid_snapping=grid_snapping,
-                               user_recent_text=user_recent_text,
-                               appearance_mode=appearance_mode,
-                               enable_iCloud_backup=enable_iCloud_backup,
-                               save_projects_automatically=save_projects_automatically,
-                               save_projects_on_export=save_projects_on_export,
-                               notifications_permission=notifications_permission,
-                               inApp_notifications_permission=inApp_notifications_permission,
-                               photo_library_permission=photo_library_permission,
-                               digital_riyals_rewards=digital_riyals_rewards,
-                               enable_touch=enable_touch,
-                               app_theme=app_theme,
-                               always_crop=always_crop)
-            data.save()
-            return Response({"Result": "Details Added."})
+        try:
+            if user:
+                data = user_detail(username=user,
+                                signature=signature,
+                                export_quality=export_quality,
+                                Language=Language,
+                                user_stared_templates=user_stared_templates,
+                                user_stared_backgrounds=user_stared_backgrounds,
+                                user_stared_stickers=user_stared_stickers,
+                                user_stared_Textart=user_stared_Textart,
+                                user_stared_colors=user_stared_colors,
+                                user_stared_fonts=user_stared_fonts,
+                                most_used_fonts=most_used_fonts,
+                                user_custom_colors=user_custom_colors,
+                                instagram_follower=instagram_follower,
+                                grid_snapping=grid_snapping,
+                                user_recent_text=user_recent_text,
+                                appearance_mode=appearance_mode,
+                                enable_iCloud_backup=enable_iCloud_backup,
+                                save_projects_automatically=save_projects_automatically,
+                                save_projects_on_export=save_projects_on_export,
+                                notifications_permission=notifications_permission,
+                                inApp_notifications_permission=inApp_notifications_permission,
+                                photo_library_permission=photo_library_permission,
+                                digital_riyals_rewards=digital_riyals_rewards,
+                                enable_touch=enable_touch,
+                                app_theme=app_theme,
+                                always_crop=always_crop)
+                data.save()
+                return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
+        except:
+            details_obj = user_detail.objects.get(username = user.id)
+            details_obj.signature = signature
+            details_obj.export_quality = export_quality
+            details_obj.Language = Language
+            details_obj.user_stared_templates = user_stared_templates
+            details_obj.user_stared_backgrounds = user_stared_backgrounds
+            details_obj.user_stared_stickers = user_stared_stickers
+            details_obj.user_stared_Textart = user_stared_Textart
+            details_obj.user_stared_colors = user_stared_colors
+            details_obj.user_stared_fonts = user_stared_fonts
+            details_obj.most_used_fonts = most_used_fonts
+            details_obj.user_custom_colors = user_custom_colors
+            details_obj.instagram_follower = instagram_follower
+            details_obj.grid_snapping = grid_snapping
+            details_obj.user_recent_text = user_recent_text
+            details_obj.appearance_mode = appearance_mode
+            details_obj.enable_iCloud_backup = enable_iCloud_backup
+            details_obj.save_projects_automatically = save_projects_automatically
+            details_obj.save_projects_on_export = save_projects_on_export
+            details_obj.notifications_permission = notifications_permission
+            details_obj.inApp_notifications_permission = inApp_notifications_permission
+            details_obj.photo_library_permission = photo_library_permission
+            details_obj.digital_riyals_rewards = digital_riyals_rewards
+            details_obj.enable_touch = enable_touch
+            details_obj.app_theme = app_theme
+            details_obj.always_crop = always_crop
+            details_obj.save()
+            return Response({"Success": "User details updated."}, status=status.HTTP_200_OK)
         else:
-            return Response({"Result": "User not Found!!!"})
+            return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET', 'POST'])
@@ -389,9 +422,9 @@ def app_data(request):
                                     Registered_user=Registered_user,
                                     Push_Notification_token=Push_Notification_token)
             data.save()
-            return Response({"Result": "Details Added."})
+            return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
         else:
-            return Response({"Result": "User not Found!!!"})
+            return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
@@ -400,9 +433,9 @@ def email_verification(request):
         email = request.GET['email']
         user = custom_user.objects.filter(email=email)
         if user:
-            return Response({"Result": "Email already in use"})
+            return Response({"Error": "Email already in use"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"Result": "Email successfully added"})
+            return Response({"Success": "Email successfully added"}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -411,9 +444,9 @@ def username_verification(request):
         username = request.GET['username']
         user = custom_user.objects.filter(username=username)
         if user:
-            return Response({"Result": "Username already in use"})
+            return Response({"Error": "Username already in use"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"Result": "Username successfully added"})
+            return Response({"Success": "Username successfully added"}, status=status.HTTP_200_OK)
 
 
 @api_view(['PUT','POST'])
@@ -439,14 +472,12 @@ def purchase_history(request):
                     is_trial_period=is_trial_period
                 )
                 obj.save()
-                return Response({"Result": "Data Added"})
+                return Response({"Success": "Data Added"}, status=status.HTTP_200_OK)
             else:
-                return Response({"Result": "User Not Exist!!!"})
+                return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
         except:
-            return Response({
-                "Error" : "Record with same user exists"
-            })
+            return Response({"Error" : "Record with same user exists"}, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == "PUT":
         username = request.POST['username']
@@ -465,6 +496,18 @@ def purchase_history(request):
             purchase_obj.is_in_intro_offer_period=is_in_intro_offer_period
             purchase_obj.is_trial_period=is_trial_period
             purchase_obj.save()
-            return Response({"Result": "Data Updated"})
+            return Response({"Success": "Data Updated"}, status=status.HTTP_200_OK)
         else:
-            return Response({"Result": "User Not Exist!!!"})
+            return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def delete_account(request):
+    if request.method == "POST":
+        username= request.POST['username']
+        user_obj = custom_user.objects.get(username=username)
+        if user_obj:
+            user_obj.delete()
+            return Response({"Success": "User Deleted"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)

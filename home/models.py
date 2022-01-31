@@ -13,30 +13,30 @@ class custom_user(AbstractUser):
 class Profile(models.Model):
     uid = models.AutoField(primary_key=True, auto_created=True)
     username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    mobile = PhoneNumberField(unique=True)
+    name = models.CharField(max_length=50, null=True, blank=True)
+    mobile = PhoneNumberField(unique=True, null=True, blank=True)
     GENDER_CHOICES = (
         ('Male', 'Male'),
         ('Female', 'Female'),
         ('Other', 'Other'),
     )
-    gender = models.CharField(max_length=7, choices=GENDER_CHOICES)
-    profile_image = models.ImageField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    gender = models.CharField(max_length=7, choices=GENDER_CHOICES, null=True, blank=True)
+    profile_image = models.ImageField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     pass_update = models.DateTimeField(blank=True, null=True)
     pass_forgot = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
-    dob = models.CharField(max_length=20, null=True)
-    city = models.CharField(max_length=20, null=True)
-    country = models.CharField(max_length=20, null=True)
-    lat = models.FloatField(max_length=30, null=True)
-    long = models.FloatField(max_length=30, null=True)
-    snap = models.CharField(max_length=30, null=True)
-    fb = models.CharField(max_length=30, null=True)
-    insta = models.CharField(max_length=30, null=True)
-    website = models.CharField(max_length=100, null=True)
-    avatar = models.ImageField(null=True)
-    bitmoji = models.ImageField(null=True)
+    dob = models.CharField(max_length=20, null=True, blank=True)
+    city = models.CharField(max_length=20, null=True, blank=True)
+    country = models.CharField(max_length=20, null=True, blank=True)
+    lat = models.FloatField(max_length=30, null=True, blank=True)
+    long = models.FloatField(max_length=30, null=True, blank=True)
+    snap = models.CharField(max_length=30, null=True, blank=True)
+    fb = models.CharField(max_length=30, null=True, blank=True)
+    insta = models.CharField(max_length=30, null=True, blank=True)
+    website = models.CharField(max_length=100, null=True, blank=True)
+    avatar = models.ImageField(null=True, blank=True)
+    bitmoji = models.ImageField(null=True, blank=True)
 
 
 class user_detail(models.Model):
