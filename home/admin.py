@@ -6,10 +6,10 @@ from django.contrib.auth.admin import UserAdmin
 
 
 class CustomUserAdmin(UserAdmin):
-    # list_display = ('username', 'email', 'first_name',
-    #                 'last_name', "password", 'is_staff', 'confirm_token')
     list_display = ('username', 'email', 'first_name',
-                    'last_name', "password", 'is_staff', 'delete_date', 'confirm_token')                    
+                    'last_name', "password", 'is_staff', 'confirm_token')
+    # list_display = ('username', 'email', 'first_name',
+    #                 'last_name', "password", 'is_staff', 'delete_date', 'confirm_token')                    
 
 
 admin.site.register(custom_user, CustomUserAdmin)
