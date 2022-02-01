@@ -21,10 +21,10 @@ custom_user = get_user_model()
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
 for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
-# users_obj = custom_user.objects.filter(is_active = False)
-# for row in users_obj:
-#     if row.delete_date + timedelta(days= 30):
-#         users_obj.delete()
+users_obj = custom_user.objects.filter(is_active = False)
+for row in users_obj:
+    if row.delete_date + timedelta(days= 30):
+        users_obj.delete()
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -402,33 +402,63 @@ def app_data(request):
         Push_Notification_token = request.POST['Push_Notification_token']
 
         user = custom_user.objects.get(username=username)
-        if user:
-            data = application_data(username=user,
-                                    UID=UID,
-                                    inApp_Products=inApp_Products,
-                                    Purchase_date=Purchase_date,
-                                    Purchased_product=Purchased_product,
-                                    Device_Model=Device_Model,
-                                    iOS=iOS,
-                                    Device_Storage=Device_Storage,
-                                    Lunch_count=Lunch_count,
-                                    Push_Notification_Status=Push_Notification_Status,
-                                    Library_permission_Status=Library_permission_Status,
-                                    Latest_Geolocation=Latest_Geolocation,
-                                    Carrier=Carrier,
-                                    App_Last_Opened=App_Last_Opened,
-                                    Purchase_attempts=Purchase_attempts,
-                                    Grace_Period=Grace_Period,
-                                    Remaining_grace_period_days=Remaining_grace_period_days,
-                                    Number_of_projects=Number_of_projects,
-                                    Total_time_spent=Total_time_spent,
-                                    total_ads_served=total_ads_served,
-                                    Registered_user=Registered_user,
-                                    Push_Notification_token=Push_Notification_token)
-            data.save()
-            return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
-        else:
-            return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            app_data_obj = application_data.objects.get(username=user.id)
+            app_data_obj.UID=UID
+            app_data_obj.inApp_Products=inApp_Products
+            app_data_obj.Purchase_date=Purchase_date
+            app_data_obj.Purchased_product=Purchased_product
+            app_data_obj.Device_Model=Device_Model
+            app_data_obj.iOS=iOS
+            app_data_obj.Device_Storage=Device_Storage
+            app_data_obj.Lunch_count=Lunch_count
+            app_data_obj.Push_Notification_Status=Push_Notification_Status
+            app_data_obj.Library_permission_Status=Library_permission_Status
+            app_data_obj.Latest_Geolocation=Latest_Geolocation
+            app_data_obj.Carrier=Carrier
+            app_data_obj.App_Last_Opened=App_Last_Opened
+            app_data_obj.Purchase_attempts=Purchase_attempts
+            app_data_obj.Grace_Period=Grace_Period
+            app_data_obj.Remaining_grace_period_days=Remaining_grace_period_days
+            app_data_obj.Number_of_projects=Number_of_projects
+            app_data_obj.Total_time_spent=Total_time_spent
+            app_data_obj.total_ads_served=total_ads_served
+            app_data_obj.Registered_user=Registered_user
+            app_data_obj.Push_Notification_token=Push_Notification_token
+            app_data_obj.save()
+            return Response({"Success": "Details Updated."}, status=status.HTTP_200_OK)
+        except Exception as e:
+            if user:
+                try:
+                    application_data.objects.get(UID=UID)
+                    return Response({"Error": "UID already exists.Plese check your UID!!!"}, status=status.HTTP_400_BAD_REQUEST)
+                except:
+                    data = application_data(username=user,
+                                            UID=UID,
+                                            inApp_Products=inApp_Products,
+                                            Purchase_date=Purchase_date,
+                                            Purchased_product=Purchased_product,
+                                            Device_Model=Device_Model,
+                                            iOS=iOS,
+                                            Device_Storage=Device_Storage,
+                                            Lunch_count=Lunch_count,
+                                            Push_Notification_Status=Push_Notification_Status,
+                                            Library_permission_Status=Library_permission_Status,
+                                            Latest_Geolocation=Latest_Geolocation,
+                                            Carrier=Carrier,
+                                            App_Last_Opened=App_Last_Opened,
+                                            Purchase_attempts=Purchase_attempts,
+                                            Grace_Period=Grace_Period,
+                                            Remaining_grace_period_days=Remaining_grace_period_days,
+                                            Number_of_projects=Number_of_projects,
+                                            Total_time_spent=Total_time_spent,
+                                            total_ads_served=total_ads_served,
+                                            Registered_user=Registered_user,
+                                            Push_Notification_token=Push_Notification_token)
+                    data.save()
+                    return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
+            else:
+                return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
@@ -479,7 +509,6 @@ def purchase_history(request):
                 return Response({"Success": "Data Added"}, status=status.HTTP_200_OK)
             else:
                 return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
-
         except:
             return Response({"Error" : "Record with same user exists"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -512,7 +541,7 @@ def delete_account(request):
         user_obj = custom_user.objects.get(username=username)
         if user_obj:
             user_obj.is_active = False
-            # user_obj.delete_date = datetime.now()
+            user_obj.delete_date = datetime.now()
             user_obj.save()
 
             return Response({"Success": "Your account is under deleting process and deleted in 30 days."}, status=status.HTTP_200_OK)

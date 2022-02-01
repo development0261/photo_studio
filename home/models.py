@@ -7,7 +7,7 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class custom_user(AbstractUser):
-    # delete_date = models.DateTimeField(null=True, blank=True)
+    delete_date = models.DateTimeField(null=True, blank=True)
     confirm_token = models.CharField(null=True, max_length=50)
 
 
@@ -38,6 +38,9 @@ class Profile(models.Model):
     website = models.CharField(max_length=100, null=True, blank=True)
     avatar = models.ImageField(null=True, blank=True)
     bitmoji = models.ImageField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class user_detail(models.Model):
@@ -130,3 +133,4 @@ class Purchase(models.Model):
     is_in_billing_retry_period = models.BooleanField(default=False)
     is_in_intro_offer_period = models.BooleanField(default=False)
     is_trial_period = models.BooleanField(default=False)
+
