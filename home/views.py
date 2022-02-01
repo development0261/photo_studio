@@ -21,10 +21,10 @@ custom_user = get_user_model()
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
 for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
-# users_obj = custom_user.objects.filter(is_active = False)
-# for row in users_obj:
-#     if row.delete_date + timedelta(days= 30):
-#         users_obj.delete()
+users_obj = custom_user.objects.filter(is_active = False)
+for row in users_obj:
+    if row.delete_date + timedelta(days= 30):
+        users_obj.delete()
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -512,7 +512,7 @@ def delete_account(request):
         user_obj = custom_user.objects.get(username=username)
         if user_obj:
             user_obj.is_active = False
-            # user_obj.delete_date = datetime.now()
+            user_obj.delete_date = datetime.now()
             user_obj.save()
 
             return Response({"Success": "Your account is under deleting process and deleted in 30 days."}, status=status.HTTP_200_OK)
