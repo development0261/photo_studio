@@ -119,27 +119,27 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 # }
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Photo_edit',
-        'USER': 'postgres',
-        'PASSWORD': 'Logix@123',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-
 # DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'rabappco_photoedit',
-#        'USER': 'rabappco_backend',
-#        'PASSWORD': 'photoedit@123',
-#        'HOST': '185.146.21.235',
-#        'PORT': '5432',
-#    }
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'Photo_edit',
+#         'USER': 'postgres',
+#         'PASSWORD': 'Logix@123',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
 # }
+
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'rabappco_photoedit',
+       'USER': 'rabappco_backend',
+       'PASSWORD': 'photoedit@123',
+       'HOST': '185.146.21.235',
+       'PORT': '5432',
+   }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
