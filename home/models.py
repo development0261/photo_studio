@@ -7,7 +7,7 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class custom_user(AbstractUser):
-    delete_date = models.DateTimeField(null=True, blank=True)
+    # delete_date = models.DateTimeField(null=True, blank=True)
     confirm_token = models.CharField(null=True, max_length=50)
 
 
@@ -130,4 +130,3 @@ class Purchase(models.Model):
     is_in_billing_retry_period = models.BooleanField(default=False)
     is_in_intro_offer_period = models.BooleanField(default=False)
     is_trial_period = models.BooleanField(default=False)
-
