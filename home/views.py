@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from NewProject.settings import TIME_ZONE
-from .models import custom_user, Profile, user_detail, application_data, Purchase
+from .models import custom_user
+from .models import Profile, user_detail, application_data, Purchase
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -25,6 +26,11 @@ users_obj = custom_user.objects.filter(is_active = False)
 for row in users_obj:
     if row.delete_date + timedelta(days= 30):
         users_obj.delete()
+
+# user_obj = custom_user.objects.filter(username = "denish").first()
+# print(user_obj.id)
+# user_obj.tag = '{"whatsapp", "fb"}'
+# user_obj.save()
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])

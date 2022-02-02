@@ -21,13 +21,14 @@ class Profile(models.Model):
         ('Female', 'Female'),
         ('Other', 'Other'),
     )
-    gender = models.CharField(max_length=7, choices=GENDER_CHOICES, null=True, blank=True)
+    gender = models.CharField(
+        max_length=7, choices=GENDER_CHOICES, null=True, blank=True)
     profile_image = models.ImageField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    pass_update = models.DateTimeField(blank=True, null=True)
-    pass_forgot = models.DateTimeField(blank=True, null=True)
+    pass_update = models.DateField(blank=True, null=True)
+    pass_forgot = models.DateField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
-    dob = models.CharField(max_length=20, null=True, blank=True)
+    dob = models.DateField(null=True, blank=True)
     city = models.CharField(max_length=20, null=True, blank=True)
     country = models.CharField(max_length=20, null=True, blank=True)
     lat = models.FloatField(max_length=30, null=True, blank=True)
@@ -40,7 +41,7 @@ class Profile(models.Model):
     bitmoji = models.ImageField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.username} - {self.name}"
 
 
 class user_detail(models.Model):
@@ -99,6 +100,9 @@ class user_detail(models.Model):
     app_theme = models.CharField(max_length=7, choices=app_choices)  # (list)
     always_crop = models.BooleanField(default=False)  # (boolean)
 
+    def __str__(self):
+        return f"{self.username} - {self.udid}"
+
 
 class application_data(models.Model):
     aid = models.AutoField(primary_key=True, auto_created=True)
@@ -125,6 +129,10 @@ class application_data(models.Model):
     Registered_user = models.BooleanField(default=False)
     Push_Notification_token = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.username} - {self.UID}"
+
+
 class Purchase(models.Model):
     pid = models.AutoField(primary_key=True, auto_created=True)
     username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
@@ -134,3 +142,12 @@ class Purchase(models.Model):
     is_in_intro_offer_period = models.BooleanField(default=False)
     is_trial_period = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.username} - {self.status}"
+
+class Tag(models.Model):
+    username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
+    tag = ArrayField(models.CharField(max_length=50),null=True, max_length=50)
+
+    def __str__(self):
+        return f"{self.username} - {self.tag}"
