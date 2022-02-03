@@ -10,7 +10,7 @@ import copy
 
 from django_otp.admin import OTPAdminSite
 
-# admin.site.__class__ = OTPAdminSite
+admin.site.__class__ = OTPAdminSite
 # Register your models here.
 
 
