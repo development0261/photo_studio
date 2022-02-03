@@ -1,4 +1,3 @@
-import imp
 from django.contrib import admin
 from .models import custom_user
 from .models import Profile, user_detail, application_data, Purchase, Tag
@@ -7,16 +6,42 @@ from django.contrib.admin import ModelAdmin
 from django.contrib.admin import SimpleListFilter
 from datetime import datetime, date, timedelta
 from django.utils.html import format_html
+import copy
 
-# from django_otp.admin import OTPAdminSite
-  
-# admin.site.__class__ = OTPAdminSite
+from django_otp.admin import OTPAdminSite
+
+admin.site.__class__ = OTPAdminSite
 # Register your models here.
 
 
 class RegisterFilter(SimpleListFilter):
-    title = 'Recently Registered Users'
+    title = 'Registered Users'
     parameter_name = 'date_joined'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('Today', 'Today'),
+            ('Last 7 days', 'Last 7 days'),
+            ('Last 30 days', 'Last 30 days'),
+            ('Last 90 days', 'Last 90 days'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'Today':
+            return queryset.filter(date_joined__date = date.today())
+        if self.value() == 'Last 7 days':
+            return queryset.filter(date_joined__gte=datetime.now() - timedelta(days=7), date_joined__lte=datetime.now())
+        if self.value() == 'Last 30 days':
+            return queryset.filter(date_joined__gte=datetime.now() - timedelta(days=30), date_joined__lte=datetime.now())
+        if self.value() == 'Last 90 days':
+            return queryset.filter(date_joined__gte=datetime.now() - timedelta(days=90), date_joined__lte=datetime.now())
+        if self.value():
+            return queryset
+
+
+class RecentlyRegisterFilter(SimpleListFilter):
+    title = 'Recently Registered Users'
+    parameter_name = 'last_login'
 
     def lookups(self, request, model_admin):
         return (
@@ -25,10 +50,15 @@ class RegisterFilter(SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
+        def get_data(n):
+            Temp = copy.copy(queryset)
+            Temp = Temp[:n]
+            set_list = custom_user.objects.filter(username__in=Temp)
+            return set_list
         if self.value() == 'Last 5':
-            return queryset.filter(date_joined__gte=datetime.now() - timedelta(days=5), date_joined__lte=datetime.now())
+            return get_data(5)
         if self.value() == 'Last 10':
-            return queryset.filter(date_joined__gte=datetime.now() - timedelta(days=10), date_joined__lte=datetime.now())
+            return get_data(10)
         if self.value():
             return queryset
 
@@ -36,7 +66,7 @@ class RegisterFilter(SimpleListFilter):
 class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'email', 'first_name',
                     'last_name', "password", 'is_staff', 'delete_date', 'confirm_token')
-    list_filter = ("date_joined", RegisterFilter)
+    list_filter = (RegisterFilter, RecentlyRegisterFilter)
     search_list = ('username', 'email', 'first_name', 'last_name')
 
 
@@ -110,12 +140,12 @@ class CustomApps(admin.ModelAdmin):
 
 
 class CustomPurchase(admin.ModelAdmin):
-    # list_display = ("username", 'status')
     search_fields = ["status", ]
 
+
 class CustomTag(admin.ModelAdmin):
-    # list_display = ("username", 'status')
-    search_fields = ["tag",]
+    search_fields = ["tag", ]
+
 
 admin.site.register(custom_user, CustomUserAdmin)
 admin.site.register(Profile, CustomProfile)

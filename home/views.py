@@ -22,15 +22,11 @@ custom_user = get_user_model()
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
 for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
-users_obj = custom_user.objects.filter(is_active = False)
+users_obj = custom_user.objects.filter(is_active=False)
 for row in users_obj:
-    if row.delete_date + timedelta(days= 30):
+    if row.delete_date + timedelta(days=30):
         users_obj.delete()
 
-# user_obj = custom_user.objects.filter(username = "denish").first()
-# print(user_obj.id)
-# user_obj.tag = '{"whatsapp", "fb"}'
-# user_obj.save()
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -249,6 +245,7 @@ def profile(request):
         else:
             return Response({'Error': "You are not admin user"}, status=status.HTTP_401_UNAUTHORIZED)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def specific_user(request):
@@ -320,35 +317,35 @@ def details(request):
         try:
             if user:
                 data = user_detail(username=user,
-                                signature=signature,
-                                export_quality=export_quality,
-                                Language=Language,
-                                user_stared_templates=user_stared_templates,
-                                user_stared_backgrounds=user_stared_backgrounds,
-                                user_stared_stickers=user_stared_stickers,
-                                user_stared_Textart=user_stared_Textart,
-                                user_stared_colors=user_stared_colors,
-                                user_stared_fonts=user_stared_fonts,
-                                most_used_fonts=most_used_fonts,
-                                user_custom_colors=user_custom_colors,
-                                instagram_follower=instagram_follower,
-                                grid_snapping=grid_snapping,
-                                user_recent_text=user_recent_text,
-                                appearance_mode=appearance_mode,
-                                enable_iCloud_backup=enable_iCloud_backup,
-                                save_projects_automatically=save_projects_automatically,
-                                save_projects_on_export=save_projects_on_export,
-                                notifications_permission=notifications_permission,
-                                inApp_notifications_permission=inApp_notifications_permission,
-                                photo_library_permission=photo_library_permission,
-                                digital_riyals_rewards=digital_riyals_rewards,
-                                enable_touch=enable_touch,
-                                app_theme=app_theme,
-                                always_crop=always_crop)
+                                   signature=signature,
+                                   export_quality=export_quality,
+                                   Language=Language,
+                                   user_stared_templates=user_stared_templates,
+                                   user_stared_backgrounds=user_stared_backgrounds,
+                                   user_stared_stickers=user_stared_stickers,
+                                   user_stared_Textart=user_stared_Textart,
+                                   user_stared_colors=user_stared_colors,
+                                   user_stared_fonts=user_stared_fonts,
+                                   most_used_fonts=most_used_fonts,
+                                   user_custom_colors=user_custom_colors,
+                                   instagram_follower=instagram_follower,
+                                   grid_snapping=grid_snapping,
+                                   user_recent_text=user_recent_text,
+                                   appearance_mode=appearance_mode,
+                                   enable_iCloud_backup=enable_iCloud_backup,
+                                   save_projects_automatically=save_projects_automatically,
+                                   save_projects_on_export=save_projects_on_export,
+                                   notifications_permission=notifications_permission,
+                                   inApp_notifications_permission=inApp_notifications_permission,
+                                   photo_library_permission=photo_library_permission,
+                                   digital_riyals_rewards=digital_riyals_rewards,
+                                   enable_touch=enable_touch,
+                                   app_theme=app_theme,
+                                   always_crop=always_crop)
                 data.save()
                 return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
         except:
-            details_obj = user_detail.objects.get(username = user.id)
+            details_obj = user_detail.objects.get(username=user.id)
             details_obj.signature = signature
             details_obj.export_quality = export_quality
             details_obj.Language = Language
@@ -410,27 +407,27 @@ def app_data(request):
         user = custom_user.objects.get(username=username)
         try:
             app_data_obj = application_data.objects.get(username=user.id)
-            app_data_obj.UID=UID
-            app_data_obj.inApp_Products=inApp_Products
-            app_data_obj.Purchase_date=Purchase_date
-            app_data_obj.Purchased_product=Purchased_product
-            app_data_obj.Device_Model=Device_Model
-            app_data_obj.iOS=iOS
-            app_data_obj.Device_Storage=Device_Storage
-            app_data_obj.Lunch_count=Lunch_count
-            app_data_obj.Push_Notification_Status=Push_Notification_Status
-            app_data_obj.Library_permission_Status=Library_permission_Status
-            app_data_obj.Latest_Geolocation=Latest_Geolocation
-            app_data_obj.Carrier=Carrier
-            app_data_obj.App_Last_Opened=App_Last_Opened
-            app_data_obj.Purchase_attempts=Purchase_attempts
-            app_data_obj.Grace_Period=Grace_Period
-            app_data_obj.Remaining_grace_period_days=Remaining_grace_period_days
-            app_data_obj.Number_of_projects=Number_of_projects
-            app_data_obj.Total_time_spent=Total_time_spent
-            app_data_obj.total_ads_served=total_ads_served
-            app_data_obj.Registered_user=Registered_user
-            app_data_obj.Push_Notification_token=Push_Notification_token
+            app_data_obj.UID = UID
+            app_data_obj.inApp_Products = inApp_Products
+            app_data_obj.Purchase_date = Purchase_date
+            app_data_obj.Purchased_product = Purchased_product
+            app_data_obj.Device_Model = Device_Model
+            app_data_obj.iOS = iOS
+            app_data_obj.Device_Storage = Device_Storage
+            app_data_obj.Lunch_count = Lunch_count
+            app_data_obj.Push_Notification_Status = Push_Notification_Status
+            app_data_obj.Library_permission_Status = Library_permission_Status
+            app_data_obj.Latest_Geolocation = Latest_Geolocation
+            app_data_obj.Carrier = Carrier
+            app_data_obj.App_Last_Opened = App_Last_Opened
+            app_data_obj.Purchase_attempts = Purchase_attempts
+            app_data_obj.Grace_Period = Grace_Period
+            app_data_obj.Remaining_grace_period_days = Remaining_grace_period_days
+            app_data_obj.Number_of_projects = Number_of_projects
+            app_data_obj.Total_time_spent = Total_time_spent
+            app_data_obj.total_ads_served = total_ads_served
+            app_data_obj.Registered_user = Registered_user
+            app_data_obj.Push_Notification_token = Push_Notification_token
             app_data_obj.save()
             return Response({"Success": "Details Updated."}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -489,7 +486,7 @@ def username_verification(request):
             return Response({"Success": "Username successfully added"}, status=status.HTTP_200_OK)
 
 
-@api_view(['PUT','POST'])
+@api_view(['PUT', 'POST'])
 @permission_classes([IsAuthenticated])
 def purchase_history(request):
     if request.method == "POST":
@@ -516,7 +513,7 @@ def purchase_history(request):
             else:
                 return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
         except:
-            return Response({"Error" : "Record with same user exists"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Error": "Record with same user exists"}, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == "PUT":
         username = request.POST['username']
@@ -529,21 +526,22 @@ def purchase_history(request):
         user = custom_user.objects.get(username=username)
         if user:
             purchase_obj = custom_user.objects.get(username=username).purchase
-            purchase_obj.status=status
-            purchase_obj.auto_renew_status=auto_renew_status
-            purchase_obj.is_in_billing_retry_period=is_in_billing_retry_period
-            purchase_obj.is_in_intro_offer_period=is_in_intro_offer_period
-            purchase_obj.is_trial_period=is_trial_period
+            purchase_obj.status = status
+            purchase_obj.auto_renew_status = auto_renew_status
+            purchase_obj.is_in_billing_retry_period = is_in_billing_retry_period
+            purchase_obj.is_in_intro_offer_period = is_in_intro_offer_period
+            purchase_obj.is_trial_period = is_trial_period
             purchase_obj.save()
             return Response({"Success": "Data Updated"}, status=status.HTTP_200_OK)
         else:
             return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def delete_account(request):
     if request.method == "POST":
-        username= request.POST['username']
+        username = request.POST['username']
         user_obj = custom_user.objects.get(username=username)
         if user_obj:
             user_obj.is_active = False
