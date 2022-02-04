@@ -35,6 +35,8 @@ urlpatterns = [
     path('update_password/', views.update_password, name="update_password"),
     path('logout/', views.logoutProcess, name='logout'),
     path('purchase_history/', views.purchase_history, name='purchase_history'),
+    path('product/', views.product, name='product'),
+
 
 ]
 

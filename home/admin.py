@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import custom_user
-from .models import Profile, user_detail, application_data, Purchase, Tag
+from .models import Product, custom_user
+from .models import Profile, user_detail, application_data, Purchase, Tag, Product
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.admin import ModelAdmin
 from django.contrib.admin import SimpleListFilter
@@ -146,6 +146,9 @@ class CustomPurchase(admin.ModelAdmin):
 class CustomTag(admin.ModelAdmin):
     search_fields = ["tag", ]
 
+class CustomProduct(admin.ModelAdmin):
+    search_fields = ["annaulSub", "annaulSubProd", "localeId", "monthlySub", "monthlySubProd", "product", "productID", "productPromo", "promoPrice"]
+
 
 admin.site.register(custom_user, CustomUserAdmin)
 admin.site.register(Profile, CustomProfile)
@@ -153,3 +156,5 @@ admin.site.register(user_detail, CustomDetails)
 admin.site.register(application_data, CustomApps)
 admin.site.register(Purchase, CustomPurchase)
 admin.site.register(Tag, CustomTag)
+admin.site.register(Product, CustomProduct)
+

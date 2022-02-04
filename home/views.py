@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from NewProject.settings import TIME_ZONE
 from .models import custom_user
-from .models import Profile, user_detail, application_data, Purchase
+from .models import Profile, user_detail, application_data, Purchase, Product
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -549,5 +549,52 @@ def delete_account(request):
             user_obj.save()
 
             return Response({"Success": "Your account is under deleting process and deleted in 30 days."}, status=status.HTTP_200_OK)
+        else:
+            return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def product(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        productID = request.POST['productID']
+        product = request.POST['product']
+        productPromo = request.POST['productPromo']
+        promoPrice = request.POST['promoPrice']
+        annaulSubProd = request.POST['annaulSubProd']
+        annaulSub = request.POST['annaulSub']
+        monthlySubProd = request.POST['monthlySubProd']
+        monthlySub = request.POST['monthlySub']
+        localeId = request.POST['localeId']
+
+        user_obj = custom_user.objects.get(username=username)
+        if user_obj:
+            try:
+                product1 = Product.objects.create(
+                    username = user_obj,
+                    productID = productID,
+                    product = product,
+                    productPromo = productPromo,
+                    promoPrice = promoPrice,
+                    annaulSubProd = annaulSubProd,
+                    annaulSub = annaulSub,
+                    monthlySubProd = monthlySubProd,
+                    monthlySub = monthlySub,
+                    localeId = localeId
+                )
+                return Response({"Success": "Product Details Added."}, status=status.HTTP_200_OK)
+
+            except:
+                product1 = Product.objects.filter(product=product).first()
+                print(product1)
+                product1.productPromo = productPromo
+                product1.promoPrice = promoPrice
+                product1.annaulSubProd = annaulSubProd
+                product1.annaulSub = annaulSub
+                product1.monthlySubProd = monthlySubProd
+                product1.monthlySub = monthlySub
+                product1.localeId = localeId
+                product1.save()
+                return Response({"Success": "Product Details Updated."}, status=status.HTTP_200_OK)
         else:
             return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)

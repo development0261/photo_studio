@@ -145,9 +145,27 @@ class Purchase(models.Model):
     def __str__(self):
         return f"{self.username} - {self.status}"
 
+
 class Tag(models.Model):
     username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
-    tag = ArrayField(models.CharField(max_length=50),null=True, max_length=50)
+    tag = ArrayField(models.CharField(max_length=50), null=True, max_length=50)
 
     def __str__(self):
         return f"{self.username} - {self.tag}"
+
+
+class Product(models.Model):
+    PID = models.AutoField(primary_key=True, auto_created=True)
+    username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
+    productID = models.CharField(max_length=255, unique=True)
+    product = models.CharField(max_length=255, unique=True)
+    productPromo = models.CharField(max_length=255, null=True, blank=True)
+    promoPrice = models.FloatField(max_length=255, null=True, blank=True)
+    annaulSubProd = models.CharField(max_length=255, null=True, blank=True)
+    annaulSub = models.CharField(max_length=255, null=True, blank=True)
+    monthlySubProd = models.CharField(max_length=255, null=True, blank=True)
+    monthlySub = models.CharField(max_length=255, null=True, blank=True)
+    localeId = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.productID} - {self.product}"
