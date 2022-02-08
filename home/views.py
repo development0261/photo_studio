@@ -69,21 +69,24 @@ def register(request):
         if not custom_user.objects.filter(username=username).exists():
             if len(username) > 5:
                 if not custom_user.objects.filter(email=email).exists():
-                    if(re.fullmatch(for_email, email)):
-                        pat = re.compile(reg)
-                        mat = re.search(pat, password)
-                        if mat:
-                            user = custom_user.objects.create_user(
-                                username=username, password=password, email=email)
-                            user.save()
-                            data = Profile(
-                                username=user, name=name, mobile=mobile, gender=gender.upper(), profile_image=profile_image)
-                            data.save()
-                            return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
+                    if not Profile.objects.filter(mobile=mobile).exists():
+                        if(re.fullmatch(for_email, email)):
+                            pat = re.compile(reg)
+                            mat = re.search(pat, password)
+                            if mat:
+                                user = custom_user.objects.create_user(
+                                    username=username, password=password, email=email)
+                                user.save()
+                                data = Profile(
+                                    username=user, name=name, mobile=mobile, gender=gender.upper(), profile_image=profile_image)
+                                data.save()
+                                return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
+                            else:
+                                return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                         else:
-                            return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
+                            return Response({"Error": "Enter valid email address"}, status=status.HTTP_400_BAD_REQUEST)
                     else:
-                        return Response({"Error": "Enter valid email address"}, status=status.HTTP_400_BAD_REQUEST)
+                        return Response({"Error": "Phone number already registered"}, status=status.HTTP_400_BAD_REQUEST)
                 else:
                     return Response({"Error": "User Already Exist with this email address"}, status=status.HTTP_400_BAD_REQUEST)
             else:

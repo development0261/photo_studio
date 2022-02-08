@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
@@ -9,13 +8,15 @@ from django.contrib.postgres.fields import ArrayField
 class custom_user(AbstractUser):
     delete_date = models.DateTimeField(null=True, blank=True)
     confirm_token = models.CharField(null=True, max_length=50)
+    class Meta:
+        verbose_name_plural = "User"
 
 
 class Profile(models.Model):
     uid = models.AutoField(primary_key=True, auto_created=True)
     username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, null=True, blank=True)
-    mobile = PhoneNumberField(unique=True, null=True, blank=True)
+    mobile = models.CharField(max_length=20, null=True, blank=True)
     GENDER_CHOICES = (
         ('Male', 'Male'),
         ('Female', 'Female'),
@@ -42,6 +43,9 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.username} - {self.name}"
+
+    class Meta:
+        verbose_name_plural = "Profile"        
 
 
 class user_detail(models.Model):
@@ -103,6 +107,9 @@ class user_detail(models.Model):
     def __str__(self):
         return f"{self.username} - {self.udid}"
 
+    class Meta:
+        verbose_name_plural = "User Detail"
+
 
 class application_data(models.Model):
     aid = models.AutoField(primary_key=True, auto_created=True)
@@ -132,6 +139,9 @@ class application_data(models.Model):
     def __str__(self):
         return f"{self.username} - {self.UID}"
 
+    class Meta:
+        verbose_name_plural = "Application data"
+
 
 class Purchase(models.Model):
     pid = models.AutoField(primary_key=True, auto_created=True)
@@ -145,6 +155,8 @@ class Purchase(models.Model):
     def __str__(self):
         return f"{self.username} - {self.status}"
 
+    class Meta:
+        verbose_name_plural = "Purchase"
 
 class Tag(models.Model):
     username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
@@ -153,6 +165,8 @@ class Tag(models.Model):
     def __str__(self):
         return f"{self.username} - {self.tag}"
 
+    class Meta:
+        verbose_name_plural = "Tag"
 
 class Product(models.Model):
     PID = models.AutoField(primary_key=True, auto_created=True)
@@ -169,3 +183,6 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.productID} - {self.product}"
+
+    class Meta:
+        verbose_name_plural = "Product"
