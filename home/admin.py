@@ -119,7 +119,9 @@ class PassowordUpdateFilter(SimpleListFilter):
 
 class CustomProfile(admin.ModelAdmin):
     def Profile_Image(self, object):
-        return format_html('<img src="{}" width="40" style="border-radius:50px">'.format(object.profile_image.url))
+        if object.profile_image:
+            return format_html('<img src="{}" width="40" style="border-radius:50px">'.format(object.profile_image.url))
+
     list_display = ('username', 'name', 'Profile_Image')
     list_display_links = ('username',)
     list_filter = ("gender", "country", AgeFilter, PassowordUpdateFilter)
