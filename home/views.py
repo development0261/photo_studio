@@ -16,11 +16,12 @@ import string
 import re
 from datetime import datetime, timezone, timedelta
 from rest_framework import status
-
+import base64
 
 custom_user = get_user_model()
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
 for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+punctuation = "!#$%&()*+, -./:;<=>?@[\]^_`{|}~"
 
 users_obj = custom_user.objects.filter(is_active=False)
 for row in users_obj:
@@ -98,7 +99,6 @@ def register(request):
         else:
             return Response({"Error": "User Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
 
-
 @api_view(['POST'])
 def send_link(request):
     if request.method == "POST":
@@ -110,44 +110,56 @@ def send_link(request):
 
             # Link = 'http://127.0.0.1:8001/forgot_password/'
             Link = 'http://185.146.21.235:7800/forgot_password/'
-            characters = string.ascii_letters + string.digits + string.punctuation
+            characters = string.ascii_letters + string.digits + punctuation
             token = ''.join(random.choice(characters) for i in range(50))
+            encrypted_token = base64.b64encode(token.encode("ascii")).decode("ascii")
             user = custom_user.objects.get(email=email)
             user.confirm_token = token
             user.save()
 
-            send_mail(
-                'Forgot password',
-                "Go to Link : " + Link + " and enter token : " + token,
-                'demo.logixbuiltinfo@gmail.com',
-                fail_silently=False,
-                recipient_list=recipient_list
-            )
+            # send_mail(
+            #     'Forgot password',
+            #     "Go to Link : " + Link + " and enter token : " + token,
+            #     'demo.logixbuiltinfo@gmail.com',
+            #     fail_silently=False,
+            #     recipient_list=recipient_list
+            # )
+            from django.core import mail
+            from django.template.loader import render_to_string
+            from django.utils.html import strip_tags
+
+            subject = 'Forgot Password'
+            html_message = render_to_string('mail_template.html', {'token': f'{Link}{encrypted_token}'})
+            plain_message = strip_tags(html_message)
+            from_email = 'From <demo.logixbuiltinfo@gmail.com>'
+            to = recipient_list[0]
+
+            mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
             return Response({"Success": "Check Your email for Forgot Password"}, status=status.HTTP_200_OK)
         else:
             return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
-def forgot_password(request):
+def forgot_password(request,t):
     if request.method == "POST":
+        decrypted_token = base64.b64decode(t).decode("ascii")
         email = request.POST['email']
-        user_token = request.POST['user_token']
         new_pass = request.POST['new_pass']
         confirm_pass = request.POST['confirm_pass']
 
         if custom_user.objects.filter(email=email).exists():
-            if custom_user.objects.filter(confirm_token=user_token).exists():
+            if custom_user.objects.filter(confirm_token=decrypted_token).exists():
                 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
                 pat = re.compile(reg)
                 mat = re.search(pat, new_pass)
                 if mat:
                     if new_pass == confirm_pass:
                         obj1 = custom_user.objects.get(
-                            confirm_token=user_token)
+                            confirm_token=decrypted_token)
                         obj1.set_password(new_pass)
                         obj2 = custom_user.objects.get(
-                            confirm_token=user_token).profile
+                            confirm_token=decrypted_token).profile
                         obj2.pass_forgot = datetime.now()
                         obj1.save()
                         obj2.save()
