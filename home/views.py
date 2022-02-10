@@ -1,3 +1,4 @@
+
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from NewProject.settings import TIME_ZONE
 from .models import custom_user
@@ -17,6 +18,7 @@ import re
 from datetime import datetime, timezone, timedelta
 from rest_framework import status
 import base64
+from django.contrib.auth.hashers import check_password
 
 custom_user = get_user_model()
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
@@ -37,12 +39,18 @@ def index(request):
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
-        data = super().validate(attrs)
-        serializer = UserSerializerWithToken(self.user).data
-
-        for k, v in serializer.items():
-            data[k] = v
-        return data
+        if custom_user.objects.filter(username = attrs['username']).exists():
+            if not check_password(attrs['password'],custom_user.objects.get(username = attrs['username']).password):
+                return {"Error":"Invalid Password"}
+            else:
+                data = super().validate(attrs)
+                serializer = UserSerializerWithToken(self.user).data
+                for k, v in serializer.items():
+                    data[k] = v
+                return data
+        else:
+            return {"Error":"Account with this username is not exists"}
+            
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -72,7 +80,28 @@ def register(request):
         if not custom_user.objects.filter(username=username).exists():
             if len(username) > 5:
                 if not custom_user.objects.filter(email=email).exists():
-                    if not Profile.objects.filter(mobile=mobile).exists():
+                    if len(mobile)>0:
+                        if not Profile.objects.filter(mobile=mobile).exists() and len(mobile)>0:
+                            if(re.fullmatch(for_email, email)):
+                                pat = re.compile(reg)
+                                mat = re.search(pat, password)
+                                if mat:
+                                    user = custom_user.objects.create_user(
+                                        username=username, password=password, email=email)
+                                    user.save()
+                                    data = Profile(
+                                        username=user, name=name, mobile=mobile, gender=gender.upper())
+                                    if 'profile_image' in request.FILES:
+                                        data.profile_image = profile_image
+                                    data.save()
+                                    return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
+                                else:
+                                    return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
+                            else:
+                                return Response({"Error": "Enter valid email address"}, status=status.HTTP_400_BAD_REQUEST)
+                        else:
+                            return Response({"Error": "Phone number already registered"}, status=status.HTTP_400_BAD_REQUEST)
+                    else:
                         if(re.fullmatch(for_email, email)):
                             pat = re.compile(reg)
                             mat = re.search(pat, password)
@@ -90,8 +119,6 @@ def register(request):
                                 return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                         else:
                             return Response({"Error": "Enter valid email address"}, status=status.HTTP_400_BAD_REQUEST)
-                    else:
-                        return Response({"Error": "Phone number already registered"}, status=status.HTTP_400_BAD_REQUEST)
                 else:
                     return Response({"Error": "User Already Exist with this email address"}, status=status.HTTP_400_BAD_REQUEST)
             else:
@@ -209,7 +236,7 @@ def update_password(request):
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-def profile(request):
+def profile(request,para=None):
     if request.method == "POST":
         username = request.POST['username']
         email = request.POST['email']
@@ -257,13 +284,13 @@ def profile(request):
 
     elif request.method == "GET":
         username = request.GET['username']
-        password = request.GET['password']
-        user1 = authenticate(username=username, password=password)
-        if user1.is_superuser:
-            queryset = Profile.objects.all()
-            serializer_class = RegistrationSerializer(queryset, many=True)
-            return Response({'data': serializer_class.data}, status=status.HTTP_200_OK)
-        else:
+        try:
+            user1 = custom_user.objects.filter(username=username).first()
+            if user1.is_superuser:
+                queryset = Profile.objects.all()
+                serializer_class = RegistrationSerializer(queryset, many=True)
+                return Response({'data': serializer_class.data}, status=status.HTTP_200_OK)
+        except:
             return Response({'Error': "You are not admin user"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
@@ -607,7 +634,6 @@ def product(request):
 
             except:
                 product1 = Product.objects.filter(product=product).first()
-                print(product1)
                 product1.productPromo = productPromo
                 product1.promoPrice = promoPrice
                 product1.annaulSubProd = annaulSubProd
