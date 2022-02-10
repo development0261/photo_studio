@@ -136,7 +136,7 @@ def send_link(request):
             recipient_list.append(user_with_email.email)
 
             # Link = 'http://127.0.0.1:8001/forgot_password/'
-            Link = 'http://185.146.21.235:7800/forgot_password/'
+            Link = 'http://185.146.21.235:7800/home/forgot_password/'
             characters = string.ascii_letters + string.digits + punctuation
             token = ''.join(random.choice(characters) for i in range(50))
             encrypted_token = base64.b64encode(token.encode("ascii")).decode("ascii")
