@@ -1,0 +1,349 @@
+{% extends 'admin_site/base.html' %}
+{% load static %}
+{% block styles %}
+<style>
+    .row {
+        margin-top: 27px !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">custom_user Details</h3>
+            </div>
+            <div class="card-body pt-4">
+                <div class="grid-margin">
+                    <div class="">
+                        <div class="panel panel-primary">
+                            {% comment %} <div class="tab-menu-heading border-0 p-0">
+                                <div class="tabs-menu1">
+                                    <!-- Tabs -->
+                                    <ul class="nav panel-tabs product-sale">
+                                        <li><a href="#tab5" class="active" data-bs-toggle="tab">All products</a></li>
+                                        <li><a href="#tab6" data-bs-toggle="tab" class="text-dark">Shipped</a></li>
+                                        <li><a href="#tab7" data-bs-toggle="tab" class="text-dark">Pending</a></li>
+                                        <li><a href="#tab8" data-bs-toggle="tab" class="text-dark">Cancelled</a></li>
+                                    </ul>
+                                </div>
+                            </div> {% endcomment %}
+                            <div class="panel-body tabs-menu-body border-0 pt-0">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab5">
+                                        <div class="table-responsive">
+                                            <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                                                <thead class="border-top">
+                                                    <tr>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            udid</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            username</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            signature</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            export quality</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            Language</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user stared templates</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user stared backgrounds</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user stared stickers</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user stared Textart</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user stared colors</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user stared fonts</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            most used fonts</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user custom colors</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            instagram follower</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            grid snapping</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user recent text</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            appearance mode</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            enable iCloud backup</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            save projects automatically</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            save projects on export</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            notifications permission</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            inApp notifications permission</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            photo library permission</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            digital riyals rewards</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            enable touch</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            app theme</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            always crop</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for row in total_details %}
+                                                    <tr class="border-bottom">
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{row.udid}}</h6>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="ms-3 mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.username}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.signature}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.export_quality}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.Language}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_stared_templates}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_stared_backgrounds}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_stared_stickers}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_stared_Textart}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_stared_colors}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_stared_fonts}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.most_used_fonts}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_custom_colors}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.instagram_follower}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.grid_snapping}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_recent_text}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.appearance_mode}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.enable_iCloud_backup}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.save_projects_automatically}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.save_projects_on_export}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.notifications_permission}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.inApp_notifications_permission}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.photo_library_permission}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.digital_riyals_rewards}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.enable_touch}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.app_theme}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.always_crop}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="g-2">
+                                                                <a class="btn text-primary btn-sm"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-original-title="Edit"><span
+                                                                        class="fe fe-edit fs-14"></span></a>
+                                                                <a class="btn text-danger btn-sm"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-original-title="Delete"><span
+                                                                       id="user_detail {{row.udid}}" class="fe fe-trash-2 fs-14"></span></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+<!-- {% block scripts %}
+<script>
+    $(".fe-trash-2").click(function () {
+        id = $(this).attr('id')
+        alert(id);
+    });
+</script>
+{% endblock scripts %} -->

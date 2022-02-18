@@ -6,8 +6,7 @@ from .models import Profile, user_detail, application_data, Purchase, Product
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from .serializers import UserSerializer, UserSerializerWithToken, RegistrationSerializer
-from django.contrib.auth.models import User
+from .serializers import UserSerializer, UserSerializerWithToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
@@ -120,11 +119,11 @@ def register(request):
                         else:
                             return Response({"Error": "Enter valid email address"}, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return Response({"Error": "User Already Exist with this email address"}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"Error": "custom_user Already Exist with this email address"}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response({"Error": "Username length must be greater than 6"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"Error": "User Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Error": "custom_user Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def send_link(request):
@@ -164,7 +163,7 @@ def send_link(request):
             mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
             return Response({"Success": "Check Your email for Forgot Password"}, status=status.HTTP_200_OK)
         else:
-            return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "custom_user Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
@@ -198,7 +197,7 @@ def forgot_password(request,t):
             else:
                 return Response({"Error": "Oops!! Please check your Token"}, status=status.HTTP_401_UNAUTHORIZED)
         else:
-            return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "custom_user Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
@@ -231,7 +230,7 @@ def update_password(request):
             else:
                 return Response({"Error": "username and password doesnot matched."}, status=status.HTTP_401_UNAUTHORIZED)
         else:
-            return Response({"Error": "User Not Exist with this username"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "custom_user Not Exist with this username"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET', 'POST'])
@@ -280,7 +279,7 @@ def profile(request,para=None):
             user.save()
             return Response({"Success": "Profile Updated"}, status=status.HTTP_200_OK)
         else:
-            return Response({"Error": "User Not Exist with this username and password"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "custom_user Not Exist with this username and password"}, status=status.HTTP_401_UNAUTHORIZED)
 
     elif request.method == "GET":
         username = request.GET['username']
@@ -420,9 +419,9 @@ def details(request):
             details_obj.app_theme = app_theme
             details_obj.always_crop = always_crop
             details_obj.save()
-            return Response({"Success": "User details updated."}, status=status.HTTP_200_OK)
+            return Response({"Success": "custom_user details updated."}, status=status.HTTP_200_OK)
         else:
-            return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "custom_user not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET', 'POST'])
@@ -509,7 +508,7 @@ def app_data(request):
                     data.save()
                     return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
             else:
-                return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({"Error": "custom_user not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
@@ -559,7 +558,7 @@ def purchase_history(request):
                 obj.save()
                 return Response({"Success": "Data Added"}, status=status.HTTP_200_OK)
             else:
-                return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({"Error": "custom_user Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
         except:
             return Response({"Error": "Record with same user exists"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -582,7 +581,7 @@ def purchase_history(request):
             purchase_obj.save()
             return Response({"Success": "Data Updated"}, status=status.HTTP_200_OK)
         else:
-            return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "custom_user Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
@@ -598,7 +597,7 @@ def delete_account(request):
 
             return Response({"Success": "Your account is under deleting process and deleted in 30 days."}, status=status.HTTP_200_OK)
         else:
-            return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "custom_user not found"}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -644,4 +643,4 @@ def product(request):
                 product1.save()
                 return Response({"Success": "Product Details Updated."}, status=status.HTTP_200_OK)
         else:
-            return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "custom_user not found"}, status=status.HTTP_401_UNAUTHORIZED)

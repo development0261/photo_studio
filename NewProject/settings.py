@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'admin_site',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -104,6 +105,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'admin_site.views.models'
             ],
         },
     },
@@ -126,7 +128,7 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'Photo_edit',
+#         'NAME': 'Photo_editor',
 #         'USER': 'postgres',
 #         'PASSWORD': 'Logix@123',
 #         'HOST': 'localhost',
@@ -207,4 +209,4 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'demo.logixbuiltinfo@gmail.com'
-EMAIL_HOST_PASSWORD = 'kvhgupucbyrtdzpr'
+EMAIL_HOST_PASSWORD = 'ozydwukigmnmsqnt'

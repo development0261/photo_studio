@@ -1,4 +1,3 @@
-import email
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
@@ -9,8 +8,16 @@ from django.contrib.postgres.fields import ArrayField
 class custom_user(AbstractUser):
     delete_date = models.DateTimeField(null=True, blank=True)
     confirm_token = models.CharField(null=True, max_length=50)
+    # app_datas = models.CharField(max_length=255, null=True, blank=True)
+    # details = models.CharField(max_length=255, null=True, blank=True)
+    # products = models.CharField(max_length=255, null=True, blank=True)
+    # profiles = models.CharField(max_length=255, null=True, blank=True)
+    # purchases = models.CharField(max_length=255, null=True, blank=True)
+    # tags = models.CharField(max_length=255, null=True, blank=True)
+
+
     class Meta:
-        verbose_name_plural = "User"
+        verbose_name_plural = "custom_user"
 
 
 class Profile(models.Model):
@@ -47,7 +54,7 @@ class Profile(models.Model):
         return f"{self.username} - {self.name}"
 
     class Meta:
-        verbose_name_plural = "Profile"        
+        verbose_name_plural = "Profile"
 
 
 class user_detail(models.Model):
@@ -110,7 +117,7 @@ class user_detail(models.Model):
         return f"{self.username} - {self.udid}"
 
     class Meta:
-        verbose_name_plural = "User Detail"
+        verbose_name_plural = "custom_user Detail"
 
 
 class application_data(models.Model):
@@ -121,7 +128,7 @@ class application_data(models.Model):
     Purchase_date = models.DateTimeField(blank=True, null=True)
     Purchased_product = models.CharField(max_length=100)
     Device_Model = models.CharField(max_length=50)
-    iOS = models.CharField(max_length=100)
+    operating_system = models.CharField(max_length=100)
     Device_Storage = models.CharField(max_length=10)
     Lunch_count = models.IntegerField()
     Push_Notification_Status = models.BooleanField(default=False)
@@ -136,7 +143,8 @@ class application_data(models.Model):
     Total_time_spent = models.CharField(max_length=10)
     total_ads_served = models.IntegerField()
     Registered_user = models.BooleanField(default=False)
-    Push_Notification_token = models.BooleanField(default=False)
+    Push_Notification_token = models.CharField(
+        max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f"{self.username} - {self.UID}"
@@ -153,12 +161,16 @@ class Purchase(models.Model):
     is_in_billing_retry_period = models.BooleanField(default=False)
     is_in_intro_offer_period = models.BooleanField(default=False)
     is_trial_period = models.BooleanField(default=False)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    subscription_type = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"{self.username} - {self.status}"
 
     class Meta:
         verbose_name_plural = "Purchase"
+
 
 class Tag(models.Model):
     username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
@@ -169,6 +181,7 @@ class Tag(models.Model):
 
     class Meta:
         verbose_name_plural = "Tag"
+
 
 class Product(models.Model):
     PID = models.AutoField(primary_key=True, auto_created=True)

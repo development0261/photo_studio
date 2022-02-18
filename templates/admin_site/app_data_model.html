@@ -1,0 +1,287 @@
+{% extends 'admin_site/base.html' %}
+{% load static %}
+{% block styles %}
+<style>
+    .row {
+        margin-top: 27px !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">Application data</h3>
+            </div>
+            <div class="card-body pt-4">
+                <div class="grid-margin">
+                    <div class="">
+                        <div class="panel panel-primary">
+                            {% comment %} <div class="tab-menu-heading border-0 p-0">
+                                <div class="tabs-menu1">
+                                    <!-- Tabs -->
+                                    <ul class="nav panel-tabs product-sale">
+                                        <li><a href="#tab5" class="active" data-bs-toggle="tab">All products</a></li>
+                                        <li><a href="#tab6" data-bs-toggle="tab" class="text-dark">Shipped</a></li>
+                                        <li><a href="#tab7" data-bs-toggle="tab" class="text-dark">Pending</a></li>
+                                        <li><a href="#tab8" data-bs-toggle="tab" class="text-dark">Cancelled</a></li>
+                                    </ul>
+                                </div>
+                            </div> {% endcomment %}
+                            <div class="panel-body tabs-menu-body border-0 pt-0">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab5">
+                                        <div class="table-responsive">
+                                            <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                                                <thead class="border-top">
+                                                    <tr>
+                                                        <th class="bg-transparent border-bottom-0">aid</th>
+                                                        <th class="bg-transparent border-bottom-0">UID</th>
+                                                        <th class="bg-transparent border-bottom-0">username</th>
+                                                        <th class="bg-transparent border-bottom-0">inApp Products</th>
+                                                        <th class="bg-transparent border-bottom-0">Purchase date</th>
+                                                        <th class="bg-transparent border-bottom-0">Purchased product
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0">Device Model</th>
+                                                        <th class="bg-transparent border-bottom-0">iOS</th>
+                                                        <th class="bg-transparent border-bottom-0">Device Storage</th>
+                                                        <th class="bg-transparent border-bottom-0">Lunch count</th>
+                                                        <th class="bg-transparent border-bottom-0">Push Notification
+                                                            Status</th>
+                                                        <th class="bg-transparent border-bottom-0">Library permission
+                                                            Status</th>
+                                                        <th class="bg-transparent border-bottom-0">Latest Geolocation
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0">Carrier</th>
+                                                        <th class="bg-transparent border-bottom-0">App Last Opened</th>
+                                                        <th class="bg-transparent border-bottom-0">Purchase attempts
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0">Grace Period</th>
+                                                        <th class="bg-transparent border-bottom-0">Remaining grace
+                                                            period days</th>
+                                                        <th class="bg-transparent border-bottom-0">Number of projects
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0">Total time spent</th>
+                                                        <th class="bg-transparent border-bottom-0">total ads served</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            Registered user
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            Push Notification token
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            Action
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for row in total_app_datas %}
+                                                    <tr class="border-bottom">
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.aid }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.UID }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.username }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.inApp_Products }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.Purchase_date }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.Purchased_product }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.Device_Model }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.iOS }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.Device_Storage }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.Lunch_count }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="mt-sm-1 d-block">
+                                                                <span
+                                                                    class="badge rounded-pill {% if row.Push_Notification_Status %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{
+                                                                    row.Push_Notification_Status }}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="mt-sm-1 d-block">
+                                                                <span
+                                                                    class="badge rounded-pill {% if row.Library_permission_Status %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.Library_permission_Status}}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.Latest_Geolocation }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.Carrier }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{ row.App_Last_Opened }}
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="ms-3 mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{ row.Purchase_attempts }}
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{ row.Grace_Period }}
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{ row.Remaining_grace_period_days }}
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{ row.Number_of_projects }}
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{ row.Total_time_spent }}
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{ row.total_ads_served }}
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="mt-sm-1 d-block">
+                                                                <span
+                                                                    class="badge rounded-pill {% if row.Registered_user %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.Registered_user}}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="mt-sm-1 d-block">
+                                                                <span
+                                                                    class="badge rounded-pill {% if row.Push_Notification_token %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.Push_Notification_token}}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="g-2">
+                                                                <a class="btn text-primary btn-sm"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-original-title="Edit"><span
+                                                                        class="fe fe-edit fs-14"></span></a>
+                                                                <a class="btn text-danger btn-sm"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-original-title="Delete"><span
+                                                                        id="application_data {{row.aid}}"
+                                                                        class="fe fe-trash-2 fs-14"></span></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+<!-- {% block scripts %}
+<script>
+    $(".fe-trash-2").click(function () {
+        id = $(this).attr('id')
+        alert(id);
+    });
+</script>
+{% endblock scripts %} -->

@@ -6734,7 +6734,7 @@ function findExistImage(newImageOrSrc) {
 }
 
 /**
- * Caution: User should cache loaded images, but not just count on LRU.
+ * Caution: custom_user should cache loaded images, but not just count on LRU.
  * Consider if required images more than LRU size, will dead loop occur?
  *
  * @param {string|HTMLImageElement|HTMLCanvasElement|Canvas} newImageOrSrc
@@ -24262,7 +24262,7 @@ var OTHER_DIMS = {tooltip: 1, label: 1, itemName: 1};
  *      [{dimsDef: []}, ...] can be specified to give names.
  * @param {Array} data Data list. [[1, 2, 3], [2, 3, 4]].
  * @param {Object} [opt]
- * @param {Array.<Object|string>} [opt.dimsDef] option.series.dimensions User defined dimensions
+ * @param {Array.<Object|string>} [opt.dimsDef] option.series.dimensions custom_user defined dimensions
  *      For example: ['asdf', {name, type}, ...].
  * @param {Object} [opt.encodeDef] option.series.encode {x: 2, y: [3, 1], tooltip: [1, 2], label: 3}
  * @param {string} [opt.extraPrefix] Prefix of name when filling the left dimensions.
@@ -25240,7 +25240,7 @@ var IntervalScale = Scale.extend({
         if (!isFinite(span)) {
             return;
         }
-        // User may set axis min 0 and data are all negative
+        // custom_user may set axis min 0 and data are all negative
         // FIXME If it needs to reverse ?
         if (span < 0) {
             span = -span;
@@ -33928,7 +33928,7 @@ Radar.prototype.update = function (ecModel, api) {
         var interval = scale.getInterval();
 
         if (fixedMin != null && fixedMax != null) {
-            // User set min, max, divide to get new interval
+            // custom_user set min, max, divide to get new interval
             scale.setExtent(+fixedMin, +fixedMax);
             scale.setInterval(
                 (fixedMax - fixedMin) / splitNumber
@@ -33936,7 +33936,7 @@ Radar.prototype.update = function (ecModel, api) {
         }
         else if (fixedMin != null) {
             var max;
-            // User set min, expand extent on the other side
+            // custom_user set min, expand extent on the other side
             do {
                 max = fixedMin + interval * splitNumber;
                 scale.setExtent(+fixedMin, max);
@@ -33949,7 +33949,7 @@ Radar.prototype.update = function (ecModel, api) {
         }
         else if (fixedMax != null) {
             var min;
-            // User set min, expand extent on the other side
+            // custom_user set min, expand extent on the other side
             do {
                 min = fixedMax - interval * splitNumber;
                 scale.setExtent(min, +fixedMax);
@@ -46299,7 +46299,7 @@ function getPanelByCover(controller, cover) {
         return true; // Global panel
     }
     var panelId = cover.__brushOption.panelId;
-    // User may give cover without coord sys info,
+    // custom_user may give cover without coord sys info,
     // which is then treated as global panel.
     return panelId != null ? panels[panelId] : true;
 }
@@ -47208,7 +47208,7 @@ SeriesModel.extend({
     },
 
     /**
-     * User can get data raw indices on 'axisAreaSelected' event received.
+     * custom_user can get data raw indices on 'axisAreaSelected' event received.
      *
      * @public
      * @param {string} activeState 'active' or 'inactive' or 'normal'
@@ -57792,7 +57792,7 @@ extendComponentView({
 
     _showOrMove: function (tooltipModel, cb) {
         // showDelay is used in this case: tooltip.enterable is set
-        // as true. User intent to move mouse into tooltip and click
+        // as true. custom_user intent to move mouse into tooltip and click
         // something. `showDelay` makes it easyer to enter the content
         // but tooltip do not move immediately.
         var delay = tooltipModel.get('showDelay');

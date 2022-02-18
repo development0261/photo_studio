@@ -79783,3 +79783,11 @@ textarea.form-control {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+a.header-brand1.admin_logo {
+    font-size: 30px;
+}
+
+a.header-brand1.admin_logo:hover {
+    color: blue;
+}
