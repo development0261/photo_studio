@@ -7,14 +7,7 @@ from django.contrib.postgres.fields import ArrayField
 
 class custom_user(AbstractUser):
     delete_date = models.DateTimeField(null=True, blank=True)
-    confirm_token = models.CharField(null=True, max_length=50)
-    # app_datas = models.CharField(max_length=255, null=True, blank=True)
-    # details = models.CharField(max_length=255, null=True, blank=True)
-    # products = models.CharField(max_length=255, null=True, blank=True)
-    # profiles = models.CharField(max_length=255, null=True, blank=True)
-    # purchases = models.CharField(max_length=255, null=True, blank=True)
-    # tags = models.CharField(max_length=255, null=True, blank=True)
-
+    confirm_token = models.CharField(null=True, blank=True, max_length=50)
 
     class Meta:
         verbose_name_plural = "custom_user"
@@ -133,7 +126,8 @@ class application_data(models.Model):
     Lunch_count = models.IntegerField()
     Push_Notification_Status = models.BooleanField(default=False)
     Library_permission_Status = models.BooleanField(default=False)
-    Latest_Geolocation = models.FloatField(max_length=30)
+    latitude = models.FloatField(blank=True, null=True,max_length=30)
+    longitude = models.FloatField(blank=True, null=True,max_length=30)
     Carrier = models.CharField(max_length=100)
     App_Last_Opened = models.DateTimeField()
     Purchase_attempts = models.IntegerField()

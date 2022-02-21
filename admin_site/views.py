@@ -3,6 +3,9 @@ from home.models import Product, Profile, Purchase, Tag, application_data, custo
 from home.models import custom_user
 from django.apps import apps
 from rest_framework.response import Response
+import json
+from django.http.response import JsonResponse
+from django.core import serializers
 
 # Create your views here.
 total_users = custom_user.objects.all()
@@ -42,20 +45,45 @@ def index(request):
 
 
 def user_model(request):
-    profiles = custom_user.objects.get(username='admin').profile
-    app_datas = custom_user.objects.get(username='admin').application_data
-    details = custom_user.objects.get(username='admin').user_detail
-    products = custom_user.objects.get(username='admin').product
-    purchases = custom_user.objects.get(username='admin').purchase
-    tags = custom_user.objects.get(username='admin').tag
-    data = {"app_datas": app_datas,
-            "details": details,
-            "products": products,
-            "profiles": profiles,
-            "purchases": purchases,
-            "tags": tags
-            }
-    return render(request, "admin_site/user_model.html", {'total_users': total_users, 'data':data})
+    admins = []
+    locals = []
+    for row in total_users:
+        # print(row.profile)
+        if row.is_superuser:
+            admins.append(row)
+        else:
+            locals.append(row)
+    # profiles = custom_user.objects.get(username='admin').profile
+    # app_datas = custom_user.objects.get(username='admin').application_data
+    # details = custom_user.objects.get(username='admin').user_detail
+    # products = custom_user.objects.get(username='admin').product
+    # purchases = custom_user.objects.get(username='admin').purchase
+    # tags = custom_user.objects.get(username='admin').tag
+    # data = {"app_datas": app_datas,
+    #         "details": details,
+    #         "products": products,
+    #         "profiles": profiles,
+    #         "purchases": purchases,
+    #         "tags": tags
+    #         }
+    return render(request, "admin_site/user_model.html", {'total_users': total_users, 'admins': admins, 'locals': locals})
+
+
+# def get_data(request, user):
+#     profiles = custom_user.objects.get(username=user).profile
+#     app_datas = custom_user.objects.get(username=user).application_data
+#     details = custom_user.objects.get(username=user).user_detail
+#     products = custom_user.objects.get(username=user).product
+#     purchases = custom_user.objects.get(username=user).purchase
+#     tags = custom_user.objects.get(username=user).tag
+#     data = {"app_datas": app_datas,
+#             "details": details,
+#             "products": products,
+#             "profiles": profiles,
+#             "purchases": purchases,
+#             "tags": tags
+#             }
+#     return JsonResponse({"data": data})
 
 
 def profile_model(request):
@@ -81,13 +109,52 @@ def tag_model(request):
 def product_model(request):
     return render(request, "admin_site/product_model.html", {'total_products': total_products})
 
-import json
-from django.http.response import JsonResponse
-# from rest_framework import serializers
-from django.core import serializers
-def view_profile(request,info):
-    infolist = info.replace(" ","").split('-')
+
+def view_profile(request, info):
+    infolist = info.replace(" ", "").split('-')
     obj = Profile.objects.filter(name=infolist[2])
     data = serializers.serialize("json", obj)
     data = json.loads(data[1:-1])
-    return JsonResponse({"res":data})
+    return JsonResponse({"res": data})
+
+
+def view_purchase(request, info):
+    infolist = info.replace(" ", "").split('-')
+    obj = Purchase.objects.filter(status=infolist[2])
+    data = serializers.serialize("json", obj)
+    data = json.loads(data[1:-1])
+    return JsonResponse({"res": data})
+
+
+def view_tag(request, info):
+    infolist = info.replace(" ", "").split('-')
+    print(infolist[2])
+    obj1 = Tag.objects.filter(username=1)
+    # obj = Tag.objects.filter(tag=infolist[2])
+    data = serializers.serialize("json", obj1)
+    data = json.loads(data[1:-1])
+    return JsonResponse({"res": data})
+
+
+def view_user_detail(request, info):
+    infolist = info.replace(" ", "").split('-')
+    obj = user_detail.objects.filter(username=1)
+    data = serializers.serialize("json", obj)
+    data = json.loads(data[1:-1])
+    return JsonResponse({"res": data})
+
+
+def view_product(request, info):
+    infolist = info.replace(" ", "").split('-')
+    obj = Product.objects.filter(username=1)
+    data = serializers.serialize("json", obj)
+    data = json.loads(data[1:-1])
+    return JsonResponse({"res": data})
+
+
+def view_app_data(request, info):
+    infolist = info.replace(" ", "").split('-')
+    obj = application_data.objects.filter(UID=infolist[2])
+    data = serializers.serialize("json", obj)
+    data = json.loads(data[1:-1])
+    return JsonResponse({"res": data})

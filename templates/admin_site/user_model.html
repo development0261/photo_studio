@@ -16,10 +16,25 @@
     }
     .main-profile-modal-wrp{
         position: relative;
+        padding: 1rem;
     }
-    .profile-field{position: relative;margin-bottom: 10px;}
-    .profile-field strong{margin-right: 10px;font-size: 18px;}
-    .profile-field label{margin: 0;font-size: 18px;}
+    .profile-field {
+        position: relative;
+    margin-bottom: 10px;
+    width: 100%;
+    display: flex;
+    }
+    .profile-field strong {
+         
+        font-size: 14px;
+         
+        display: inline-block;
+        color:Black;
+        width: 40%;
+    }
+    .profile-field label {
+        width: 60%;
+    }
     .avtar-profile{
         width: 150px;
         height: 150px;
@@ -29,29 +44,76 @@
         height: 100%;
         object-fit: contain;
     }
+    h5#largeModalLabel {
+        font-size: 25px;
+        color: #05c3fb;
+    }
+    #Modal{
+        margin:10px !important;
+    }
+
+    {% comment %} filter_CSS {% endcomment %}
+    .filter_title h3 {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    .filter_title h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #e9edf4;
+    margin-bottom: 0;
+}
+
+
+.filter_box {
+    background-color: #fff;
+    border-radius: 7px;
+}
+
+.filter_body {padding: 1.2rem 1.5rem;}
+h5.filter_title {
+    font-weight: 500;
+}
+.filter_data_list ul li a {
+    color: #2e3138;
+}
+.filter_data_list {
+    margin-top: 10px;
+    border-top: 1px solid #e9edf4;
+    padding-top: 10px;
+}
+.filter_data_list:first-child{
+    border: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+}
+{% comment %} end filter css {% endcomment %}
     </style>
 {% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-12 col-sm-12">
+        <div class="col-lg-8 col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title mb-0">Users</h3>
+                    <h3 class="card-title mb-0">Admin Users</h3>
                 </div>
                 <div class="card-body pt-4">
                     <div class="grid-margin">
                         <div class="">
                             <div class="panel panel-primary">
                                 {% comment %} <div class="tab-menu-heading border-0 p-0">
-                                <div class="tabs-menu1">
-                                    <!-- Tabs -->
-                                    <ul class="nav panel-tabs product-sale">
-                                        <li><a href="#tab5" class="active" data-bs-toggle="tab">All products</a></li>
-                                        <li><a href="#tab6" data-bs-toggle="tab" class="text-dark">Shipped</a></li>
-                                        <li><a href="#tab7" data-bs-toggle="tab" class="text-dark">Pending</a></li>
-                                        <li><a href="#tab8" data-bs-toggle="tab" class="text-dark">Cancelled</a></li>
-                                    </ul>
-                                </div>
+                            <div class="tabs-menu1">
+                                <!-- Tabs -->
+                                <ul class="nav panel-tabs product-sale">
+                                    <li><a href="#tab5" class="active" data-bs-toggle="tab">All products</a></li>
+                                    <li><a href="#tab6" data-bs-toggle="tab" class="text-dark">Shipped</a></li>
+                                    <li><a href="#tab7" data-bs-toggle="tab" class="text-dark">Pending</a></li>
+                                    <li><a href="#tab8" data-bs-toggle="tab" class="text-dark">Cancelled</a></li>
+                                </ul>
+                            </div>
                                 </div> {% endcomment %}
                                 <div class="panel-body tabs-menu-body border-0 pt-0">
                                     <div class="tab-content">
@@ -83,7 +145,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {% for row in total_users %}
+                                                        {% for row in admins %}
                                                             <tr class="border-bottom">
                                                                 <td class="text-center">
                                                                     <div class="mt-0 mt-sm-2 d-block">
@@ -98,12 +160,12 @@
                                                                     </div>
                                                                 </td>
                                                                 <!-- <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">{{row.password}}</h6>
-                                                                </div>
+                                                        <div class="d-flex">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">{{row.password}}</h6>
                                                             </div>
-                                                        </td> -->
+                                                        </div>
+                                                    </td> -->
                                                                 <td>
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
@@ -166,19 +228,19 @@
                                                                     </div>
                                                                 </td>
                                                                 {% comment %} <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.confirm_token}}</h6>
-                                                                </div>
+                                                        <div class="d-flex">
+                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                    {{row.confirm_token}}</h6>
                                                             </div>
+                                                        </div>
                                                                 </td> {% endcomment %}
                                                                 <td>
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
                                                                             <h6 class="mb-0 fs-14 fw-semibold"
                                                                                 id="application_data - {{ data.app_datas }}">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                                                <i class="fa fa-eye " id="{{ row.username }}" aria-hidden="true"></i>
                                                                             </h6>
                                                                         </div>
                                                                     </div>
@@ -187,7 +249,7 @@
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
                                                                             <h6 class="mb-0 fs-14 fw-semibold" id="user_detail - {{ data.details }}">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                                                <i class="fa fa-eye " id="{{ row.username }}" aria-hidden="true"></i>
                                                                             </h6>
                                                                         </div>
                                                                     </div>
@@ -196,7 +258,7 @@
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
                                                                             <h6 class="mb-0 fs-14 fw-semibold" id="Product - {{ data.products }}">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                                                <i class="fa fa-eye " id="{{ row.username }}" aria-hidden="true"></i>
                                                                             </h6>
                                                                         </div>
                                                                     </div>
@@ -205,7 +267,7 @@
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
                                                                             <h6 class="mb-0 fs-14 fw-semibold" id="Profile - {{ data.profiles }}">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                                                <i class="fa fa-eye " id="{{ row.username }}" aria-hidden="true"></i>
                                                                             </h6>
                                                                         </div>
                                                                     </div>
@@ -214,7 +276,7 @@
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
                                                                             <h6 class="mb-0 fs-14 fw-semibold" id="Purchase - {{ data.purchases }}">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                                                <i class="fa fa-eye " id="{{ row.username }}" aria-hidden="true"></i>
                                                                             </h6>
                                                                         </div>
                                                                     </div>
@@ -223,7 +285,7 @@
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
                                                                             <h6 class="mb-0 fs-14 fw-semibold" id="Tag - {{ data.tags }}">
-                                                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                                                <i class="fa fa-eye " id="{{ row.username }}" aria-hidden="true"></i>
                                                                             </h6>
                                                                         </div>
                                                                     </div>
@@ -253,64 +315,300 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <!-- Modal HTML -->
-    <div id="myModal" class="modal fade">
-        <div class="modal-dialog modal-confirm">
-            <div class="modal-content">
-                <div class="modal-header flex-column">
-                    <div class="icon-box">
-                        <i class="material-icons">&#xE5CD;</i>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        Local Users
+                    </h3>
+                </div>
+                <div class="card-body pt-4">
+                    <div class="grid-margin">
+                        <div class="">
+                            <div class="panel panel-primary">
+                                {% comment %} <div class="tab-menu-heading border-0 p-0">
+                                <div class="tabs-menu1">
+                                    <!-- Tabs -->
+                                    <ul class="nav panel-tabs product-sale">
+                                        <li><a href="#tab5" class="active" data-bs-toggle="tab">All products</a></li>
+                                        <li><a href="#tab6" data-bs-toggle="tab" class="text-dark">Shipped</a></li>
+                                        <li><a href="#tab7" data-bs-toggle="tab" class="text-dark">Pending</a></li>
+                                        <li><a href="#tab8" data-bs-toggle="tab" class="text-dark">Cancelled</a></li>
+                                    </ul>
+                                </div>
+                                </div> {% endcomment %}
+                                <div class="panel-body tabs-menu-body border-0 pt-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tab5">
+                                            <div class="table-responsive">
+                                                <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                                                    <thead class="border-top">
+                                                        <tr>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                Id
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                Username
+                                                            </th>
+                                                            <!-- <th class="bg-transparent border-bottom-0">Password</th> -->
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                Firstname
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                Lastname
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                Email Address
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                Active
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                Staff Status
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                Superuser Status
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                Last Login
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                Date Joined
+                                                            </th>
+                                                            {% comment %} <th class="bg-transparent border-bottom-0">Confirm
+                                                            Token</th> {% endcomment %}
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                app_datas
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                details
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                products
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                profiles
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                purchases
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                tags
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                Action
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for i in locals %}
+                                                            <tr class="border-bottom">
+                                                                <td class="text-center">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{ forloop.counter }}
+                                                                        </h6>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="ms-3 mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ i.username }}
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <!-- <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">{{i.password}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td> -->
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ i.first_name }}
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ i.last_name }}
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ i.email }}
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mt-sm-1 d-block">
+                                                                        <span class="badge rounded-pill {% if i.is_active %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{ i.is_active }}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mt-sm-1 d-block">
+                                                                        <span id="colorchange"
+                                                                              class="badge rounded-pill {% if i.is_staff %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{ i.is_staff }}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mt-sm-1 d-block">
+                                                                        <span class="badge rounded-pill {% if i.is_superuser %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{ i.is_superuser }}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ i.last_login }}
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ i.date_joined }}
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                {% comment %} <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{i.confirm_token}}</h6>
+                                                                </div>
+                                                            </div>
+                                                                </td> {% endcomment %}
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold"
+                                                                                id="application_data - {{ data.app_datas }}">
+                                                                                <i class="fa fa-eye " id="{{ i.username }}" aria-hidden="true"></i>
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold" id="user_detail - {{ data.details }}">
+                                                                                <i class="fa fa-eye " id="{{ i.username }}" aria-hidden="true"></i>
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold" id="Product - {{ data.products }}">
+                                                                                <i class="fa fa-eye " id="{{ i.username }}" aria-hidden="true"></i>
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold" id="Profile - {{ data.profiles }}">
+                                                                                <i class="fa fa-eye " id="{{ i.username }}" aria-hidden="true"></i>
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold" id="Purchase - {{ data.purchases }}">
+                                                                                <i class="fa fa-eye " id="{{ i.username }}" aria-hidden="true"></i>
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold" id="Tag - {{ data.tags }}">
+                                                                                <i class="fa fa-eye " id="{{ i.username }}" aria-hidden="true"></i>
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="g-2">
+                                                                        <a class="btn text-primary btn-sm"
+                                                                           data-bs-toggle="tooltip"
+                                                                           data-bs-original-title="Edit"><span class="fe fe-edit fs-14"></span></a>
+                                                                        <a class="trigger-btn text-danger btn-sm"
+                                                                           href="#myModal"
+                                                                           data-bs-toggle="tooltip"
+                                                                           data-bs-original-title="Delete"
+                                                                           data-toggle="modal"><span id="custom_user {{ i.id }}" class="fe fe-trash-2 fs-14"></span></a>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h4 class="modal-title w-100">
-                        Are you sure?
-                    </h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
                 </div>
-                <div class="modal-body">
-                    <p>
-                        Do you really want to delete these records? This process cannot be undone.
-                    </p>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="filter_box">
+                <div class="filter_title">
+                    <h3>
+                        Filter
+                    </h3>
                 </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                        Cancel
-                    </button>
-                    <button type="button" class="btn btn-danger">
-                        Delete
-                    </button>
+                <div class="filter_body">
+                    <div class="filter_data_list">
+                        <h5 class="filter_title">
+                            By gender
+                        </h5>
+                        <ul>
+                            <li>
+                                <a href="#">All</a>
+                            </li>
+                            <li>
+                                <a href="#">Male</a>
+                            </li>
+                            <li>
+                                <a href="#">Female</a>
+                            </li>
+                            <li>
+                                <a href="#">Other</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--  modal  -->
-    {% comment %} <div class="modal fade" tabindex="-1" role="dialog" id="profileModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        Profile <span id="modal_emp_id"></span>
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="profileModalBody">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                        Close
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div> {% endcomment %}
     <!-- Modal -->
     <div class="modal fade bd-example-modal-lg"
-         id="profileModal"
+         id="Modal"
          tabindex="-1"
          role="dialog"
          aria-labelledby="myLargeModalLabel"
@@ -318,158 +616,11 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">
-                        Profile
+                    <h5 class="modal-title" id="largeModalLabel">
                     </h5>
                 </div>
-                <div class="modal-body main-profile-modal-wrp">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <div class="avtar-profile">
-                                    avatar
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <div class="avtar-profile">
-                                    profile_image
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>Name</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>city</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>country</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>created_at</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>D.O.B</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>email</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>fb</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>gender</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>insta</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>lat</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>long</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>mobile</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>pass_forgot</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>pass_update</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>snap</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>updated_at</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>username</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="profile-field">
-                                <strong>website</strong>
-                                <label>Demo</label>
-                            </div>
-                        </div>
-                        
-                    </div>
+                <div class="modalbody main-profile-modal-wrp">
                 </div>
-                {% comment %} avatar: "download_hJfcpYO.jpg"
-                bitmoji: "download_1dQF7sA.jpg"
-                city: "dhdfgh"
-                country: "India"
-                created_at: "2022-02-17T13:30:37.440Z"
-                dob: "2022-02-17"
-                email: "demo@gmail.com"
-                fb: "nvbnvb"
-                gender: "Male"
-                insta: "nvbnvb"
-                lat: 1.02
-                long: 54
-                mobile: "5475467546"
-                name: "Demo"
-                pass_forgot: null
-                pass_update: "2022-02-17"
-                profile_image: "download_gAgPH82.jpg"
-                snap: "fvcnvcb"
-                updated_at: null
-                username: 1
-                website: "nvnvbnvbn" {% endcomment %}
                 <div class="modal-footer">
                     <button type="button"
                             id="closebtn"
@@ -485,25 +636,793 @@
 {% block scripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    {% comment %} <script>
+        $("i.fa.fa-eye").click(function () {
+            id = $(this).attr('id');
+            alert(id);
+        })
+    </script> {% endcomment %}
     <script>
     $("h6").click(function () {
         id = $(this).attr('id')
-        $.ajax({
-            type: "GET",
-            url: `/admin_site/Profile/${id}`,
-            success: function (profileresult) {
-                console.log(profileresult);
-                {% comment %} $(".modal-body").append(`
-                    hkdghuisdgkj
-                `) {% endcomment %}
-                $("#profileModal").modal('show');
-            }
-        })
+        alert(id)
+        if (id.substring(0,7) == 'Profile') {
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/Profile/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`Profile`)
+                    $(".modalbody").append(`
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Profile Image</strong>
+                                <div class="avtar-profile">
+                                    <img src="/media/${data.profile_image}" style="width: 60%;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Avatar</strong>
+                                <div class="avtar-profile">
+                                    <img src="/media/${data.avatar}" style="width: 60%;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Name</strong>
+                                <label>
+                                    ${data.name}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>City</strong>
+                                <label>
+                                    ${data.city}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Country</strong>
+                                <label>
+                                    ${data.country}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Created_at</strong>
+                                <label>
+                                    ${data.created_at}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Date of Birth</strong>
+                                <label>
+                                    ${data.dob}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Email</strong>
+                                <label>
+                                    ${data.email}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Facebook</strong>
+                                <label>
+                                    ${data.fb}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Gender</strong>
+                                <label>
+                                    ${data.gender}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Insta</strong>
+                                <label>
+                                    ${data.insta}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Latitude</strong>
+                                <label>
+                                    ${data.lat}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Longitude</strong>
+                                <label>
+                                    ${data.long}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Mobile</strong>
+                                <label>
+                                    ${data.mobile}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>pass_forgot</strong>
+                                <label>
+                                    ${data.pass_forgot}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>pass_update</strong>
+                                <label>
+                                    ${data.pass_update}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>snap</strong>
+                                <label>
+                                    ${data.snap}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>updated_at</strong>
+                                <label>
+                                    ${data.updated_at}
+                                </label>
+                            </div>
+                        </div>
+                        {% comment %} <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>username</strong>
+                                <label>
+                                    ${data.username}
+                                </label>
+                            </div>
+                        </div> {% endcomment %}
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Website</strong>
+                                <label>
+                                    ${data.website}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    `)
+                    $("#Modal").modal('show');
+                }
+            })
+        } else if(id.substring(0,3) == 'Pur') {
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/Purchase/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`Purchase`)
+                    $(".modalbody").append(`
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Status</strong>
+                                <label>
+                                    ${data.status}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Auto renew status</strong>
+                                <label>
+                                    ${data.auto_renew_status}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Is in billing retry period</strong>
+                                <label>
+                                    ${data.is_in_billing_retry_period}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Is in intro offer period</strong>
+                                <label>
+                                    ${data.is_in_intro_offer_period}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Is trial period</strong>
+                                <label>
+                                    ${data.is_trial_period}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>start date</strong>
+                                <label>
+                                    ${data.start_date}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>End date</strong>
+                                <label>
+                                    ${data.end_date}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Subscription Type</strong>
+                                <label>
+                                    ${data.subscription_type}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    `)
+                    $("#Modal").modal('show');
+                }
+            })
+        } else if (id.substring(0,3) == 'Tag') {
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/Tag/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`Tag`)
+                    $(".modalbody").append(`
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Tags</strong>
+                                <div class="user_tag">
+                                    <label>
+                                        ${data.tag}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `)
+                    $("#Modal").modal('show');
+                }
+            })
+        } else if (id.substring(0,8) == 'user_det') {
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/user_detail/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`User Deatils`)
+                    $(".modalbody").append(`
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Export quality</strong>
+                                <label>
+                                    ${data.export_quality}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Language</strong>
+                                <label>
+                                    ${data.Language}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>User stared templates</strong>
+                                <label>
+                                    ${data.user_stared_templates}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>User stared backgrounds</strong>
+                                <label>
+                                    ${data.user_stared_backgrounds}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>User stared stickers</strong>
+                                <label>
+                                    ${data.user_stared_stickers}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>User stared Textart</strong>
+                                <label>
+                                    ${data.user_stared_Textart}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>User stared colors</strong>
+                                <label>
+                                    ${data.user_stared_colors}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>User stared fonts</strong>
+                                <label>
+                                    ${data.user_stared_fonts}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Most used fonts</strong>
+                                <label>
+                                    ${data.most_used_fonts}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>User custom colors</strong>
+                                <label>
+                                    ${data.user_custom_colors}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Instagram follower</strong>
+                                <label>
+                                    ${data.instagram_follower}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Grid snapping</strong>
+                                <label>
+                                    ${data.grid_snapping}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>User recent text</strong>
+                                <label>
+                                    ${data.user_recent_text}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Appearance mode</strong>
+                                <label>
+                                    ${data.appearance_mode}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Enable iCloud backup</strong>
+                                <label>
+                                    ${data.enable_iCloud_backup}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Save projects automatically</strong>
+                                <label>
+                                    ${data.save_projects_automatically}
+                                </label>
+                            </div>
+                        </div>
+                        {% comment %} <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Save projects on export</strong>
+                                <label>
+                                    ${data.save_projects_on_export}
+                                </label>
+                            </div>
+                        </div> {% endcomment %}
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Notifications permission</strong>
+                                <label>
+                                    ${data.notifications_permission}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>InApp notifications permission</strong>
+                                <label>
+                                    ${data.inApp_notifications_permission}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Photo library permission</strong>
+                                <label>
+                                    ${data.photo_library_permission}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Digital riyals rewards</strong>
+                                <label>
+                                    ${data.digital_riyals_rewards}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Enable touch</strong>
+                                <label>
+                                    ${data.enable_touch}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>App theme</strong>
+                                <label>
+                                    ${data.app_theme}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Always crop</strong>
+                                <label>
+                                    ${data.always_crop}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Signature</strong>
+                                <div class="avtar-profile">
+                                    <img src="/media/${data.signature}" style="width: 60%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `)
+                    $("#Modal").modal('show');
+                }
+            })
+        } else if (id.substring(0,7) == 'Product') {
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/Product/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`Product`)
+                    $(".modalbody").append(`
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>ProductID</strong>
+                                <label>
+                                    ${data.productID}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Product</strong>
+                                <label>
+                                    ${data.product}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>ProductPromo</strong>
+                                <label>
+                                    ${data.productPromo}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>PromoPrice</strong>
+                                <label>
+                                    ${data.promoPrice}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>AnnaulSubProd</strong>
+                                <label>
+                                    ${data.annaulSubProd}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>AnnaulSub</strong>
+                                <label>
+                                    ${data.annaulSub}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>MonthlySubProd</strong>
+                                <label>
+                                    ${data.monthlySubProd}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>MonthlySub</strong>
+                                <label>
+                                    ${data.monthlySub}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>LocaleId</strong>
+                                <label>
+                                    ${data.localeId}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    `)
+                    $("#Modal").modal('show');
+                }
+            })
+        } else if (id.substring(0,3) == 'app') {
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/application_data/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`Application Data`)
+                    $(".modalbody").append(`
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>UID</strong>
+                                <label>
+                                    ${data.UID}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>InApp Products</strong>
+                                <label>
+                                    ${data.inApp_Products}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Purchase date</strong>
+                                <label>
+                                    ${data.Purchase_date}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Purchased product</strong>
+                                <label>
+                                    ${data.Purchased_product}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Device Model</strong>
+                                <label>
+                                    ${data.Device_Model}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Operating system</strong>
+                                <label>
+                                    ${data.operating_system}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Device Storage</strong>
+                                <label>
+                                    ${data.Device_Storage}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Lunch count</strong>
+                                <label>
+                                    ${data.Lunch_count}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Push Notification Status</strong>
+                                <label>
+                                    ${data.Push_Notification_Status}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Library permission Status</strong>
+                                <label>
+                                    ${data.Library_permission_Status}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Latitude</strong>
+                                <label>
+                                    ${data.latitude}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Longitude</strong>
+                                <label>
+                                    ${data.longitude}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Carrier</strong>
+                                <label>
+                                    ${data.Carrier}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>App Last Opened</strong>
+                                <label>
+                                    ${data.App_Last_Opened}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Purchase attempts</strong>
+                                <label>
+                                    ${data.Purchase_attempts}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Grace Period</strong>
+                                <label>
+                                    ${data.Grace_Period}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Remaining grace period days</strong>
+                                <label>
+                                    ${data.Remaining_grace_period_days}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Number of projects</strong>
+                                <label>
+                                    ${data.Number_of_projects}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Total time spent</strong>
+                                <label>
+                                    ${data.Total_time_spent}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Total ads served</strong>
+                                <label>
+                                    ${data.total_ads_served}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Registered user</strong>
+                                <label>
+                                    ${data.Registered_user}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="profile-field">
+                                <strong>Push Notification token</strong>
+                                <label>
+                                    ${data.Push_Notification_token}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    `)
+                    $("#Modal").modal('show');
+                }
+            })
+        }
     });
     </script>
+    
     <script>
         $(document).on('click','#closebtn',function(){
-            $('#profileModal').modal('hide');
+            $('#Modal').modal('hide');
         })
+        $("#Modal").on("hidden.bs.modal", function(){
+            $("#largeModalLabel").html("");
+            $(".modalbody").html("");
+        });
     </script>
 {% endblock scripts %}
