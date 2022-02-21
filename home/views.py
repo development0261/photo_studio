@@ -1,5 +1,7 @@
 
+from xml.dom import ValidationErr
 from django.contrib.auth import get_user_model, login, logout, authenticate
+from django.forms import ValidationError
 from NewProject.settings import TIME_ZONE
 from .models import custom_user
 from .models import Profile, user_detail, application_data, Purchase, Product
@@ -38,6 +40,7 @@ def index(request):
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
+        print(attrs['username'])
         if custom_user.objects.filter(username = attrs['username']).exists():
             if not check_password(attrs['password'],custom_user.objects.get(username = attrs['username']).password):
                 return {"Error":"Invalid Password"}
@@ -243,7 +246,7 @@ def profile(request,para=None):
         name = request.POST['name']
         mobile = request.POST['mobile']
         gender = request.POST['gender']
-        profile_image = request.FILES['profile_image']
+        # profile_image = request.FILES['profile_image']
         date_of_Birth = request.POST['dob']
         city = request.POST['city']
         country = request.POST['country']
@@ -253,8 +256,23 @@ def profile(request,para=None):
         facebook = request.POST['fb']
         instagram = request.POST['insta']
         website = request.POST['website']
-        avatar_image = request.FILES['avatar']
-        bitmoji = request.FILES['bitmoji']
+        # avatar_image = request.FILES['avatar']
+        # bitmoji = request.FILES['bitmoji']
+
+        if 'profile_image' in request.FILES:
+            profile_image = request.FILES['profile_image']
+        else:
+            profile_image = None
+
+        if 'avatar_image' in request.FILES:
+            avatar_image = request.FILES['avatar_image']
+        else:
+            avatar_image = None
+
+        if 'bitmoji' in request.FILES:
+            bitmoji = request.FILES['bitmoji']
+        else:
+            bitmoji = None
 
         user1 = authenticate(username=username, password=password)
         if user1:
@@ -264,11 +282,14 @@ def profile(request,para=None):
             user.mobile = mobile
             user.gender = gender
             user.profile_image = profile_image
-            user.dob = date_of_Birth
+            if date_of_Birth != "":
+                user.dob = date_of_Birth
             user.city = city
             user.country = country.upper()
-            user.lat = user_Latitude
-            user.long = user_Longitude
+            if user_Latitude != "":
+                user.lat = user_Latitude
+            if user_Longitude != "":
+                user.long = user_Longitude
             user.snap = snapchat
             user.fb = facebook
             user.insta = instagram
@@ -289,7 +310,8 @@ def profile(request,para=None):
                 queryset = Profile.objects.all()
                 serializer_class = RegistrationSerializer(queryset, many=True)
                 return Response({'data': serializer_class.data}, status=status.HTTP_200_OK)
-        except:
+        except Exception as e:
+            print(e)
             return Response({'Error': "You are not admin user"}, status=status.HTTP_401_UNAUTHORIZED)
 
 

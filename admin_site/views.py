@@ -48,25 +48,45 @@ def user_model(request):
     admins = []
     locals = []
     for row in total_users:
-        # print(row.profile)
         if row.is_superuser:
             admins.append(row)
         else:
             locals.append(row)
-    # profiles = custom_user.objects.get(username='admin').profile
-    # app_datas = custom_user.objects.get(username='admin').application_data
-    # details = custom_user.objects.get(username='admin').user_detail
-    # products = custom_user.objects.get(username='admin').product
-    # purchases = custom_user.objects.get(username='admin').purchase
-    # tags = custom_user.objects.get(username='admin').tag
-    # data = {"app_datas": app_datas,
-    #         "details": details,
-    #         "products": products,
-    #         "profiles": profiles,
-    #         "purchases": purchases,
-    #         "tags": tags
-    #         }
-    return render(request, "admin_site/user_model.html", {'total_users': total_users, 'admins': admins, 'locals': locals})
+    for i in locals:
+        print(i.profile)
+    try:
+        profiles = custom_user.objects.get(username='Denish').profile
+    except:
+        profiles = False
+    try:
+        app_datas = custom_user.objects.get(username='Denish').application_data
+    except:
+        app_datas = False
+    try:
+        details = custom_user.objects.get(username='Denish').user_detail
+    except:
+        details = False
+    try:
+        products = custom_user.objects.get(username='Denish').product
+    except:
+        products = False
+    try:
+        purchases = custom_user.objects.get(username='Denish').purchase
+    except:
+        purchases = False
+    try:
+        tags = custom_user.objects.get(username='Denish').tag
+    except:
+        tags = False
+
+    data = {"app_datas": app_datas,
+            "details": details,
+            "products": products,
+            "profiles": profiles,
+            "purchases": purchases,
+            "tags": tags
+            }
+    return render(request, "admin_site/user_model.html", {'total_users': total_users, 'admins': admins, 'locals': locals, "data": data})
 
 
 # def get_data(request, user):
@@ -127,13 +147,16 @@ def view_purchase(request, info):
 
 
 def view_tag(request, info):
+    print(custom_user.objects.get(username="Denish").id)
     infolist = info.replace(" ", "").split('-')
-    print(infolist[2])
-    obj1 = Tag.objects.filter(username=1)
+    obj1 = Tag.objects.filter(username=3)
     # obj = Tag.objects.filter(tag=infolist[2])
     data = serializers.serialize("json", obj1)
-    data = json.loads(data[1:-1])
-    return JsonResponse({"res": data})
+    data = json.loads(data)
+    final = []
+    for i in data:
+        final.append(i['fields']['tag'])
+    return JsonResponse({"res": final})
 
 
 def view_user_detail(request, info):
