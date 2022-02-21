@@ -5,278 +5,319 @@
     .row {
         margin-top: 27px !important;
     }
+    {% comment %} filter_CSS {% endcomment %}
+    .filter_title h3 {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    .filter_title h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #e9edf4;
+    margin-bottom: 0;
+    }
+
+
+    .filter_box {
+        background-color: #fff;
+        border-radius: 7px;
+    }
+
+    .filter_body {
+        padding: 1.2rem 1.5rem;
+    }
+    h5.filter_title {
+        font-weight: 500;
+    }
+    .filter_data_list ul li a {
+        color: #2e3138;
+    }
+    .filter_data_list {
+        margin-top: 10px;
+        border-top: 1px solid #e9edf4;
+        padding-top: 10px;
+    }
+    .filter_data_list:first-child{
+        border: none;
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+{% comment %} end filter css {% endcomment %}
 </style>
 {% endblock %}
 {% block content %}
-<div class="row">
-    <div class="col-12 col-sm-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title mb-0">Profiles</h3>
-            </div>
-            <div class="card-body pt-4">
-                <div class="grid-margin">
-                    <div class="">
-                        <div class="panel panel-primary">
-                            {% comment %} <div class="tab-menu-heading border-0 p-0">
-                                <div class="tabs-menu1">
-                                    <!-- Tabs -->
-                                    <ul class="nav panel-tabs product-sale">
-                                        <li><a href="#tab5" class="active" data-bs-toggle="tab">All products</a></li>
-                                        <li><a href="#tab6" data-bs-toggle="tab" class="text-dark">Shipped</a></li>
-                                        <li><a href="#tab7" data-bs-toggle="tab" class="text-dark">Pending</a></li>
-                                        <li><a href="#tab8" data-bs-toggle="tab" class="text-dark">Cancelled</a></li>
-                                    </ul>
-                                </div>
-                            </div> {% endcomment %}
-                            <div class="panel-body tabs-menu-body border-0 pt-0">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="tab5">
-                                        <div class="table-responsive">
-                                            <table id="data-table" class="table table-bordered text-nowrap mb-0">
-                                                <thead class="border-top">
-                                                    <tr>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            uid</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            username</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            name</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            email</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            mobile</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            gender</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            profile image</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            created at</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            pass update</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            pass forgot</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            updated at</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            dob</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            city</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            country</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            lat</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            long</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            snap</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            fb</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            insta</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            website</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            avatar</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            bitmoji</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for row in total_profiles %}
-                                                    <tr class="border-bottom">
-                                                        <td class="text-center">
-                                                            <div class="mt-0 mt-sm-2 d-block">
-                                                                <h6 class="mb-0 fs-14 fw-semibold">
-                                                                    {{row.uid}}</h6>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="ms-3 mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.username}}</h6>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
+    <div class="row">
+        <div class="col-lg-8 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">Profiles</h3>
+                </div>
+                <div class="card-body pt-4">
+                    <div class="grid-margin">
+                        <div class="">
+                            <div class="panel panel-primary">
+                                {% comment %} <div class="tab-menu-heading border-0 p-0">
+                                    <div class="tabs-menu1">
+                                        <!-- Tabs -->
+                                        <ul class="nav panel-tabs product-sale">
+                                            <li><a href="#tab5" class="active" data-bs-toggle="tab">All products</a></li>
+                                            <li><a href="#tab6" data-bs-toggle="tab" class="text-dark">Shipped</a></li>
+                                            <li><a href="#tab7" data-bs-toggle="tab" class="text-dark">Pending</a></li>
+                                            <li><a href="#tab8" data-bs-toggle="tab" class="text-dark">Cancelled</a></li>
+                                        </ul>
+                                    </div>
+                                </div> {% endcomment %}
+                                <div class="panel-body tabs-menu-body border-0 pt-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tab5">
+                                            <div class="table-responsive">
+                                                <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                                                    <thead class="border-top">
+                                                        <tr>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                uid</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                username</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                name</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                email</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                mobile</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                gender</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                profile image</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                created at</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                pass update</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                pass forgot</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                updated at</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                dob</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                city</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                country</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                lat</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                long</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                snap</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                fb</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                insta</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                website</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                avatar</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                bitmoji</th>
+                                                            <th class="bg-transparent border-bottom-0">
+                                                                Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for row in total_profiles %}
+                                                        <tr class="border-bottom">
+                                                            <td class="text-center">
                                                                 <div class="mt-0 mt-sm-2 d-block">
                                                                     <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.name}}</h6>
+                                                                        {{row.uid}}</h6>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.email}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="ms-3 mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.username}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.mobile}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.name}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.gender}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.email}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.profile_image}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.mobile}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.created_at}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.gender}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.pass_update}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.profile_image}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.pass_forgot}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.created_at}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.updated_at}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.pass_update}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.dob}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.pass_forgot}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.city}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.updated_at}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.country}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.dob}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.lat}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.city}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.long}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.country}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.snap}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.lat}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.fb}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.long}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.insta}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.snap}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.website}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.fb}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.avatar}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.insta}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.bitmoji}}</h6>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.website}}</h6>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="g-2">
-                                                                <a class="btn text-primary btn-sm"
-                                                                    data-bs-toggle="tooltip"
-                                                                    data-bs-original-title="Edit"><span
-                                                                        class="fe fe-edit fs-14"></span></a>
-                                                                <a class="btn text-danger btn-sm"
-                                                                    data-bs-toggle="tooltip"
-                                                                    data-bs-original-title="Delete"><span
-                                                                    id="Profile {{row.uid}}" class="fe fe-trash-2 fs-14"></span></a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.avatar}}</h6>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">
+                                                                            {{row.bitmoji}}</h6>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="g-2">
+                                                                    <a class="btn text-primary btn-sm"
+                                                                        data-bs-toggle="tooltip"
+                                                                        data-bs-original-title="Edit"><span
+                                                                            class="fe fe-edit fs-14"></span></a>
+                                                                    <a class="btn text-danger btn-sm"
+                                                                        data-bs-toggle="tooltip"
+                                                                        data-bs-original-title="Delete"><span
+                                                                        id="Profile {{row.uid}}" class="fe fe-trash-2 fs-14"></span></a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -285,9 +326,99 @@
                     </div>
                 </div>
             </div>
+            
+        </div>
+        <div class="col-lg-4">
+            <div class="filter_box">
+                <div class="filter_title">
+                    <h3>
+                        Filter
+                    </h3>
+                </div>
+                <div class="filter_body">
+                    <div class="filter_data_list">
+                        <h5 class="filter_title">
+                            By gender
+                        </h5>
+                        <ul>
+                            <li>
+                                <a href="#">All</a>
+                            </li>
+                            <li>
+                                <a href="#">Male</a>
+                            </li>
+                            <li>
+                                <a href="#">Female</a>
+                            </li>
+                            <li>
+                                <a href="#">Other</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="filter_body">
+                    <div class="filter_data_list">
+                        <h5 class="filter_title">
+                            By country
+                        </h5>
+                        <ul>
+                            <li>
+                                <a href="#">All</a>
+                            </li>
+                            <li>
+                                <a href="#">India</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="filter_body">
+                    <div class="filter_data_list">
+                        <h5 class="filter_title">
+                            By age
+                        </h5>
+                        <ul>
+                            <li>
+                                <a href="#">All</a>
+                            </li>
+                            <li>
+                                <a href="#">20 - 30</a>
+                            </li>
+                            <li>
+                                <a href="#">30 - 40</a>
+                            </li>
+                            <li>
+                                <a href="#">Greater than 40</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="filter_body">
+                    <div class="filter_data_list">
+                        <h5 class="filter_title">
+                            By last password updated
+                        </h5>
+                        <ul>
+                            <li>
+                                <a href="#">All</a>
+                            </li>
+                            <li>
+                                <a href="#">Today</a>
+                            </li>
+                            <li>
+                                <a href="#">Past 7 days</a>
+                            </li>
+                            <li>
+                                <a href="#">This month</a>
+                            </li>
+                            <li>
+                                <a href="#">This year</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}
 <!-- {% block scripts %}
 <script>

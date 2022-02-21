@@ -5,11 +5,48 @@
     .row {
         margin-top: 27px !important;
     }
+    {% comment %} filter_CSS {% endcomment %}
+    {% comment %} .filter_title h3 {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    .filter_title h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #e9edf4;
+    margin-bottom: 0;
+}
+
+
+.filter_box {
+    background-color: #fff;
+    border-radius: 7px;
+}
+
+.filter_body {padding: 1.2rem 1.5rem;}
+h5.filter_title {
+    font-weight: 500;
+}
+.filter_data_list ul li a {
+    color: #2e3138;
+}
+.filter_data_list {
+    margin-top: 10px;
+    border-top: 1px solid #e9edf4;
+    padding-top: 10px;
+}
+.filter_data_list:first-child{
+    border: none;
+    margin-top: 0;
+    padding-top: 0;
+} {% endcomment %}
+{% comment %} end filter css {% endcomment %}
 </style>
 {% endblock %}
 {% block content %}
 <div class="row">
-    <div class="col-12 col-sm-12">
+    <div class="col-lg-12 col-sm-12">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title mb-0">Application data</h3>
@@ -275,6 +312,36 @@
             </div>
         </div>
     </div>
+    {% comment %} <div class="col-lg-4">
+        <div class="filter_box">
+            <div class="filter_title">
+                <h3>
+                    Filter
+                </h3>
+            </div>
+            <div class="filter_body">
+                <div class="filter_data_list">
+                    <h5 class="filter_title">
+                        By gender
+                    </h5>
+                    <ul>
+                        <li>
+                            <a href="#">All</a>
+                        </li>
+                        <li>
+                            <a href="#">Male</a>
+                        </li>
+                        <li>
+                            <a href="#">Female</a>
+                        </li>
+                        <li>
+                            <a href="#">Other</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div> {% endcomment %}
 </div>
 {% endblock %}
 <!-- {% block scripts %}
