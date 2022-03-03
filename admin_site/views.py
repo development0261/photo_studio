@@ -13,8 +13,6 @@ from django.contrib import messages
 from django.core.mail import send_mail
 import string
 import random
-# from captcha.image import ImageCaptcha
-# import glob
 import os
 import re
 from django.core import mail
