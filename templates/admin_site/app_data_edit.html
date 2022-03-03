@@ -1,0 +1,335 @@
+{% extends 'admin_site/base.html' %}
+{% load static %}
+{% block styles %}
+<style>
+    input.btn-primary,
+    button#closebtn {
+        margin-left: 20px;
+        padding: 7px;
+        border-radius: 6px;
+        border: none;
+        background-color: #6c5ffc;
+        line-height: 23px;
+    }
+
+    button#closebtn a {
+        color: #fff;
+
+    }
+
+    .edit_form_title {
+        margin-top: 30px;
+        border-radius: 7px 7px 0 0;
+        background-color: #fff;
+        padding: 1.2rem 1.5rem;
+        border-bottom: 1px solid #e9edf4;
+    }
+
+    .edit_form_title h3 {
+        margin: 0;
+    }
+
+    .form_body {
+        background-color: #fff;
+        padding: 1.2rem 1.5rem;
+        border-radius: 0 0 7px 7px;
+    }
+
+    .profile_field input {
+        border: 1px solid #e9edf4;
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    .profile_field {
+        margin-bottom: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .profile_field strong {
+        color: #282f53;
+        font-size: 15px;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    input:focus-visible {
+        outline: none;
+    }
+
+    .btns {
+        margin-left: 800px;
+    }
+
+    #readonly {
+        background-color: #e9edf4;
+    }
+
+    label#edit_img {
+        font-size: 12px;
+        margin-left: 165px;
+        display: contents;
+    }
+
+    input[type="file"] {
+        width: 172px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="edit_form">
+    <div class="edit_form_title">
+        <h3>Edit Form</h3>
+    </div>
+    <div class="form_body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    {% for row in result %}
+                    <input type="hidden" id="username" name="username" value="{{ row.username }}">
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>UID</strong>
+                            <div class="name">
+                                <input type="text" name="UID" value="{{ row.UID }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>inApp_Products</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="inApp_Products" value="{{ row.inApp_Products }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Purchase_date</strong>
+                            <div class="datetime">
+                                <input type="text" name="Purchase_date" value="{{ row.Purchase_date }}">
+                                {% comment %} currently : <input type="text" name="Purchase_date" value="{{ row.Purchase_date }}"><br>
+                                change : <input type="datetime-local" name="Purchase_date_change"> {% endcomment %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Purchased_product</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="Purchased_product" value="{{ row.Purchased_product }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Device_Model</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="Device_Model" value="{{ row.Device_Model }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>operating_system</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="operating_system" value="{{ row.operating_system }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Device_Storage</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="Device_Storage" value="{{ row.Device_Storage }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Lunch_count</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="number" name="Lunch_count" value="{{ row.Lunch_count }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Registered_user</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="checkbox" id="checkbox" name="Push_Notification_Status" {% if row.Push_Notification_Status %}checked{% endif %}>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Library_permission_Status</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="checkbox" id="checkbox" name="Library_permission_Status" {% if row.Library_permission_Status %}checked{% endif %}>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>latitude</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="number" name="latitude" step="0.01" value="{{ row.latitude }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>longitude</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="number" name="longitude" step="0.01" value="{{ row.longitude }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Carrier</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="Carrier" value="{{ row.Carrier }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>App_Last_Opened</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="inApp_Products" value="{{ row.App_Last_Opened }}">
+
+                                    {% comment %} currently : <input type="text" name="App_Last_Opened" value="{{ row.App_Last_Opened }}"><br>
+                                    change : <input type="datetime-local" name="App_Last_Opened_change"> {% endcomment %}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Purchase_attempts</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="number" name="Purchase_attempts" value="{{ row.Purchase_attempts }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Grace_Period</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="Grace_Period" value="{{ row.Grace_Period }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Remaining_grace_period_days</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="number" name="Remaining_grace_period_days" value="{{ row.Remaining_grace_period_days }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Number_of_projects</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="number" name="Number_of_projects" value="{{ row.Number_of_projects }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Total_time_spent</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="Total_time_spent" value="{{ row.Total_time_spent }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>total_ads_served</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="number" name="total_ads_served" value="{{ row.total_ads_served }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Registered_user</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="checkbox" id="checkbox" name="Registered_user" {% if row.Registered_user %}checked{% endif %}>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="profile_field">
+                            <strong>Push_Notification_token</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="Push_Notification_token" value="{{ row.Push_Notification_token }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="btns">
+                <input type="submit" class="btn-primary" value="Submit">
+                <button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                    <a href="{% url 'application_data' %}">Cancel</a>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+        // $("btn-primary").click(function () {
+        //     alert("Record Updated")
+        // })
+</script>
+{% endblock scripts %}

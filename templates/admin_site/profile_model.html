@@ -1,9 +1,12 @@
 {% extends 'admin_site/base.html' %}
 {% load static %}
 {% block styles %}
-<style>
+    <style>
     .row {
         margin-top: 27px !important;
+    }
+    .profile_name{
+        cursor: pointer;
     }
     {% comment %} filter_CSS {% endcomment %}
     .filter_title h3 {
@@ -42,9 +45,20 @@
         margin-top: 0;
         padding-top: 0;
     }
+    .filter_body a.active {
+        color: #6c5ffc !important;
+    }
 
+    li:hover {
+        background-color: #efeff4;
+    }
+
+    h6:hover {
+        background-color: #efeff4;
+    }
 {% comment %} end filter css {% endcomment %}
-</style>
+
+    </style>
 {% endblock %}
 {% block content %}
     <div class="row">
@@ -75,244 +89,257 @@
                                                 <table id="data-table" class="table table-bordered text-nowrap mb-0">
                                                     <thead class="border-top">
                                                         <tr>
+                                                            <th class="bg-transparent border-bottom-0">profile image</th>
+                                                            {% comment %} <th class="bg-transparent border-bottom-0">uid</th> {% endcomment %}
+                                                            {% comment %} <th class="bg-transparent border-bottom-0">username</th> {% endcomment %}
+                                                            <th class="bg-transparent border-bottom-0">name</th>
+                                                            <th class="bg-transparent border-bottom-0">email</th>
+                                                            {% comment %} <th class="bg-transparent border-bottom-0">mobile</th>
+                                                            <th class="bg-transparent border-bottom-0">gender</th> {% endcomment %}
+                                                            <th class="bg-transparent border-bottom-0">Registration date</th>
+                                                            {% comment %} <th class="bg-transparent border-bottom-0">pass update</th>
+                                                            <th class="bg-transparent border-bottom-0">pass forgot</th>
+                                                            <th class="bg-transparent border-bottom-0">updated at</th>
+                                                            <th class="bg-transparent border-bottom-0">dob</th> {% endcomment %}
+                                                            <th class="bg-transparent border-bottom-0">city</th>
+                                                            <th class="bg-transparent border-bottom-0">country</th>
+                                                            {% comment %} <th class="bg-transparent border-bottom-0">lat</th>
+                                                            <th class="bg-transparent border-bottom-0">long</th>
+                                                            <th class="bg-transparent border-bottom-0">snap</th>
+                                                            <th class="bg-transparent border-bottom-0">fb</th>
+                                                            <th class="bg-transparent border-bottom-0">insta</th>
+                                                            <th class="bg-transparent border-bottom-0">website</th>
+                                                            <th class="bg-transparent border-bottom-0">avatar</th>
                                                             <th class="bg-transparent border-bottom-0">
-                                                                uid</th>
+                                                                bitmoji
+                                                            </th> {% endcomment %}
                                                             <th class="bg-transparent border-bottom-0">
-                                                                username</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                name</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                email</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                mobile</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                gender</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                profile image</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                created at</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                pass update</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                pass forgot</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                updated at</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                dob</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                city</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                country</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                lat</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                long</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                snap</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                fb</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                insta</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                website</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                avatar</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                bitmoji</th>
-                                                            <th class="bg-transparent border-bottom-0">
-                                                                Action</th>
+                                                                Action
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {% for row in total_profiles %}
-                                                        <tr class="border-bottom">
-                                                            <td class="text-center">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.uid}}</h6>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="ms-3 mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.username}}</h6>
+                                                            <tr class="border-bottom"> 
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {% if row.profile_image %}
+                                                                                <img src="/media/{{ row.profile_image }}" style="width: 40%;">
+                                                                                {% else %}
+                                                                                None
+                                                                                {% endif %}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
+                                                                </td>
+                                                                {% comment %} <td class="text-center">
                                                                     <div class="mt-0 mt-sm-2 d-block">
                                                                         <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.name}}</h6>
+                                                                            {{ row.uid }}
+                                                                        </h6>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.email}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="ms-3 mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.username }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.mobile}}</h6>
+                                                                </td> {% endcomment %}
+                                                                <td class="text-center">
+                                                                    <div class="d-flex profile_name" id="Profile - {{row.username}} - {{ row.name }}">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.name }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.gender}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.email }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.profile_image}}</h6>
+                                                                </td>
+                                                                {% comment %} <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.mobile }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.created_at}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.gender }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.pass_update}}</h6>
+                                                                </td> {% endcomment %}
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.created_at }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.pass_forgot}}</h6>
+                                                                </td>
+                                                                {% comment %} <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.pass_update }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.updated_at}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.pass_forgot }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.dob}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.updated_at }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.city}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.dob }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.country}}</h6>
+                                                                </td> {% endcomment %}
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.city }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.lat}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.country }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.long}}</h6>
+                                                                </td>
+                                                                {% comment %} <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.lat }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.snap}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.long }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.fb}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.snap }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.insta}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.fb }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.website}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.insta }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.avatar}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.website }}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="mt-0 mt-sm-2 d-block">
-                                                                        <h6 class="mb-0 fs-14 fw-semibold">
-                                                                            {{row.bitmoji}}</h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {% if row.avatar %}
+                                                                                <img src="/media/{{ row.avatar }}" style="width: 40%;">
+                                                                                {% else %}
+                                                                                None
+                                                                                {% endif %}
+                                                                            </h6>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="g-2">
-                                                                    <a class="btn text-primary btn-sm"
-                                                                        data-bs-toggle="tooltip"
-                                                                        data-bs-original-title="Edit"><span
-                                                                            class="fe fe-edit fs-14"></span></a>
-                                                                    <a class="btn text-danger btn-sm"
-                                                                        data-bs-toggle="tooltip"
-                                                                        data-bs-original-title="Delete"><span
-                                                                        id="Profile {{row.uid}}" class="fe fe-trash-2 fs-14"></span></a>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {% if row.bitmoji %}
+                                                                                <img src="/media/{{ row.bitmoji }}" style="width: 40%;">
+                                                                                {% else %}
+                                                                                None
+                                                                                {% endif %}
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td> {% endcomment %}
+                                                                <td class="text-center">
+                                                                    <div class="g-2">
+                                                                        <a href="/admin_site/ProfileEdit/Profile {{ row.uid }}" class="btn text-primary btn-sm"
+                                                                           data-bs-toggle="tooltip"
+                                                                           data-bs-original-title="Edit"><span class="fe fe-edit fs-14"></span></a>
+                                                                        <a class="btn text-danger btn-sm"
+                                                                           data-bs-toggle="tooltip"
+                                                                           data-bs-original-title="Delete"><span id="Profile {{ row.uid }}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
                                                         {% endfor %}
                                                     </tbody>
                                                 </table>
@@ -325,7 +352,6 @@
                     </div>
                 </div>
             </div>
-            
         </div>
         <div class="col-lg-4">
             <div class="filter_box">
@@ -335,82 +361,86 @@
                     </h3>
                 </div>
                 <div class="filter_body">
+                    <h6>
+                        <a href="{% url 'Profile' %}" id="Clear all filters" class="active"><i class="fa fa-close"></i> Clear all
+                            filters</a>
+                    </h6>
                     <div class="filter_data_list">
                         <h5 class="filter_title">
                             By gender
                         </h5>
                         <ul>
                             <li>
-                                <a href="#">All</a>
+                                <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
                             </li>
                             <li>
-                                <a href="#">Male</a>
+                                <a href="{% url 'Profile' %}?filter=Male" {% if request.GET.filter == 'Male' %} class="active" {% endif %}>Male</a>
                             </li>
                             <li>
-                                <a href="#">Female</a>
+                                <a href="{% url 'Profile' %}?filter=Female" {% if request.GET.filter == 'Female' %} class="active" {% endif %}>Female</a>
                             </li>
                             <li>
-                                <a href="#">Other</a>
+                                <a href="{% url 'Profile' %}?filter=Other" {% if request.GET.filter == 'Other' %} class="active" {% endif %}>Other</a>
                             </li>
                         </ul>
                     </div>
-                </div>
-                <div class="filter_body">
+                
                     <div class="filter_data_list">
                         <h5 class="filter_title">
                             By country
                         </h5>
                         <ul>
                             <li>
-                                <a href="#">All</a>
+                                <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
                             </li>
                             <li>
-                                <a href="#">India</a>
+                                <a href="{% url 'Profile' %}?filter=India" {% if request.GET.filter == 'India' %} class="active" {% endif %}>India</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Profile' %}?filter=USA" {% if request.GET.filter == 'USA' %} class="active" {% endif %}>USA</a>
                             </li>
                         </ul>
                     </div>
-                </div>
-                <div class="filter_body">
+                
                     <div class="filter_data_list">
                         <h5 class="filter_title">
                             By age
                         </h5>
                         <ul>
                             <li>
-                                <a href="#">All</a>
+                                <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
                             </li>
                             <li>
-                                <a href="#">20 - 30</a>
+                                <a href="{% url 'Profile' %}?filter=twenty" {% if request.GET.filter == 'twenty' %} class="active" {% endif %}>20 - 30</a>
                             </li>
                             <li>
-                                <a href="#">30 - 40</a>
+                                <a href="{% url 'Profile' %}?filter=thirty" {% if request.GET.filter == 'thirty' %} class="active" {% endif %}>30 - 40</a>
                             </li>
                             <li>
-                                <a href="#">Greater than 40</a>
+                                <a href="{% url 'Profile' %}?filter=greater" {% if request.GET.filter == 'greater' %} class="active" {% endif %}>Greater than 40</a>
                             </li>
                         </ul>
                     </div>
-                </div>
-                <div class="filter_body">
+                
                     <div class="filter_data_list">
                         <h5 class="filter_title">
                             By last password updated
                         </h5>
                         <ul>
                             <li>
-                                <a href="#">All</a>
+                                <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
                             </li>
                             <li>
-                                <a href="#">Today</a>
+                                <a href="{% url 'Profile' %}?filter=today" {% if request.GET.filter == 'today' %} class="active" {% endif %}>Today</a>
                             </li>
                             <li>
-                                <a href="#">Past 7 days</a>
+                                <a href="{% url 'Profile' %}?filter=seven" {% if request.GET.filter == 'seven' %} class="active" {% endif %}>Past 7 days</a>
                             </li>
                             <li>
-                                <a href="#">This month</a>
+                                <a href="{% url 'Profile' %}?filter=month" {% if request.GET.filter == 'month' %} class="active" {% endif %}>This month</a>
                             </li>
                             <li>
-                                <a href="#">This year</a>
+                                <a href="{% url 'Profile' %}?filter=year" {% if request.GET.filter == 'year' %} class="active" {% endif %}>This year</a>
                             </li>
                         </ul>
                     </div>
@@ -418,12 +448,258 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg" id="Modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="largeModalLabel">
+                </h5>
+            </div>
+            <div class="modalbody main-profile-modal-wrp">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
+
 {% endblock %}
-<!-- {% block scripts %}
-<script>
-    $(".fe-trash-2").click(function () {
-        id = $(this).attr('id')
-        alert(id);
-    });
-</script>
-{% endblock scripts %} -->
+{% block scripts %}
+    import swal from 'sweetalert2';
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
+    {% comment %} delete data {% endcomment %}
+    <script>
+        $(".delete_class").click(function () {
+            delete_id = $(this).attr('id')
+            alert(delete_id)
+
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this Account!",
+                icon: "warning",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Delete',
+                denyButtonText: `Don't save`,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    window.location.href = "/admin_site/DeleteProfile/" + delete_id
+                }
+            }).catch(swal.noop);
+        });
+
+    </script>
+    {% comment %} filters {% endcomment %}
+    <script>
+        $('.filter_body a').on('click', function () {
+            $('.filter_body a.active').removeClass('active');
+            $(this).addClass('active');
+        });
+    </script>
+
+    {% comment %} view modal {% endcomment %}
+    <script>
+        $('.profile_name').on('click', function () {
+            id = $(this).attr('id')
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/Profile/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`Profile`)
+                    $(".modalbody").append(`
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Profile Image</strong>
+                                        <div class="avtar-profile">
+                                            <img src="/media/${data.profile_image}" style="width: 60%;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Avatar</strong>
+                                        <div class="avtar-profile">
+                                            <img src="/media/${data.avatar}" style="width: 60%;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Name</strong>
+                                        <label>
+                                            ${data.name}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>City</strong>
+                                        <label>
+                                            ${data.city}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Country</strong>
+                                        <label>
+                                            ${data.country}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Created_at</strong>
+                                        <label>
+                                            ${data.created_at}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Date of Birth</strong>
+                                        <label>
+                                            ${data.dob}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Email</strong>
+                                        <label>
+                                            ${data.email}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Facebook</strong>
+                                        <label>
+                                            ${data.fb}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Gender</strong>
+                                        <label>
+                                            ${data.gender}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Insta</strong>
+                                        <label>
+                                            ${data.insta}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Latitude</strong>
+                                        <label>
+                                            ${data.lat}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Longitude</strong>
+                                        <label>
+                                            ${data.long}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Mobile</strong>
+                                        <label>
+                                            ${data.mobile}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Password forgot</strong>
+                                        <label>
+                                            ${data.pass_forgot}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Pass update</strong>
+                                        <label>
+                                            ${data.pass_update}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Snap</strong>
+                                        <label>
+                                            ${data.snap}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Updated at</strong>
+                                        <label>
+                                            ${data.updated_at}
+                                        </label>
+                                    </div>
+                                </div>
+                                {% comment %} <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Username</strong>
+                                        <label>
+                                            ${data.username}
+                                        </label>
+                                    </div>
+                                </div> {% endcomment %}
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Website</strong>
+                                        <label>
+                                            ${data.website}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            `)
+                    $("#Modal").modal('show');
+                }
+            })
+        });
+    </script>
+
+    {% comment %} refresh and close view modal {% endcomment %}
+    <script>
+        $(document).on('click', '#closebtn', function () {
+            $('#Modal').modal('hide');
+        })
+        $("#Modal").on("hidden.bs.modal", function () {
+            $("#largeModalLabel").html("");
+            $(".modalbody").html("");
+            $(".modal-footer").html(`<button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                    </button>`);
+        });
+    </script>
+
+
+{% endblock scripts %}

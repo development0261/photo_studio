@@ -126,7 +126,7 @@
     padding: 5px 3px;
     text-align: left;
     font-weight: normal;
-    background: transparent!important
+    background: transparent !important
 }
 
 .evo-palette-ie td {
@@ -182,7 +182,7 @@
 
 .evo-colorbox-ie {
     font-size: 8px;
-    padding: 3px 9px!important
+    padding: 3px 9px !important
 }
 
 .evo-colortxt-ie {
@@ -451,10 +451,12 @@ a.evo-hist {
     .demo_changer {
         top: 0;
     }
+
     .demo_changer .demo-icon {
         height: 40px;
         width: 40px;
     }
+
     .demo_changer i {
         font-size: 17px;
     }
@@ -464,14 +466,17 @@ a.evo-hist {
     .demo_changer {
         top: 0px;
     }
+
     .demo_changer i {
         font-size: 21px;
         margin-top: 8px;
     }
+
     .demo_changer .demo-icon {
         height: 40px;
         width: 40px;
     }
+
     .demo_changer {
         display: block;
     }
@@ -723,89 +728,109 @@ a.evo-hist {
     left: 0;
     right: 0;
 }
-.transparent-mode .demo_changer .form_holder{
+
+.transparent-mode .demo_changer .form_holder {
     background-color: var(--transparent-body);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 .transparent-mode .demo_changer h4 {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.2);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     color: #fff;
 }
-.transparent-mode .demo_changer, .transparent-mode .demo_changer p {
+
+.transparent-mode .demo_changer,
+.transparent-mode .demo_changer p {
     color: rgba(255, 255, 255, 0.8) !important;
 }
-.dark-mode .demo_changer .form_holder{
+
+.dark-mode .demo_changer .form_holder {
     background-color: #2a2a4a;
     border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 .dark-mode .demo_changer h4 {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.2);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     color: #fff;
 }
-.dark-mode .demo_changer, .dark-mode .demo_changer p {
+
+.dark-mode .demo_changer,
+.dark-mode .demo_changer p {
     color: rgba(255, 255, 255, 0.8) !important;
 }
-.dark-mode  .input-color-picker {
+
+.dark-mode .input-color-picker {
     border: 1px solid rgba(255, 255, 255, 0.1);
     background-color: rgba(255, 255, 255, 0.1);
 }
-.dark-mode  .input-dark-color-picker {
+
+.dark-mode .input-dark-color-picker {
     border: 1px solid rgba(255, 255, 255, 0.1);
     background-color: rgba(255, 255, 255, 0.1);
 }
-.dark-mode  .input-transparent-color-picker {
+
+.dark-mode .input-transparent-color-picker {
     border: 1px solid rgba(255, 255, 255, 0.1);
     background-color: rgba(255, 255, 255, 0.1);
 }
-.transparent-mode  .input-color-picker {
+
+.transparent-mode .input-color-picker {
     border: 1px solid rgba(255, 255, 255, 0.5);
     background-color: rgba(255, 255, 255, 0.5);
 }
-.transparent-mode  .input-dark-color-picker {
+
+.transparent-mode .input-dark-color-picker {
     border: 1px solid rgba(255, 255, 255, 0.5);
     background-color: rgba(255, 255, 255, 0.5);
 }
-.transparent-mode  .input-transparent-color-picker {
+
+.transparent-mode .input-transparent-color-picker {
     border: 1px solid rgba(255, 255, 255, 0.5);
     background-color: rgba(255, 255, 255, 0.5);
 }
+
 .transparent-mode .demo_changer img {
     border: 4px solid rgba(255, 255, 255, 0.5);
     background: rgba(255, 255, 255, 0.5);
 }
+
 .dark-mode .demo_changer img {
     border: 4px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.1);
 }
-.bg-img1 .form_holder{
+
+.bg-img1 .form_holder {
     background-image: url(../../images/media/bg-img1.jpg) !important;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
 }
-.bg-img2 .form_holder{
+
+.bg-img2 .form_holder {
     background-image: url(../../images/media/bg-img2.jpg) !important;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
 }
-.bg-img3 .form_holder{
+
+.bg-img3 .form_holder {
     background-image: url(../../images/media/bg-img3.jpg) !important;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
 }
-.bg-img4 .form_holder{
+
+.bg-img4 .form_holder {
     background-image: url(../../images/media/bg-img4.jpg) !important;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
 }
-    
+
 
 
 
@@ -842,16 +867,54 @@ a.evo-hist {
     left: 0px;
     right: inherit;
 }
+
 .rtl.transparent-mode .demo_changer .form_holder {
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     border-left: 0px solid rgba(255, 255, 255, 0.1);
 }
+
 .rtl.dark-mode .demo_changer .form_holder {
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 @media screen and (max-width:991px) {
     .leftmenu-styles {
         display: none;
     }
+}
+
+a.dropdown-item {
+    text-align: center;
+}
+
+span.tooltiptext {
+    visibility: hidden;
+    width: 80px;
+    background-color: #000000eb;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 88%;
+    left: 91%;
+    margin-left: -59px;
+    font-size: 10px;
+}
+
+span.tooltiptext::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+}
+
+i.fa.fa-sign-out:hover span.tooltiptext {
+    visibility: visible;
 }

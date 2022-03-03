@@ -1,7 +1,7 @@
 {% extends 'admin_site/base.html' %}
 {% load static %}
 {% block styles %}
-<style>
+    <style>
     .row {
         margin-top: 27px !important;
     }
@@ -42,20 +42,20 @@ h5.filter_title {
     padding-top: 0;
 } {% endcomment %}
 {% comment %} end filter css {% endcomment %}
-</style>
+    </style>
 {% endblock %}
 {% block content %}
-<div class="row">
-    <div class="col-lg-12 col-sm-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title mb-0">Purchases</h3>
-            </div>
-            <div class="card-body pt-4">
-                <div class="grid-margin">
-                    <div class="">
-                        <div class="panel panel-primary">
-                            {% comment %} <div class="tab-menu-heading border-0 p-0">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">Purchases</h3>
+                </div>
+                <div class="card-body pt-4">
+                    <div class="grid-margin">
+                        <div class="">
+                            <div class="panel panel-primary">
+                                {% comment %} <div class="tab-menu-heading border-0 p-0">
                                 <div class="tabs-menu1">
                                     <!-- Tabs -->
                                     <ul class="nav panel-tabs product-sale">
@@ -65,97 +65,104 @@ h5.filter_title {
                                         <li><a href="#tab8" data-bs-toggle="tab" class="text-dark">Cancelled</a></li>
                                     </ul>
                                 </div>
-                            </div> {% endcomment %}
-                            <div class="panel-body tabs-menu-body border-0 pt-0">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="tab5">
-                                        <div class="table-responsive">
-                                            <table id="data-table" class="table table-bordered text-nowrap mb-0">
-                                                <thead class="border-top">
-                                                    <tr>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            pid</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            username</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            status</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            auto renew status</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            is in billing retry period</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            is in intro offer period</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            is trial period</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for row in total_purchases %}
-                                                    <tr class="border-bottom">
-                                                        <td class="text-center">
-                                                            <div class="mt-0 mt-sm-2 d-block">
-                                                                <h6 class="mb-0 fs-14 fw-semibold">
-                                                                    {{row.pid}}</h6>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="ms-3 mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.username}}</h6>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{row.status}}</h6>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="mt-sm-1 d-block">
-                                                                <span
-                                                                    class="badge rounded-pill {% if row.auto_renew_status %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.auto_renew_status}}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="mt-sm-1 d-block">
-                                                                <span
-                                                                    class="badge rounded-pill {% if row.is_in_billing_retry_period %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.is_in_billing_retry_period}}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="mt-sm-1 d-block">
-                                                                <span
-                                                                    class="badge rounded-pill {% if row.is_in_intro_offer_period %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.is_in_intro_offer_period}}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="mt-sm-1 d-block">
-                                                                <span
-                                                                    class="badge rounded-pill {% if row.is_trial_period %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.is_trial_period}}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="g-2">
-                                                                <a class="btn text-primary btn-sm"
-                                                                    data-bs-toggle="tooltip"
-                                                                    data-bs-original-title="Edit"><span
-                                                                        class="fe fe-edit fs-14"></span></a>
-                                                                <a class="btn text-danger btn-sm"
-                                                                    data-bs-toggle="tooltip"
-                                                                    data-bs-original-title="Delete"><span
-                                                                    id="Purchase {{row.pid}}" class="fe fe-trash-2 fs-14"></span></a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
+                                </div> {% endcomment %}
+                                <div class="panel-body tabs-menu-body border-0 pt-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tab5">
+                                            <div class="table-responsive">
+                                                <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                                                    <thead class="border-top">
+                                                        <tr>
+                                                            <th class="bg-transparent border-bottom-0">pid</th>
+                                                            <th class="bg-transparent border-bottom-0">username</th>
+                                                            <th class="bg-transparent border-bottom-0">status</th>
+                                                            <th class="bg-transparent border-bottom-0">auto renew status</th>
+                                                            <th class="bg-transparent border-bottom-0">is in billing retry period</th>
+                                                            <th class="bg-transparent border-bottom-0">is in intro offer period</th>
+                                                            <th class="bg-transparent border-bottom-0">is trial period</th>
+                                                            <th class="bg-transparent border-bottom-0">start date</th>
+                                                            <th class="bg-transparent border-bottom-0">end date</th>
+                                                            <th class="bg-transparent border-bottom-0">subscription type</th>
+                                                            <th class="bg-transparent border-bottom-0">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for row in total_purchases %}
+                                                            <tr class="border-bottom">
+                                                                <td class="text-center">
+                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                        <h6 class="mb-0 fs-14 fw-semibold">{{ row.pid }}</h6>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="ms-3 mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">{{ row.username }}</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">{{ row.status }}</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mt-sm-1 d-block">
+                                                                        <span class="badge rounded-pill {% if row.auto_renew_status %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{ row.auto_renew_status }}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mt-sm-1 d-block">
+                                                                        <span class="badge rounded-pill {% if row.is_in_billing_retry_period %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{ row.is_in_billing_retry_period }}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mt-sm-1 d-block">
+                                                                        <span class="badge rounded-pill {% if row.is_in_intro_offer_period %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{ row.is_in_intro_offer_period }}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mt-sm-1 d-block">
+                                                                        <span class="badge rounded-pill {% if row.is_trial_period %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{ row.is_trial_period }}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">{{ row.start_date }}</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">{{ row.end_date }}</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">{{ row.subscription_type }}</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="g-2">
+                                                                        <a href="/admin_site/EditPurchase/Purchase {{ row.pid }}" class="btn text-primary btn-sm"                                                                           data-bs-toggle="tooltip"
+                                                                           data-bs-original-title="Edit"><span class="fe fe-edit fs-14"></span></a>
+                                                                        <a class="btn text-danger btn-sm"
+                                                                           data-bs-toggle="tooltip"
+                                                                           data-bs-original-title="Delete"><span id="Purchase {{ row.pid }}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -165,13 +172,10 @@ h5.filter_title {
                 </div>
             </div>
         </div>
-    </div>
-    {% comment %} <div class="col-lg-4">
+        {% comment %} <div class="col-lg-4">
         <div class="filter_box">
             <div class="filter_title">
-                <h3>
-                    Filter
-                </h3>
+                <h3>Filter</h3>
             </div>
             <div class="filter_body">
                 <div class="filter_data_list">
@@ -195,14 +199,37 @@ h5.filter_title {
                 </div>
             </div>
         </div>
-    </div> {% endcomment %}
-</div>
+        </div> {% endcomment %}
+    </div>
 {% endblock %}
-<!-- {% block scripts %}
-<script>
-    $(".fe-trash-2").click(function () {
-        id = $(this).attr('id')
-        alert(id);
-    });
-</script>
-{% endblock scripts %} -->
+{% block scripts %}
+    import swal from 'sweetalert2';
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
+    <script>
+        $(".delete_class").click(function () {
+            delete_id = $(this).attr('id')
+            alert(delete_id)
+
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this Account!",
+                icon: "warning",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Delete',
+                denyButtonText: `Don't save`,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    window.location.href = "/admin_site/DeletePurchase/" + delete_id
+                }
+            }).catch(swal.noop);
+        });
+
+    </script>
+{% endblock scripts %}

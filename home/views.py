@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.forms import ValidationError
 from NewProject.settings import TIME_ZONE
 from .models import custom_user
-from .models import Profile, user_detail, application_data, Purchase, Product
+from .models import Profile, user_preference, application_data, Purchase, Product
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -32,18 +32,12 @@ for row in users_obj:
         users_obj.delete()
 
 
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-def index(request):
-    return Response({"Message": "Welcome"}, status=status.HTTP_200_OK)
-
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         print(attrs['username'])
-        if custom_user.objects.filter(username = attrs['username']).exists():
-            if not check_password(attrs['password'],custom_user.objects.get(username = attrs['username']).password):
-                return {"Error":"Invalid Password"}
+        if custom_user.objects.filter(username=attrs['username']).exists():
+            if not check_password(attrs['password'], custom_user.objects.get(username=attrs['username']).password):
+                return {"Error": "Invalid Password"}
             else:
                 data = super().validate(attrs)
                 serializer = UserSerializerWithToken(self.user).data
@@ -51,8 +45,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
                     data[k] = v
                 return data
         else:
-            return {"Error":"Account with this username is not exists"}
-            
+            return {"Error": "Account with this username is not exists"}
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -75,6 +68,9 @@ def register(request):
         name = request.POST['name']
         mobile = request.POST['mobile']
         gender = request.POST['gender']
+        social_token = request.POST['social_token']
+        social_registration = request.POST['social_registration']
+        social_account = request.POST['social_account']
 
         if 'profile_image' in request.FILES:
             profile_image = request.FILES['profile_image']
@@ -82,21 +78,24 @@ def register(request):
         if not custom_user.objects.filter(username=username).exists():
             if len(username) > 5:
                 if not custom_user.objects.filter(email=email).exists():
-                    if len(mobile)>0:
-                        if not Profile.objects.filter(mobile=mobile).exists() and len(mobile)>0:
+                    if len(mobile) > 0:
+                        if not Profile.objects.filter(mobile=mobile).exists() and len(mobile) > 0:
                             if(re.fullmatch(for_email, email)):
                                 pat = re.compile(reg)
                                 mat = re.search(pat, password)
                                 if mat:
-                                    user = custom_user.objects.create_user(
-                                        username=username, password=password, email=email)
-                                    user.save()
-                                    data = Profile(
-                                        username=user, name=name, mobile=mobile, gender=gender.upper())
-                                    if 'profile_image' in request.FILES:
-                                        data.profile_image = profile_image
-                                    data.save()
-                                    return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
+                                    if len(social_token)>0 and len(social_registration) and len(social_account)>0:
+                                        user = custom_user.objects.create_user(
+                                            username=username, password=password, email=email)
+                                        user.save()
+                                        data = Profile(
+                                            username=user, name=name, mobile=mobile, gender=gender.upper(), social_token=social_token, social_registration=social_registration, social_account=social_account)
+                                        if 'profile_image' in request.FILES:
+                                            data.profile_image = profile_image
+                                        data.save()
+                                        return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
+                                    else:
+                                        return Response({"Error": "Enter valid social_token,social_registration and social_account!"}, status=status.HTTP_400_BAD_REQUEST)
                                 else:
                                     return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                             else:
@@ -108,15 +107,18 @@ def register(request):
                             pat = re.compile(reg)
                             mat = re.search(pat, password)
                             if mat:
-                                user = custom_user.objects.create_user(
-                                    username=username, password=password, email=email)
-                                user.save()
-                                data = Profile(
-                                    username=user, name=name, mobile=mobile, gender=gender.upper())
-                                if 'profile_image' in request.FILES:
-                                    data.profile_image = profile_image
-                                data.save()
-                                return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
+                                if len(social_token)>0 and len(social_registration) and len(social_account)>0:
+                                    user = custom_user.objects.create_user(
+                                        username=username, password=password, email=email)
+                                    user.save()
+                                    data = Profile(
+                                        username=user, name=name, mobile=mobile, gender=gender.upper())
+                                    if 'profile_image' in request.FILES:
+                                        data.profile_image = profile_image
+                                    data.save()
+                                    return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
+                                else:
+                                    return Response({"Error": "Enter valid social_token,social_registration and social_account!"}, status=status.HTTP_400_BAD_REQUEST)
                             else:
                                 return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                         else:
@@ -127,6 +129,7 @@ def register(request):
                 return Response({"Error": "Username length must be greater than 6"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"Error": "custom_user Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def send_link(request):
@@ -141,36 +144,32 @@ def send_link(request):
             Link = 'http://185.146.21.235:7800/home/forgot_password/'
             characters = string.ascii_letters + string.digits + punctuation
             token = ''.join(random.choice(characters) for i in range(50))
-            encrypted_token = base64.b64encode(token.encode("ascii")).decode("ascii")
+            encrypted_token = base64.b64encode(
+                token.encode("ascii")).decode("ascii")
             user = custom_user.objects.get(email=email)
             user.confirm_token = token
             user.save()
 
-            # send_mail(
-            #     'Forgot password',
-            #     "Go to Link : " + Link + " and enter token : " + token,
-            #     'demo.logixbuiltinfo@gmail.com',
-            #     fail_silently=False,
-            #     recipient_list=recipient_list
-            # )
             from django.core import mail
             from django.template.loader import render_to_string
             from django.utils.html import strip_tags
 
             subject = 'Forgot Password'
-            html_message = render_to_string('mail_template.html', {'token': f'{Link}{encrypted_token}'})
+            html_message = render_to_string(
+                'mail_template.html', {'token': f'{Link}{encrypted_token}'})
             plain_message = strip_tags(html_message)
             from_email = 'From <demo.logixbuiltinfo@gmail.com>'
             to = recipient_list[0]
 
-            mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+            mail.send_mail(subject, plain_message, from_email,
+                           [to], html_message=html_message)
             return Response({"Success": "Check Your email for Forgot Password"}, status=status.HTTP_200_OK)
         else:
             return Response({"Error": "custom_user Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
-def forgot_password(request,t):
+def forgot_password(request, t):
     if request.method == "POST":
         decrypted_token = base64.b64decode(t).decode("ascii")
         email = request.POST['email']
@@ -236,9 +235,9 @@ def update_password(request):
             return Response({"Error": "custom_user Not Exist with this username"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def profile(request,para=None):
+def profile(request, para=None):
     if request.method == "POST":
         username = request.POST['username']
         email = request.POST['email']
@@ -301,18 +300,6 @@ def profile(request,para=None):
             return Response({"Success": "Profile Updated"}, status=status.HTTP_200_OK)
         else:
             return Response({"Error": "custom_user Not Exist with this username and password"}, status=status.HTTP_401_UNAUTHORIZED)
-
-    elif request.method == "GET":
-        username = request.GET['username']
-        try:
-            user1 = custom_user.objects.filter(username=username).first()
-            if user1.is_superuser:
-                queryset = Profile.objects.all()
-                serializer_class = RegistrationSerializer(queryset, many=True)
-                return Response({'data': serializer_class.data}, status=status.HTTP_200_OK)
-        except Exception as e:
-            print(e)
-            return Response({'Error': "You are not admin user"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET'])
@@ -382,68 +369,69 @@ def details(request):
         app_theme = request.POST['app_theme']
         always_crop = request.POST['always_crop']
 
-        user = custom_user.objects.get(username=username)
         try:
-            if user:
-                data = user_detail(username=user,
-                                   signature=signature,
-                                   export_quality=export_quality,
-                                   Language=Language,
-                                   user_stared_templates=user_stared_templates,
-                                   user_stared_backgrounds=user_stared_backgrounds,
-                                   user_stared_stickers=user_stared_stickers,
-                                   user_stared_Textart=user_stared_Textart,
-                                   user_stared_colors=user_stared_colors,
-                                   user_stared_fonts=user_stared_fonts,
-                                   most_used_fonts=most_used_fonts,
-                                   user_custom_colors=user_custom_colors,
-                                   instagram_follower=instagram_follower,
-                                   grid_snapping=grid_snapping,
-                                   user_recent_text=user_recent_text,
-                                   appearance_mode=appearance_mode,
-                                   enable_iCloud_backup=enable_iCloud_backup,
-                                   save_projects_automatically=save_projects_automatically,
-                                   save_projects_on_export=save_projects_on_export,
-                                   notifications_permission=notifications_permission,
-                                   inApp_notifications_permission=inApp_notifications_permission,
-                                   photo_library_permission=photo_library_permission,
-                                   digital_riyals_rewards=digital_riyals_rewards,
-                                   enable_touch=enable_touch,
-                                   app_theme=app_theme,
-                                   always_crop=always_crop)
-                data.save()
-                return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
+            user = custom_user.objects.get(username=username)
+            try:
+                if user:
+                    data = user_preference(username=user,
+                                    signature=signature,
+                                    export_quality=export_quality,
+                                    Language=Language,
+                                    user_stared_templates=user_stared_templates,
+                                    user_stared_backgrounds=user_stared_backgrounds,
+                                    user_stared_stickers=user_stared_stickers,
+                                    user_stared_Textart=user_stared_Textart,
+                                    user_stared_colors=user_stared_colors,
+                                    user_stared_fonts=user_stared_fonts,
+                                    most_used_fonts=most_used_fonts,
+                                    user_custom_colors=user_custom_colors,
+                                    instagram_follower=instagram_follower,
+                                    grid_snapping=grid_snapping,
+                                    user_recent_text=user_recent_text,
+                                    appearance_mode=appearance_mode,
+                                    enable_iCloud_backup=enable_iCloud_backup,
+                                    save_projects_automatically=save_projects_automatically,
+                                    save_projects_on_export=save_projects_on_export,
+                                    notifications_permission=notifications_permission,
+                                    inApp_notifications_permission=inApp_notifications_permission,
+                                    photo_library_permission=photo_library_permission,
+                                    digital_riyals_rewards=digital_riyals_rewards,
+                                    enable_touch=enable_touch,
+                                    app_theme=app_theme,
+                                    always_crop=always_crop)
+                    data.save()
+                    return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
+            except:
+                details_obj = user_preference.objects.get(username=user.id)
+                details_obj.signature = signature
+                details_obj.export_quality = export_quality
+                details_obj.Language = Language
+                details_obj.user_stared_templates = user_stared_templates
+                details_obj.user_stared_backgrounds = user_stared_backgrounds
+                details_obj.user_stared_stickers = user_stared_stickers
+                details_obj.user_stared_Textart = user_stared_Textart
+                details_obj.user_stared_colors = user_stared_colors
+                details_obj.user_stared_fonts = user_stared_fonts
+                details_obj.most_used_fonts = most_used_fonts
+                details_obj.user_custom_colors = user_custom_colors
+                details_obj.instagram_follower = instagram_follower
+                details_obj.grid_snapping = grid_snapping
+                details_obj.user_recent_text = user_recent_text
+                details_obj.appearance_mode = appearance_mode
+                details_obj.enable_iCloud_backup = enable_iCloud_backup
+                details_obj.save_projects_automatically = save_projects_automatically
+                details_obj.save_projects_on_export = save_projects_on_export
+                details_obj.notifications_permission = notifications_permission
+                details_obj.inApp_notifications_permission = inApp_notifications_permission
+                details_obj.photo_library_permission = photo_library_permission
+                details_obj.digital_riyals_rewards = digital_riyals_rewards
+                details_obj.enable_touch = enable_touch
+                details_obj.app_theme = app_theme
+                details_obj.always_crop = always_crop
+                details_obj.save()
+                return Response({"Success": "User details updated."}, status=status.HTTP_200_OK)
         except:
-            details_obj = user_detail.objects.get(username=user.id)
-            details_obj.signature = signature
-            details_obj.export_quality = export_quality
-            details_obj.Language = Language
-            details_obj.user_stared_templates = user_stared_templates
-            details_obj.user_stared_backgrounds = user_stared_backgrounds
-            details_obj.user_stared_stickers = user_stared_stickers
-            details_obj.user_stared_Textart = user_stared_Textart
-            details_obj.user_stared_colors = user_stared_colors
-            details_obj.user_stared_fonts = user_stared_fonts
-            details_obj.most_used_fonts = most_used_fonts
-            details_obj.user_custom_colors = user_custom_colors
-            details_obj.instagram_follower = instagram_follower
-            details_obj.grid_snapping = grid_snapping
-            details_obj.user_recent_text = user_recent_text
-            details_obj.appearance_mode = appearance_mode
-            details_obj.enable_iCloud_backup = enable_iCloud_backup
-            details_obj.save_projects_automatically = save_projects_automatically
-            details_obj.save_projects_on_export = save_projects_on_export
-            details_obj.notifications_permission = notifications_permission
-            details_obj.inApp_notifications_permission = inApp_notifications_permission
-            details_obj.photo_library_permission = photo_library_permission
-            details_obj.digital_riyals_rewards = digital_riyals_rewards
-            details_obj.enable_touch = enable_touch
-            details_obj.app_theme = app_theme
-            details_obj.always_crop = always_crop
-            details_obj.save()
-            return Response({"Success": "custom_user details updated."}, status=status.HTTP_200_OK)
-        else:
-            return Response({"Error": "custom_user not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET', 'POST'])
@@ -621,6 +609,7 @@ def delete_account(request):
         else:
             return Response({"Error": "custom_user not found"}, status=status.HTTP_401_UNAUTHORIZED)
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def product(request):
@@ -640,16 +629,16 @@ def product(request):
         if user_obj:
             try:
                 product1 = Product.objects.create(
-                    username = user_obj,
-                    productID = productID,
-                    product = product,
-                    productPromo = productPromo,
-                    promoPrice = promoPrice,
-                    annaulSubProd = annaulSubProd,
-                    annaulSub = annaulSub,
-                    monthlySubProd = monthlySubProd,
-                    monthlySub = monthlySub,
-                    localeId = localeId
+                    username=user_obj,
+                    productID=productID,
+                    product=product,
+                    productPromo=productPromo,
+                    promoPrice=promoPrice,
+                    annaulSubProd=annaulSubProd,
+                    annaulSub=annaulSub,
+                    monthlySubProd=monthlySubProd,
+                    monthlySub=monthlySub,
+                    localeId=localeId
                 )
                 return Response({"Success": "Product Details Added."}, status=status.HTTP_200_OK)
 

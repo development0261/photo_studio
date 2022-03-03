@@ -27,6 +27,9 @@ class Profile(models.Model):
     gender = models.CharField(
         max_length=7, choices=GENDER_CHOICES, null=True, blank=True)
     profile_image = models.ImageField(null=True, blank=True)
+    social_token = models.CharField(max_length=255, null=True, blank=True)
+    social_registration = models.CharField(max_length=255, null=True, blank=True)
+    social_account = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     pass_update = models.DateField(blank=True, null=True)
     pass_forgot = models.DateField(blank=True, null=True)
@@ -42,6 +45,7 @@ class Profile(models.Model):
     website = models.CharField(max_length=100, null=True, blank=True)
     avatar = models.ImageField(null=True, blank=True)
     bitmoji = models.ImageField(null=True, blank=True)
+    delete_account = models.BooleanField(default=False) 
 
     def __str__(self):
         return f"{self.username} - {self.name}"
@@ -50,7 +54,7 @@ class Profile(models.Model):
         verbose_name_plural = "Profile"
 
 
-class user_detail(models.Model):
+class user_preference(models.Model):
     udid = models.AutoField(primary_key=True, auto_created=True)
     username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
     signature = models.ImageField(null=True)
@@ -110,7 +114,7 @@ class user_detail(models.Model):
         return f"{self.username} - {self.udid}"
 
     class Meta:
-        verbose_name_plural = "custom_user Detail"
+        verbose_name_plural = "user_preference"
 
 
 class application_data(models.Model):
@@ -129,7 +133,7 @@ class application_data(models.Model):
     latitude = models.FloatField(blank=True, null=True,max_length=30)
     longitude = models.FloatField(blank=True, null=True,max_length=30)
     Carrier = models.CharField(max_length=100)
-    App_Last_Opened = models.DateTimeField()
+    App_Last_Opened = models.DateTimeField(blank=True, null=True)
     Purchase_attempts = models.IntegerField()
     Grace_Period = models.CharField(max_length=100)
     Remaining_grace_period_days = models.IntegerField()
@@ -191,7 +195,7 @@ class Product(models.Model):
     localeId = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.productID} - {self.product}"
+        return f"{self.PID} - {self.product}"
 
     class Meta:
         verbose_name_plural = "Product"

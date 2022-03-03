@@ -15,9 +15,23 @@
         text-decoration: none;
         color: inherit;
     }
+    button.closebutton {
+        margin-left: 757px;
+        border: 1px green;
+    }
 </style>
 {% endblock %}
 {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong id="g_msg">Message : {{message}} </strong>
+            <button class="closebutton" type="button" onclick="parentNode.remove()" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+{% endif %}
 <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
@@ -67,12 +81,12 @@
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
             <div class="card overflow-hidden">
-                <a class="table_link" href="{% url 'user_detail' %}">
+                <a class="table_link" href="{% url 'user_preference' %}">
 
                     <div class="card-body" id="total_details">
                         <div class="d-flex">
                             <div class="mt-2">
-                                <h6 class="">Total User Details</h6>
+                                <h6 class="">Total User Preferences</h6>
                                 <h2 class="mb-0 number-font">{{total_details.count}}</h2>
                             </div>
                             <div class="ms-auto">

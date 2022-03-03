@@ -29,6 +29,8 @@
                                 <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">HOME</span><i class="angle fe fe-chevron-right"></i></a>
                                 <ul class="slide-menu">
                                     <li class="side-menu-label1"><a href="javascript:void(0)">HOME</a></li>
+                                    <li><a href="/admin_site/AdminUsers/" class="slide-item">Admin Users</a></li>
+                                    <li><a href="/admin_site/AppUsers/" class="slide-item">App Users</a></li>
                                     {% for row in home_models %}
                                     <li><a href="/admin_site/{{row}}/" class="slide-item">{{row}}</a></li>
                                     {% endfor %}
