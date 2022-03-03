@@ -444,7 +444,7 @@ def app_data(request):
         Purchase_date = request.POST['Purchase_date']
         Purchased_product = request.POST['Purchased_product']
         Device_Model = request.POST['Device_Model']
-        iOS = request.POST['iOS']
+        operating_system = request.POST['operating_system']
         Device_Storage = request.POST['Device_Storage']
         Lunch_count = request.POST['Lunch_count']
         Push_Notification_Status = request.POST['Push_Notification_Status']
@@ -469,7 +469,7 @@ def app_data(request):
             app_data_obj.Purchase_date = Purchase_date
             app_data_obj.Purchased_product = Purchased_product
             app_data_obj.Device_Model = Device_Model
-            app_data_obj.iOS = iOS
+            app_data_obj.operating_system = operating_system
             app_data_obj.Device_Storage = Device_Storage
             app_data_obj.Lunch_count = Lunch_count
             app_data_obj.Push_Notification_Status = Push_Notification_Status

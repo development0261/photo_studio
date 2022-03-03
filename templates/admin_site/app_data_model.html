@@ -73,17 +73,17 @@ h5.filter_title {
                                             <table id="data-table" class="table table-bordered text-nowrap mb-0">
                                                 <thead class="border-top">
                                                     <tr>
-                                                        <th class="bg-transparent border-bottom-0">UID</th>
+                                                        {% comment %} <th class="bg-transparent border-bottom-0">UID</th> {% endcomment %}
                                                         <th class="bg-transparent border-bottom-0">username</th>
                                                         <th class="bg-transparent border-bottom-0">inApp Products</th>
                                                         <th class="bg-transparent border-bottom-0">Purchase date</th>
-                                                        <th class="bg-transparent border-bottom-0">Purchased product
+                                                        {% comment %} <th class="bg-transparent border-bottom-0">Purchased product
                                                         </th>
-                                                        <th class="bg-transparent border-bottom-0">Device Model</th>
+                                                        <th class="bg-transparent border-bottom-0">Device Model</th> {% endcomment %}
                                                         <th class="bg-transparent border-bottom-0">Operating system</th>
-                                                        <th class="bg-transparent border-bottom-0">Device Storage</th>
+                                                        {% comment %} <th class="bg-transparent border-bottom-0">Device Storage</th> {% endcomment %}
                                                         <th class="bg-transparent border-bottom-0">Lunch count</th>
-                                                        <th class="bg-transparent border-bottom-0">Push Notification
+                                                        {% comment %} <th class="bg-transparent border-bottom-0">Push Notification
                                                             Status</th>
                                                         <th class="bg-transparent border-bottom-0">Library permission
                                                             Status</th>
@@ -92,12 +92,12 @@ h5.filter_title {
                                                         <th class="bg-transparent border-bottom-0">Longitude
                                                         </th>
                                                         <th class="bg-transparent border-bottom-0">Carrier</th>
-                                                        <th class="bg-transparent border-bottom-0">App Last Opened</th>
+                                                        <th class="bg-transparent border-bottom-0">App Last Opened</th> {% endcomment %}
                                                         <th class="bg-transparent border-bottom-0">Purchase attempts
                                                         </th>
-                                                        <th class="bg-transparent border-bottom-0">Grace Period</th>
+                                                        {% comment %} <th class="bg-transparent border-bottom-0">Grace Period</th>
                                                         <th class="bg-transparent border-bottom-0">Remaining grace
-                                                            period days</th>
+                                                            period days</th> {% endcomment %}
                                                         <th class="bg-transparent border-bottom-0">Number of projects
                                                         </th>
                                                         <th class="bg-transparent border-bottom-0">Total time spent</th>
@@ -105,9 +105,9 @@ h5.filter_title {
                                                         <th class="bg-transparent border-bottom-0">
                                                             Registered user
                                                         </th>
-                                                        <th class="bg-transparent border-bottom-0">
+                                                        {% comment %} <th class="bg-transparent border-bottom-0">
                                                             Push Notification token
-                                                        </th>
+                                                        </th> {% endcomment %}
                                                         <th class="bg-transparent border-bottom-0">
                                                             Action
                                                         </th>
@@ -116,13 +116,13 @@ h5.filter_title {
                                                 <tbody>
                                                     {% for row in total_app_datas %}
                                                     <tr class="border-bottom">
-                                                        <td class="text-center">
+                                                        {% comment %} <td class="text-center">
                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                 <h6 class="mb-0 fs-14 fw-semibold">
                                                                     {{ row.UID }}
                                                                 </h6>
                                                             </div>
-                                                        </td>
+                                                        </td> {% endcomment %}
                                                         <td class="text-center">
                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                 <h6 class="mb-0 fs-14 fw-semibold">
@@ -144,7 +144,7 @@ h5.filter_title {
                                                                 </h6>
                                                             </div>
                                                         </td>
-                                                        <td class="text-center">
+                                                        {% comment %} <td class="text-center">
                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                 <h6 class="mb-0 fs-14 fw-semibold">
                                                                     {{ row.Purchased_product }}
@@ -157,21 +157,21 @@ h5.filter_title {
                                                                     {{ row.Device_Model }}
                                                                 </h6>
                                                             </div>
-                                                        </td>
+                                                        </td> {% endcomment %}
                                                         <td class="text-center">
                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                 <h6 class="mb-0 fs-14 fw-semibold">
-                                                                    {{ row.iOS }}
+                                                                    {{ row.operating_system }}
                                                                 </h6>
                                                             </div>
                                                         </td>
-                                                        <td class="text-center">
+                                                        {% comment %} <td class="text-center">
                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                 <h6 class="mb-0 fs-14 fw-semibold">
                                                                     {{ row.Device_Storage }}
                                                                 </h6>
                                                             </div>
-                                                        </td>
+                                                        </td> {% endcomment %}
                                                         <td class="text-center">
                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                 <h6 class="mb-0 fs-14 fw-semibold">
@@ -179,7 +179,7 @@ h5.filter_title {
                                                                 </h6>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        {% comment %} <td>
                                                             <div class="mt-sm-1 d-block">
                                                                 <span
                                                                     class="badge rounded-pill {% if row.Push_Notification_Status %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">
@@ -219,7 +219,7 @@ h5.filter_title {
                                                                     {{ row.App_Last_Opened }}
                                                                 </h6>
                                                             </div>
-                                                        </td>
+                                                        </td> {% endcomment %}
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="ms-3 mt-0 mt-sm-2 d-block">
@@ -229,7 +229,7 @@ h5.filter_title {
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        {% comment %} <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
                                                                     <h6 class="mb-0 fs-14 fw-semibold">
@@ -246,7 +246,7 @@ h5.filter_title {
                                                                     </h6>
                                                                 </div>
                                                             </div>
-                                                        </td>
+                                                        </td> {% endcomment %}
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
@@ -280,7 +280,7 @@ h5.filter_title {
                                                                     class="badge rounded-pill {% if row.Registered_user %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.Registered_user}}</span>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        {% comment %} <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
                                                                     <h6 class="mb-0 fs-14 fw-semibold">
@@ -288,7 +288,7 @@ h5.filter_title {
                                                                     </h6>
                                                                 </div>
                                                             </div>
-                                                        </td>
+                                                        </td> {% endcomment %}
                                                         <td>
                                                             <div class="g-2">
                                                                 <a href="/admin_site/EditAppData/application_data {{row.aid}}" class="btn text-primary btn-sm"
