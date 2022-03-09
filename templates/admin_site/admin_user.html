@@ -500,60 +500,65 @@
                         url: `/admin_site/Purchase/${id}`,
                         success: function (profileresult) {
                             var data = profileresult.res;
-                            $("#largeModalLabel").append(`Purchases`)
-                            $(".modalbody").append(`
-                                <div class="card-body pt-4">
-                                    <div class="grid-margin">
-                                        <div class="panel panel-primary">
-                                            <div class="panel-body tabs-menu-body border-0 pt-0">
-                                                <div class="tab-content">
-                                                    <div class="tab-pane active" id="tab5">
-                                                        <div class="table-responsive">
-                                                            <table id="data-table" class="table table-bordered text-nowrap mb-0">
-                                                                <thead class="border-top">
-                                                                    <tr>
-                                                                        <th class="bg-transparent border-bottom-0 sort_it">Product ID</th>
-                                                                        <th class="bg-transparent border-bottom-0 sort_it">Product</th>
-                                                                        <th class="bg-transparent border-bottom-0 sort_it">View</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    ${data.map((item,index)=>{
-                                                                        return `
+                            if(data.length != 0){
+                                console.log('yesss')
+                                $("#largeModalLabel").append(`Purchases`)
+                                $(".modalbody").append(`
+                                    <div class="card-body pt-4">
+                                        <div class="grid-margin">
+                                            <div class="panel panel-primary">
+                                                <div class="panel-body tabs-menu-body border-0 pt-0">
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane active" id="tab5">
+                                                            <div class="table-responsive">
+                                                                <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                                                                    <thead class="border-top">
                                                                         <tr>
-                                                                            <td class="text-center">
-                                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                                    <h6 class="mb-0 fs-14">${item.fields.productID}
-                                                                                    </h6>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td class="text-center">
-                                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                                    <h6 class="mb-0 fs-14">
-                                                                                        ${item.fields.product}
-                                                                                    </h6>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td class="text-center">
-                                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                                    <h6 class="mb-0 fs-14 drop_items" id="${item.fields.product}">
-                                                                                        <i class="fa fa-eye product_eye"></i>
-                                                                                    </h6>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>`
-                                                                    }).join('')}
-                                                                </tbody>
-                                                            </table>
+                                                                            <th class="bg-transparent border-bottom-0 sort_it">Product ID</th>
+                                                                            <th class="bg-transparent border-bottom-0 sort_it">Product</th>
+                                                                            <th class="bg-transparent border-bottom-0 sort_it">View</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        ${data.map((item,index)=>{
+                                                                            return `
+                                                                            <tr>
+                                                                                <td class="text-center">
+                                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                                        <h6 class="mb-0 fs-14">${item.fields.productID}
+                                                                                        </h6>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td class="text-center">
+                                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                                        <h6 class="mb-0 fs-14">
+                                                                                            ${item.fields.product}
+                                                                                        </h6>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td class="text-center">
+                                                                                    <div class="mt-0 mt-sm-2 d-block">
+                                                                                        <h6 class="mb-0 fs-14 drop_items" id="${item.fields.product}">
+                                                                                            <i class="fa fa-eye product_eye"></i>
+                                                                                        </h6>
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>`
+                                                                        }).join('')}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            `);
-                            $("#Modal").modal('show');
+                                `);
+                                $("#Modal").modal('show');
+                            }else{
+                                alert('There is no data!!!')
+                            }
                         }
                     })
                 } else if (id.substring(0, 3) == 'Tag') {
@@ -1172,7 +1177,7 @@
         });
 
     </script>
-    
+
     {% comment %} refresh and close view modal {% endcomment %}
     <script>
         $(document).on('click', '#closebtn', function () {
