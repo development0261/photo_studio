@@ -501,7 +501,6 @@
                         success: function (profileresult) {
                             var data = profileresult.res;
                             if(data.length != 0){
-                                console.log('yesss')
                                 $("#largeModalLabel").append(`Purchases`)
                                 $(".modalbody").append(`
                                     <div class="card-body pt-4">
@@ -893,7 +892,6 @@
                         url: `/admin_site/application_data/${id}`,
                         success: function (profileresult) {
                             var data = profileresult.res.fields;
-                            console.log(data)
                             $("#largeModalLabel").append(`Application Data`)
                             $(".modalbody").append(`
                                     <div class="row">
@@ -1243,9 +1241,7 @@
             var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
         
             this.asc = !this.asc
-            console.log(this.asc)
             if (this.asc == true) {
-              console.log($(this).children('span').children('.sort-order'))
               $(this).children('span').children('.sort-order').addClass('upOrder')
               $(this).children('span').children('.sort-order').removeClass('downOrder')
         

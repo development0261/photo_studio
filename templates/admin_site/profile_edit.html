@@ -207,7 +207,6 @@
 <script>
     function validateForm() {
         let dob = document.getElementById('dob').value;
-        console.log(dob)
         var datePattern = /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
         if (!dob.match(datePattern)) {
             alert("Please enter Date of birth in yyyy-mm-dd format");

@@ -975,7 +975,6 @@
                         url: `/admin_site/application_data/${id}`,
                         success: function (profileresult) {
                             var data = profileresult.res.fields;
-                            console.log(data)
                             $("#largeModalLabel").append(`Application Data`)
                             $(".modalbody").append(`
                                     <div class="row">
@@ -1313,9 +1312,7 @@
             var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
         
             this.asc = !this.asc
-            console.log(this.asc)
             if (this.asc == true) {
-              console.log($(this).children('span').children('.sort-order'))
               $(this).children('span').children('.sort-order').addClass('upOrder')
               $(this).children('span').children('.sort-order').removeClass('downOrder')
         
@@ -1475,7 +1472,6 @@
         $(document).ready(function(){
             $("select#table_length").change(function(){
                 var data = parseInt($(this).children("option:selected").val());
-                console.log(data, typeof data)
                 if(data==25){
                     makePaginationTable(25)
                 }else if(data==50){
