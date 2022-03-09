@@ -230,8 +230,8 @@
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold"
-                                                                        id="Purchase - {% if not i.purchase %}False{% else %} {{ i.purchase }} {% endif %}">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold view"
+                                                                        id="Purchase - {{ i.username }}">
                                                                         <i class="fa fa-eye " id="{{ i.username }}"
                                                                             aria-hidden="true"></i>
                                                                     </h6>
@@ -499,76 +499,60 @@
                         type: "GET",
                         url: `/admin_site/Purchase/${id}`,
                         success: function (profileresult) {
-                            var data = profileresult.res.fields;
-                            $("#largeModalLabel").append(`Purchase`)
+                            var data = profileresult.res;
+                            $("#largeModalLabel").append(`Purchases`)
                             $(".modalbody").append(`
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>Status</strong>
-                                                <label>
-                                                    ${data.status}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>Auto renew status</strong>
-                                                <label>
-                                                    ${data.auto_renew_status}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>Is in billing retry period</strong>
-                                                <label>
-                                                    ${data.is_in_billing_retry_period}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>Is in intro offer period</strong>
-                                                <label>
-                                                    ${data.is_in_intro_offer_period}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>Is trial period</strong>
-                                                <label>
-                                                    ${data.is_trial_period}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>start date</strong>
-                                                <label>
-                                                    ${data.start_date}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>End date</strong>
-                                                <label>
-                                                    ${data.end_date}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>Subscription Type</strong>
-                                                <label>
-                                                    ${data.subscription_type}
-                                                </label>
+                                <div class="card-body pt-4">
+                                    <div class="grid-margin">
+                                        <div class="panel panel-primary">
+                                            <div class="panel-body tabs-menu-body border-0 pt-0">
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="tab5">
+                                                        <div class="table-responsive">
+                                                            <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                                                                <thead class="border-top">
+                                                                    <tr>
+                                                                        <th class="bg-transparent border-bottom-0 sort_it">Product ID</th>
+                                                                        <th class="bg-transparent border-bottom-0 sort_it">Product</th>
+                                                                        <th class="bg-transparent border-bottom-0 sort_it">View</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    ${data.map((item,index)=>{
+                                                                        return `
+                                                                        <tr>
+                                                                            <td class="text-center">
+                                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                                    <h6 class="mb-0 fs-14">${item.fields.productID}
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="text-center">
+                                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                                    <h6 class="mb-0 fs-14">
+                                                                                        ${item.fields.product}
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="text-center">
+                                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                                    <h6 class="mb-0 fs-14 drop_items" id="${item.fields.product}">
+                                                                                        <i class="fa fa-eye product_eye"></i>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>`
+                                                                    }).join('')}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    `)
+                                </div>
+                            `);
                             $("#Modal").modal('show');
                         }
                     })
@@ -1094,6 +1078,101 @@
         });
     </script>
 
+    {% comment %} specific purchase {% endcomment %}
+    <script>
+        $(document).on("click", ".drop_items", function () {
+            $("#largeModalLabel").html("");
+            $(".modalbody").html("");
+            id = $(this).attr('id');
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/specific_product/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`Product`)
+                    $(".modalbody").append(`
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>ProductID</strong>
+                                        <label>
+                                            ${data.productID}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Product</strong>
+                                        <label>
+                                            ${data.product}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>ProductPromo</strong>
+                                        <label>
+                                            ${data.productPromo}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>PromoPrice</strong>
+                                        <label>
+                                            ${data.promoPrice}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>AnnaulSubProd</strong>
+                                        <label>
+                                            ${data.annaulSubProd}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>AnnaulSub</strong>
+                                        <label>
+                                            ${data.annaulSub}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>MonthlySubProd</strong>
+                                        <label>
+                                            ${data.monthlySubProd}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>MonthlySub</strong>
+                                        <label>
+                                            ${data.monthlySub}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>LocaleId</strong>
+                                        <label>
+                                            ${data.localeId}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            `)
+                    $("#Modal").modal('show');
+                }
+            })
+        });
+
+    </script>
+    
     {% comment %} refresh and close view modal {% endcomment %}
     <script>
         $(document).on('click', '#closebtn', function () {

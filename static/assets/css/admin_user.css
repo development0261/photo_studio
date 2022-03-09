@@ -155,3 +155,12 @@ i.fa.fa-caret-up, i.fa.fa-caret-down {
 .upOrder i.fa.fa-caret-up {
     opacity: 1;
 }
+
+ /* view_products  */
+ th.bg-transparent.border-bottom-0.sort_it {
+    text-align: center;
+    font-weight: bold;
+}
+i.fa.fa-eye.product_eye {
+    color: #05c3fb;
+}
