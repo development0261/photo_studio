@@ -401,11 +401,23 @@ def user_edit(request, para):
             firstname = request.POST['firstname']
             lastname = request.POST['lastname']
             email = request.POST['email']
+            active = request.POST.get('active_user')
+            staff = request.POST.get('staff_user')
+            
 
             obj = custom_user.objects.get(username=username)
             obj.first_name = firstname
             obj.last_name = lastname
             obj.email = email
+            if active == "on":
+                obj.is_active = True
+            else:
+                obj.is_active = False
+
+            if staff == "on":
+                obj.is_staff = True
+            else:
+                obj.is_staff = False
             obj.save()
 
             return redirect('custom_user')

@@ -50,6 +50,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-6">
+                                <div class="profile_field">
+                                    <strong>Active</strong>
+                                    <div class="name">
+                                        <input type="checkbox" id="checkbox" name="active_user" {% if row.is_active %}checked{% endif %}>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile_field">
+                                    <strong>Staff User</strong>
+                                    <div class="name">
+                                        <input type="checkbox" id="checkbox" name="staff_user" {% if row.is_staff %}checked{% endif %}>
+                                    </div>
+                                </div>
+                            </div>
                         {% endfor %}
                     </div>
                 </div>

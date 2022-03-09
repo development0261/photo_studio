@@ -69,7 +69,6 @@
                                                         <th class="bg-transparent border-bottom-0">Email Address</th>
                                                         <th class="bg-transparent border-bottom-0">Active</th>
                                                         <th class="bg-transparent border-bottom-0">Staff Status</th>
-                                                        <th class="bg-transparent border-bottom-0">Superuser Status</th>
                                                         <th class="bg-transparent border-bottom-0 sortit">
                                                             <span style="display:flex">Last Login
                                                                 <div class="sort-order ml-2">
@@ -155,12 +154,6 @@
                                                             <div class="mt-sm-1 d-block">
                                                                 <span id="colorchange"
                                                                     class="badge rounded-pill {% if i.is_staff %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{i.is_staff }}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="mt-sm-1 d-block">
-                                                                <span
-                                                                    class="badge rounded-pill {% if i.is_superuser %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{i.is_superuser }}</span>
                                                             </div>
                                                         </td>
                                                         <td>
