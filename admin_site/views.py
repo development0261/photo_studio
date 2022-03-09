@@ -242,7 +242,8 @@ def view_profile(request, info):
 def view_purchase(request, info):
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split('-')
-        obj = Purchase.objects.filter(status=infolist[0])
+        user_obj = custom_user.objects.get(username=infolist[0])
+        obj = Purchase.objects.filter(username=user_obj.id,status=infolist[1])
         data = serializers.serialize("json", obj)
         data = json.loads(data[1:-1])
         return JsonResponse({"res": data})

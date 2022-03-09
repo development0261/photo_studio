@@ -93,7 +93,7 @@
                                                                 <td>
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
-                                                                            <h6 class="mb-0 fs-14 fw-semibold puchase_view" id="{{ row.status }}">{{ row.status }}</h6>
+                                                                            <h6 class="mb-0 fs-14 fw-semibold puchase_view" id="{{row.username}} - {{ row.status }}">{{ row.status }}</h6>
                                                                         </div>
                                                                     </div>
                                                                 </td>
@@ -240,6 +240,7 @@
     <script>
         $('.puchase_view').on('click', function () {
             id = $(this).attr('id');
+            alert(id)
             $.ajax({
                 type: "GET",
                 url: `/admin_site/specific_purchase/${id}`,
