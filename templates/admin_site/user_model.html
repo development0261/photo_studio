@@ -1,177 +1,27 @@
 {% extends 'admin_site/base.html' %}
 {% load static %}
 {% block styles %}
-<style>
-    .row {
-        margin-top: 27px !important;
-    }
-
-    .tab-content i,
-    .tabs-menu2 ul li .active {
-        color: #27cf09;
-    }
-
-    i.fa.fa-eye {
-        cursor: pointer;
-    }
-
-    .main-profile-modal-wrp {
-        position: relative;
-        padding: 1rem;
-    }
-
-    .profile-field {
-        position: relative;
-        margin-bottom: 10px;
-        width: 100%;
-        display: flex;
-    }
-
-    .profile-field strong {
-
-        font-size: 14px;
-
-        display: inline-block;
-        color: Black;
-        width: 40%;
-    }
-
-    .profile-field label {
-        width: 60%;
-    }
-
-    .avtar-profile {
-        width: 150px;
-        height: 150px;
-    }
-
-    .avtar-profile img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-
-    h5#largeModalLabel {
-        font-size: 25px;
-        color: #05c3fb;
-    }
-
-    #Modal {
-        margin: 10px !important;
-    }
-
-        {
-        % comment %
-    }
-
-    model edit form {
-        % endcomment %
-    }
-
-    .profile_field strong {
-        color: #282f53;
-        font-size: 15px;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    .modalbody .profile_field input {
-        border: 1px solid #e9edf4;
-        border-radius: 5px;
-        padding: 5px;
-    }
-
-    .profile_field {
-        margin-bottom: 11px;
-    }
-
-        {
-        % comment %
-    }
-
-    end model edit form css {
-        % endcomment %
-    }
-
-        {
-        % comment %
-    }
-
-    filter_CSS {
-        % endcomment %
-    }
-
-    .filter_title h3 {
-        font-size: 1rem;
-        font-weight: 500;
-    }
-
-    .filter_title h3 {
-        font-size: 1rem;
-        font-weight: 500;
-        padding: 1.2rem 1.5rem;
-        border-bottom: 1px solid #e9edf4;
-        margin-bottom: 0;
-    }
-
-    .filter_box {
-        background-color: #fff;
-        border-radius: 7px;
-    }
-
-    .filter_body {
-        padding: 1.2rem 1.5rem;
-    }
-
-    h5.filter_title {
-        font-weight: 500;
-    }
-
-    .filter_data_list ul li a {
-        color: #2e3138;
-    }
-
-    .filter_data_list {
-        margin-top: 10px;
-        border-top: 1px solid #e9edf4;
-        padding-top: 10px;
-    }
-
-    .filter_data_list:first-child {
-        border: none;
-        margin-top: 0;
-        padding-top: 0;
-    }
-
-    .filter_body a.active {
-        color: #6c5ffc !important;
-    }
-
-    li:hover {
-        background-color: #efeff4;
-    }
-
-    h6:hover {
-        background-color: #efeff4;
-    }
-
-        {
-        % comment %
-    }
-
-    end filter css {
-        % endcomment %
-    }
-</style>
+<link rel="stylesheet" href="{% static 'assets/css/app_user.css' %}">
 {% endblock %}
 {% block content %}
 <form method="post">
     {% csrf_token %}
-    <div class="row">
-        <div class="col-lg-8 col-sm-12">
+    <div class="main-section">
+        <div class="main-table">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title mb-0">App Users</h3>
+                    <div class="profiles">
+                        <h3 class="card-title mb-0">App Users</h3>
+                    </div>
+                    <div class="main-header-center ms-3 d-none d-lg-block">
+                        <input id='searchbar' class="form-control" placeholder="Search for results..." type="search">
+                    </div>
+                    <div class="togal-button">
+                        <span class="toggletooltip">Filters</span>
+                        <p><a href="#" class="bar-button">
+                            <i class="fa fa-bars"></i>
+                        </a></p>
+                    </div>
                 </div>
                 <div class="card-body pt-4">
                     <div class="grid-margin">
@@ -183,22 +33,64 @@
                                             <table id="data-table" class="table table-bordered text-nowrap mb-0">
                                                 <thead class="border-top">
                                                     <tr>
-                                                        <th class="bg-transparent border-bottom-0">Id</th>
-                                                        <th class="bg-transparent border-bottom-0">Username</th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Id
+                                                                <div class="sort-order ml-2">
+                                                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Username
+                                                                <div class="sort-order ml-2">
+                                                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
                                                         <!-- <th class="bg-transparent border-bottom-0">Password</th> -->
-                                                        <th class="bg-transparent border-bottom-0">Firstname</th>
-                                                        <th class="bg-transparent border-bottom-0">Lastname</th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Firstname
+                                                                <div class="sort-order ml-2">
+                                                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Lastname
+                                                                <div class="sort-order ml-2">
+                                                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
                                                         <th class="bg-transparent border-bottom-0">Email Address</th>
                                                         <th class="bg-transparent border-bottom-0">Active</th>
                                                         <th class="bg-transparent border-bottom-0">Staff Status</th>
                                                         <th class="bg-transparent border-bottom-0">Superuser Status</th>
-                                                        <th class="bg-transparent border-bottom-0">Last Login</th>
-                                                        <th class="bg-transparent border-bottom-0">Date Joined</th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Last Login
+                                                                <div class="sort-order ml-2">
+                                                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Date Joined
+                                                                <div class="sort-order ml-2">
+                                                                <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
                                                         {% comment %} <th class="bg-transparent border-bottom-0">Confirm
                                                             Token</th> {% endcomment %}
                                                         <th class="bg-transparent border-bottom-0">app_datas</th>
                                                         <th class="bg-transparent border-bottom-0">Preferences</th>
-                                                        <th class="bg-transparent border-bottom-0">products</th>
+                                                        {% comment %} <th class="bg-transparent border-bottom-0">products</th> {% endcomment %}
                                                         <th class="bg-transparent border-bottom-0">profiles</th>
                                                         <th class="bg-transparent border-bottom-0">purchases</th>
                                                         <th class="bg-transparent border-bottom-0">tags</th>
@@ -206,7 +98,7 @@
                                                     </tr>
                                                 </thead>
 
-                                                <tbody>
+                                                <tbody id="table_body">
                                                     {% for i in locals %}
                                                     <tr class="border-bottom">
                                                         <td class="text-center">
@@ -300,9 +192,9 @@
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold"
+                                                                    <h6 class="mb-0 fs-14 fw-semibold view"
                                                                         id="application_data - {% if not i.application_data %}False{% else %} {{ i.application_data }} {% endif %}">
-                                                                        <i class="fa fa-eye " id="{{ i.username }}"
+                                                                        <i class="fa fa-eye" id="{{ i.username }}"
                                                                             aria-hidden="true"></i>
                                                                     </h6>
                                                                 </div>
@@ -311,7 +203,7 @@
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold"
+                                                                    <h6 class="mb-0 fs-14 fw-semibold view"
                                                                         id="user_preference - {% if not i.user_preference %}False{% else %} {{ i.user_preference }} {% endif %}">
                                                                         <i class="fa fa-eye " id="{{ i.username }}"
                                                                             aria-hidden="true"></i>
@@ -319,7 +211,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        {% comment %} <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
                                                                     <h6 class="mb-0 fs-14 fw-semibold"
@@ -329,11 +221,11 @@
                                                                     </h6>
                                                                 </div>
                                                             </div>
-                                                        </td>
+                                                        </td> {% endcomment %}
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold"
+                                                                    <h6 class="mb-0 fs-14 fw-semibold view"
                                                                         id="Profile - {% if not i.profile %}False{% else %} {{ i.profile }} {% endif %}">
                                                                         <i class="fa fa-eye " id="{{ i.username }}"
                                                                             aria-hidden="true"></i>
@@ -344,8 +236,8 @@
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold"
-                                                                        id="Purchase - {% if not i.purchase %}False{% else %} {{ i.purchase }} {% endif %}">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold view"
+                                                                        id="Purchase - {{ i.username }}">
                                                                         <i class="fa fa-eye " id="{{ i.username }}"
                                                                             aria-hidden="true"></i>
                                                                     </h6>
@@ -355,7 +247,7 @@
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold"
+                                                                    <h6 class="mb-0 fs-14 fw-semibold view"
                                                                         id="Tag - {% if not i.tag %}False{% else %} {{ i.tag }} {% endif %}">
                                                                         <i class="fa fa-eye " id="{{ i.username }}"
                                                                             aria-hidden="true"></i>
@@ -363,23 +255,49 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        <td class="text-center">
                                                             <div class="g-2">
                                                                 <a href="/admin_site/UserEdit/{{ i.username }} {{ i.id }}"
                                                                     class="btn text-primary btn-sm"
                                                                     data-bs-toggle="tooltip"
-                                                                    data-bs-original-title="Edit"><span
-                                                                        id="{{ i.username }} {{ i.id }}"
-                                                                        class="fe fe-edit fs-14 edit_class"></span></a>
+                                                                    data-bs-original-title="Edit">
+                                                                    <span class="fe fe-edit fs-14">
+                                                                    </span>
+                                                                </a>
                                                                 <a class="trigger-btn text-danger btn-sm">
                                                                     <span id="{{ i.username }} {{ i.id }}"
-                                                                        class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                                                        class="fe fe-trash-2 fs-14 delete_class">
+                                                                    </span>
+                                                                </a>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     {% endfor %}
                                                 </tbody>
                                             </table>
+                                        </div>
+                                        <div class="pagination_div">
+                                            <div class="row align-items-center">
+                                                <div class="col-lg-6">
+                                                    <div class="show_entries">
+                                                        <label class="m-0 d-flex align-items-center">Show 
+                                                            <div class="table_length_outer mx-2">
+                                                            <select id="table_length">
+                                                                <option class="selected" value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                            </select>
+                                                        </div>
+                                                        entries</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="pages">
+                                                        <ul class="pagination m-0" id="app_user_Pagination"></ul>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -389,7 +307,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="saidbar-toggle">
             <div class="filter_box">
                 <div class="filter_title">
                     <h3>
@@ -474,12 +392,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    
     {% comment %} view {% endcomment %}
     <script>
-        $("h6").click(function () {
+        $(".view").click(function () {
             id = $(this).attr('id')
             if (id.substring(id.length - 5) == 'False') {
-                alert("Add Data First!!");
+                alert("There is no data!!");
             }
             else {
                 if (id.substring(0, 7) == 'Profile') {
@@ -656,85 +575,72 @@
                             $("#Modal").modal('show');
                         }
                     })
-                } else if (id.substring(0, 3) == 'Pur') {
+                } 
+                else if (id.substring(0, 3) == 'Pur') {
                     $.ajax({
                         type: "GET",
                         url: `/admin_site/Purchase/${id}`,
                         success: function (profileresult) {
-                            var data = profileresult.res.fields;
-                            $("#largeModalLabel").append(`Purchase`)
+                            var data = profileresult.res;
+                            console.log(data)
+                            $("#largeModalLabel").append(`Purchases`)
                             $(".modalbody").append(`
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>Status</strong>
-                                                <label>
-                                                    ${data.status}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>Auto renew status</strong>
-                                                <label>
-                                                    ${data.auto_renew_status}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>Is in billing retry period</strong>
-                                                <label>
-                                                    ${data.is_in_billing_retry_period}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>Is in intro offer period</strong>
-                                                <label>
-                                                    ${data.is_in_intro_offer_period}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>Is trial period</strong>
-                                                <label>
-                                                    ${data.is_trial_period}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>start date</strong>
-                                                <label>
-                                                    ${data.start_date}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>End date</strong>
-                                                <label>
-                                                    ${data.end_date}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="profile-field">
-                                                <strong>Subscription Type</strong>
-                                                <label>
-                                                    ${data.subscription_type}
-                                                </label>
+                                <div class="card-body pt-4">
+                                    <div class="grid-margin">
+                                        <div class="panel panel-primary">
+                                            <div class="panel-body tabs-menu-body border-0 pt-0">
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="tab5">
+                                                        <div class="table-responsive">
+                                                            <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                                                                <thead class="border-top">
+                                                                    <tr>
+                                                                        <th class="bg-transparent border-bottom-0 sort_it">Product ID</th>
+                                                                        <th class="bg-transparent border-bottom-0 sort_it">Product</th>
+                                                                        <th class="bg-transparent border-bottom-0 sort_it">View</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    ${data.map((item,index)=>{
+                                                                        return `
+                                                                        <tr>
+                                                                            <td class="text-center">
+                                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                                    <h6 class="mb-0 fs-14">${item.fields.productID}
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="text-center">
+                                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                                    <h6 class="mb-0 fs-14">
+                                                                                        ${item.fields.product}
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="text-center">
+                                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                                    <h6 class="mb-0 fs-14 drop_items" id="${item.fields.product}">
+                                                                                        <i class="fa fa-eye product_eye"></i>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>`
+                                                                    }).join('')}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    `)
+                                </div>
+                            `);
                             $("#Modal").modal('show');
                         }
                     })
-                } else if (id.substring(0, 3) == 'Tag') {
+                } 
+                else if (id.substring(0, 3) == 'Tag') {
                     $.ajax({
                         type: "GET",
                         url: `/admin_site/Tag/${id}`,
@@ -758,7 +664,8 @@
                             $("#Modal").modal('show');
                         }
                     })
-                } else if (id.substring(0, 3) == 'use') {
+                } 
+                else if (id.substring(0, 3) == 'use') {
                     $.ajax({
                         type: "GET",
                         url: `/admin_site/user_preference/${id}`,
@@ -972,7 +879,8 @@
                             $("#Modal").modal('show');
                         }
                     })
-                } else if (id.substring(0, 7) == 'Product') {
+                } 
+                else if (id.substring(0, 7) == 'Product') {
                     $.ajax({
                         type: "GET",
                         url: `/admin_site/Product/${id}`,
@@ -1058,7 +966,8 @@
                             $("#Modal").modal('show');
                         }
                     })
-                } else if (id.substring(0, 3) == 'app') {
+                } 
+                else if (id.substring(0, 3) == 'app') {
                     $.ajax({
                         type: "GET",
                         url: `/admin_site/application_data/${id}`,
@@ -1253,6 +1162,102 @@
             }
         });
     </script>
+
+    {% comment %} specific purchase {% endcomment %}
+    <script>
+        $(document).on("click", ".drop_items", function () {
+            $("#largeModalLabel").html("");
+            $(".modalbody").html("");
+            id = $(this).attr('id');
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/specific_product/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`Product`)
+                    $(".modalbody").append(`
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>ProductID</strong>
+                                        <label>
+                                            ${data.productID}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Product</strong>
+                                        <label>
+                                            ${data.product}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>ProductPromo</strong>
+                                        <label>
+                                            ${data.productPromo}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>PromoPrice</strong>
+                                        <label>
+                                            ${data.promoPrice}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>AnnaulSubProd</strong>
+                                        <label>
+                                            ${data.annaulSubProd}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>AnnaulSub</strong>
+                                        <label>
+                                            ${data.annaulSub}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>MonthlySubProd</strong>
+                                        <label>
+                                            ${data.monthlySubProd}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>MonthlySub</strong>
+                                        <label>
+                                            ${data.monthlySub}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>LocaleId</strong>
+                                        <label>
+                                            ${data.localeId}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            `)
+                    $("#Modal").modal('show');
+                }
+            })
+        });
+
+    </script>
+
     {% comment %} refresh and close view modal {% endcomment %}
     <script>
         $(document).on('click', '#closebtn', function () {
@@ -1266,6 +1271,7 @@
                     </button>`);
         });
     </script>
+
     {% comment %} delete modal(sweet alert) {% endcomment %}
     <script>
         $(".delete_class").click(function () {
@@ -1289,12 +1295,196 @@
                 }).catch(swal.noop);
         });
     </script>
+
     {% comment %} filters {% endcomment %}
     <script>
         $('.filter_body a').on('click', function () {
-            {% comment %} alert("yess") {% endcomment %}
             $('.filter_body a.active').removeClass('active');
             $(this).addClass('active');
         });
+    </script>
+
+    {% comment %} sorting {% endcomment %}
+    <script>
+        $('#data-table th.sortit').click(function () {
+            var table = $(this).parents('table').eq(0)
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        
+            this.asc = !this.asc
+            console.log(this.asc)
+            if (this.asc == true) {
+              console.log($(this).children('span').children('.sort-order'))
+              $(this).children('span').children('.sort-order').addClass('upOrder')
+              $(this).children('span').children('.sort-order').removeClass('downOrder')
+        
+            } else {
+              $(this).children('span').children('.sort-order').addClass('downOrder')
+              $(this).children('span').children('.sort-order').removeClass('upOrder')
+        
+            }
+            if (!this.asc) { rows = rows.reverse() }
+            for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+          })
+          function comparer(index) {
+            return function (a, b) {
+              var valA = getCellValue(a, index), valB = getCellValue(b, index)
+              return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+            }
+          }
+          function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
+    </script>
+
+    {% comment %} searchbar {% endcomment %}
+    <script>
+        $(document).ready(function () {
+            $("#searchbar").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#data-table tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
+
+    {% comment %} filter toggle {% endcomment %}
+    <script>
+        $(document).ready(function(){
+            $(".bar-button").click(function(){
+                $(".filter_box").toggle();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+          $(".bar-button").click(function(){
+            if ( $(".main-table").hasClass("main-profile-table") ) {
+                $(".main-table").removeClass("main-profile-table");
+            }
+            else{
+                $(".main-table").addClass("main-profile-table");
+            }
+          });
+        });
+    </script>
+
+    {% comment %} pagination {% endcomment %}
+    <script>
+        function makePaginationTable(pageRange) {
+            function getPageList(totalPages, page, maxLength) {
+                if (maxLength < 5) throw "maxLength must be at least 5";
+        
+                function range(start, end) {
+                    return Array.from(Array(end - start + 1), (_, i) => i + start);
+                }
+            
+            
+                var sideWidth = maxLength < 9 ? 1 : 2;
+                var leftWidth = (maxLength - sideWidth * 2 - 3) >> 1;
+                var rightWidth = (maxLength - sideWidth * 2 - 2) >> 1;
+                if (totalPages <= maxLength) {
+                    // no breaks in list
+                    return range(1, totalPages);
+                }
+                if (page <= maxLength - sideWidth - 1 - rightWidth) {
+                    // no break on left of page
+                    return range(1, maxLength - sideWidth - 1)
+                    .concat(0, range(totalPages - sideWidth + 1, totalPages));
+                }
+                if (page >= totalPages - sideWidth - 1 - rightWidth) {
+                    // no break on right of page
+                    return range(1, sideWidth)
+                    .concat(0, range(totalPages - sideWidth - 1 - rightWidth - leftWidth, totalPages));
+                }
+                // Breaks on both sides
+                return range(1, sideWidth)
+                    .concat(0, range(page - leftWidth, page + rightWidth),
+                    0, range(totalPages - sideWidth + 1, totalPages));
+            }
+            
+                // Below is an example use of the above function.
+            $(function () {
+                // Number of items and limits the number of items per page
+                var numberOfItems = $("#table_body tr").length;
+            
+                var limitPerPage = pageRange;
+                // Total pages rounded upwards
+                var totalPages = Math.ceil(numberOfItems / limitPerPage);
+                // Number of buttons at the top, not counting prev/next,
+                // but including the dotted buttons.
+                // Must be at least 5:
+                var paginationSize = 7;
+                var currentPage;
+            
+                function showPage(whichPage) {
+            
+                    if (whichPage < 1 || whichPage > totalPages) return false;
+                    currentPage = whichPage;
+                    $("#table_body tr").hide()
+                    .slice((currentPage - 1) * limitPerPage,
+                        currentPage * limitPerPage).show();
+                    // Replace the navigation items (not prev/next):            
+                    $("#app_user_Pagination li").slice(1, -1).remove();
+                    getPageList(totalPages, currentPage, paginationSize).forEach(item => {
+                    $("<li>").addClass("page-item")
+                        .addClass(item ? "current-page" : "disabled")
+                        .toggleClass("active", item === currentPage).append(
+                        $("<a>").addClass("page-link").attr({
+                            href: "javascript:void(0)"
+                        }).text(item || "...")
+                        ).insertBefore("#app_user_Pagination #next-page");
+                    });
+                    // Disable prev/next when at first/last page:
+                    $("#app_user_Pagination #previous-page").toggleClass("disabled", currentPage === 1);
+                    $("#app_user_Pagination #next-page").toggleClass("disabled", currentPage === totalPages);
+                    return true;
+                }
+            
+                // Include the prev/next buttons:
+                $("#app_user_Pagination").append(
+                    $("<li>").addClass("page-item").attr({ id: "previous-page" }).append(
+                    $("<a>").addClass("page-link").attr({
+                        href: "javascript:void(0)"
+                    }).text("<")
+                    ),
+                    $("<li>").addClass("page-item").attr({ id: "next-page" }).append(
+                    $("<a>").addClass("page-link").attr({
+                        href: "javascript:void(0)"
+                    }).text(">")
+                    )
+                );
+                // Show the page links
+                $(".datatable-body").show();
+                showPage(1);
+            
+                // Use event delegation, as these items are recreated later    
+                $(document).on("click", "#app_user_Pagination li.current-page:not(.active)", function () {
+                    return showPage(+$(this).text());
+                });
+                $("#app_user_Pagination #next-page").on("click", function () {
+                    return showPage(currentPage + 1);
+                });
+            
+                $("#app_user_Pagination #previous-page").on("click", function () {
+                    return showPage(currentPage - 1);
+                });
+            });
+        }
+        makePaginationTable(10)
+        $(document).ready(function(){
+            $("select#table_length").change(function(){
+                var data = parseInt($(this).children("option:selected").val());
+                console.log(data, typeof data)
+                if(data==25){
+                    makePaginationTable(25)
+                }else if(data==50){
+                    makePaginationTable(50)
+                }else if(data==100){
+                    makePaginationTable(100)
+                }else if(data==10){
+                    makePaginationTable(10)
+                }
+            });
+        });
+        
     </script>
 {% endblock scripts %}

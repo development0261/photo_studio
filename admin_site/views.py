@@ -13,8 +13,6 @@ from django.contrib import messages
 from django.core.mail import send_mail
 import string
 import random
-# from captcha.image import ImageCaptcha
-# import glob
 import os
 import re
 from django.core import mail
@@ -25,27 +23,9 @@ punctuation = "!#$%&()*+, -./:;<=>?@[\]^_`{|}~"
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
 
 # Create your views here.
-total_users = custom_user.objects.all()
-total_profiles = Profile.objects.all()
-total_details = user_preference.objects.all()
-total_app_datas = application_data.objects.all()
-total_purchases = Purchase.objects.all()
-total_tags = Tag.objects.all()
-total_products = Product.objects.all()
 
 
 def loginprocess(request):
-    # captcha_code = string.digits + string.ascii_lowercase + string.ascii_uppercase
-    # captcha_data = ''.join(random.choice(captcha_code) for i in range(6))
-    # image = ImageCaptcha(width = 280, height = 90)
-    # image.write(captcha_data, 'media/CAPTCHA.png')
-    # print(captcha_data)
-
-    # list_of_files = glob.glob('D:\Photo_editor\Photo_editor\media\*') # * means all if need specific format then *.csv
-    # latest_file = max(list_of_files, key=os.path.getctime)
-    # latest_file = str(latest_file).split("\\")
-    # latest_file = latest_file[-1]
-
     if 'otpSubmit' in request.POST:
         email = request.POST['email']
         password = request.POST['password']
@@ -65,29 +45,21 @@ def loginprocess(request):
                 user.save()
                 messages.success(request, 'Check your mail Inbox.')
                 return redirect('login')
-                # f'/admin_site/otp-verification/{user}'
             else:
                 messages.error(request, 'Please check your password!!!')
                 return redirect("login")
         except Exception as e:
-            print(e)
             messages.error(request, 'Please check your email!!!')
             return redirect("login")
 
     if 'FinalSubmit' in request.POST:
         otp = request.POST['otp']
         email = request.POST['email']
-        # captcha_in = request.POST['captcha_in']
         obj = custom_user.objects.get(email=email)
         if obj.confirm_token == otp:
-            # print(captcha_in, captcha_data)
-            # if captcha_in == captcha_data:
             login(request, obj)
             messages.success(request, 'Login Successfully.')
             return redirect("index")
-            # else:
-            #     messages.error(request, 'Please check your captcha!!!')
-            #     return redirect("login")
         else:
             messages.error(request, 'Please check your otp!!!')
             return redirect("login")
@@ -101,19 +73,27 @@ def models(request):
     for i in app_models:
         if i.__name__ == "custom_user":
             pass
+        elif i.__name__ == 'user_preference':
+            home_models.append('User Preference')
+        elif i.__name__ == 'application_data':
+            home_models.append('Application Data')
         else:
             home_models.append(i.__name__)
-
-    app_models = apps.get_app_config('otp_totp').get_models()
-    totp = []
-    for i in app_models:
-        totp.append(i.__name__)
-    return {'home_models': home_models, 'totp': totp}
+    return {'home_models': home_models}
 
 
 def index(request):
     if request.user.is_authenticated:
-        return render(request, "admin_site/index.html", {'total_users': total_users,
+        admins = custom_user.objects.filter(is_superuser=True)
+        locals = custom_user.objects.filter(is_superuser=False)
+        total_profiles = Profile.objects.all()
+        total_details = user_preference.objects.all()
+        total_app_datas = application_data.objects.all()
+        total_purchases = Purchase.objects.all()
+        total_tags = Tag.objects.all()
+        total_products = Product.objects.all()
+        return render(request, "admin_site/index.html", {'total_admins': admins,
+                                                         'total_locals': locals,
                                                          'total_profiles': total_profiles,
                                                          'total_details': total_details,
                                                          'total_app_datas': total_app_datas,
@@ -252,20 +232,41 @@ def product_model(request):
 def view_profile(request, info):
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split('-')
-        print(infolist)
         obj = Profile.objects.filter(name=infolist[2])
         data = serializers.serialize("json", obj)
-        print(data)
         data = json.loads(data[1:-1])
         return JsonResponse({"res": data})
     else:
         return redirect("login")
 
-
 def view_purchase(request, info):
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split('-')
-        obj = Purchase.objects.filter(status=infolist[2])
+        obj = Purchase.objects.filter(status=infolist[0])
+        data = serializers.serialize("json", obj)
+        data = json.loads(data[1:-1])
+        return JsonResponse({"res": data})
+    else:
+        return redirect("login")
+
+def view_purchases(request, info):
+    if request.user.is_authenticated:
+        infolist = info.replace(" ", "").split('-')
+        user_obj = custom_user.objects.get(username=infolist[1])
+        obj = Purchase.objects.filter(username=user_obj.id)
+        data = []
+        for i in obj:
+            data.append(i.product)
+        data = serializers.serialize("json", data)
+        data = json.loads(data)
+        return JsonResponse({"res": data})
+    else:
+        return redirect("login")
+
+def specific_product(request, info):
+    if request.user.is_authenticated:
+        infolist = info.split(' ')
+        obj = Product.objects.filter(product=infolist[0])
         data = serializers.serialize("json", obj)
         data = json.loads(data[1:-1])
         return JsonResponse({"res": data})
@@ -291,8 +292,7 @@ def view_tag(request, info):
 def view_user_preference(request, info):
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split('-')
-        obj = custom_user.objects.get(username=infolist[1])
-        obj = user_preference.objects.filter(username=obj.id)
+        obj = user_preference.objects.filter(udid=infolist[2])
         data = serializers.serialize("json", obj)
         data = json.loads(data[1:-1])
         return JsonResponse({"res": data})
@@ -303,7 +303,7 @@ def view_user_preference(request, info):
 def view_product(request, info):
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split('-')
-        obj = Product.objects.filter(username=infolist[1])
+        obj = Product.objects.filter(PID=infolist[1])
         data = serializers.serialize("json", obj)
         data = json.loads(data[1:-1])
         return JsonResponse({"res": data})
@@ -455,11 +455,12 @@ def profile_edit(request, para):
     if request.user.is_authenticated:
         if request.method == "POST":
             username = request.POST['username']
-            print(username)
             name = request.POST['name']
             email = request.POST['email']
             mobile = request.POST['mobile']
             profile_image = request.POST['profile_image']
+            if 'profile_image_check' in request.POST:
+                profile_image_check = request.POST['profile_image_check']
             gender = request.POST['gender']
             dob = request.POST['dob']
             city = request.POST['city']
@@ -471,12 +472,19 @@ def profile_edit(request, para):
             insta = request.POST['insta']
             website = request.POST['website']
             avatar = request.POST['avatar']
+            if 'avatar_check' in request.POST:
+                avatar_check = request.POST['avatar_check']
             bitmoji = request.POST['bitmoji']
+            if 'bitmoji_check' in request.POST:
+                bitmoji_check = request.POST['bitmoji_check']
 
             obj = Profile.objects.get(username=int(username))
             obj.name = name
             obj.email = email
             obj.mobile = mobile
+            if 'profile_image_check' in request.POST:
+                if profile_image_check:
+                    obj.profile_image = None
             if profile_image != "":
                 obj.profile_image = profile_image
             obj.gender = gender
@@ -492,8 +500,14 @@ def profile_edit(request, para):
             obj.fb = fb
             obj.insta = insta
             obj.website = website
+            if 'avatar_check' in request.POST:
+                if avatar_check:
+                    obj.avatar = None
             if avatar != "":
                 obj.avatar = avatar
+            if 'bitmoji_check' in request.POST:
+                if bitmoji_check:
+                    obj.bitmoji = None
             if bitmoji != "":
                 obj.bitmoji = bitmoji
             obj.save()
@@ -518,6 +532,8 @@ def preferences_edit(request, para):
         if request.method == "POST":
             username = request.POST['username']
             signature = request.POST['signature']
+            if 'signature_check' in request.POST:
+                signature_check = request.POST['signature_check']
             export_quality = request.POST['export_quality']
             Language = request.POST['Language']
             user_stared_templates = request.POST['user_stared_templates']
@@ -549,6 +565,9 @@ def preferences_edit(request, para):
             always_crop = request.POST.get('always_crop')
 
             obj = user_preference.objects.get(username=int(username))
+            if 'signature_check' in request.POST:
+                if signature_check:
+                    obj.signature = None
             if signature != "":
                 obj.signature = signature
             obj.export_quality = export_quality
@@ -666,7 +685,7 @@ def app_data_edit(request, para):
             operating_system = request.POST['operating_system']
             Device_Storage = request.POST['Device_Storage']
             Lunch_count = request.POST['Lunch_count']
-            Push_Notification_Status = request.POST['Push_Notification_Status']
+            Push_Notification_Status = request.POST.get('Push_Notification_Status')
             Library_permission_Status = request.POST.get(
                 'Library_permission_Status')
             latitude = request.POST['latitude']
@@ -748,7 +767,7 @@ def app_data_edit(request, para):
 def purchase_edit(request, para):
     if request.user.is_authenticated:
         if request.method == "POST":
-            username = request.POST['username']
+            pk = request.POST['username']
             status = request.POST['status']
             auto_renew_status = request.POST.get('auto_renew_status')
             is_in_billing_retry_period = request.POST.get(
@@ -760,7 +779,7 @@ def purchase_edit(request, para):
             end_date = request.POST['end_date']
             subscription_type = request.POST['subscription_type']
 
-            obj = Purchase.objects.get(username=username)
+            obj = Purchase.objects.get(pid=pk)
             obj.status = status
             if auto_renew_status == "on":
                 obj.auto_renew_status = True
@@ -794,10 +813,7 @@ def purchase_edit(request, para):
             obj = Purchase.objects.filter(pid=modal_id[1])
             data = serializers.serialize("json", obj)
             data = json.loads(data)
-            res = []
-            for i in data:
-                res.append(i['fields'])
-            return render(request, 'admin_site/purchase_edit.html', {"result": res})
+            return render(request, 'admin_site/purchase_edit.html', {"result": data})
     else:
         return redirect("login")
 
@@ -834,7 +850,7 @@ def product_edit(request, para):
             productID = request.POST['productID']
             product = request.POST['product']
             productPromo = request.POST['productPromo']
-            promoPrice = request.POST['promoPrice']
+            promoPrice = request.POST.get('promoPrice')
             annaulSubProd = request.POST['annaulSubProd']
             annaulSub = request.POST['annaulSub']
             monthlySubProd = request.POST['monthlySubProd']
@@ -845,12 +861,14 @@ def product_edit(request, para):
             obj.productID = productID
             obj.product = product
             obj.productPromo = productPromo
-            obj.promoPrice = promoPrice
+            if promoPrice != "":
+                obj.promoPrice = promoPrice
             obj.annaulSubProd = annaulSubProd
             obj.annaulSub = annaulSub
             obj.monthlySubProd = monthlySubProd
             obj.monthlySub = monthlySub
-            obj.localeId = localeId
+            if localeId != "":
+                obj.localeId = localeId
             obj.save()
 
             return redirect('Product')
@@ -866,65 +884,6 @@ def product_edit(request, para):
             return render(request, 'admin_site/product_edit.html', {"result": res})
     else:
         return redirect("login")
-
-# def filters(request, para):
-#     print(para)
-#     total_users = custom_user.objects.all()
-#     print(total_users)
-
-#     def get_data(n):
-#         Temp = copy.copy(total_users)
-#         Temp = Temp[:n]
-#         set_list = custom_user.objects.filter(username__in=Temp)
-#         return set_list
-
-#     if para == 'Today':
-#         print("today")
-#         data = list(total_users.filter(date_joined__date=date.today()))
-#         data = serializers.serialize("json", data)
-#         data = json.loads(data)
-#         print(data)
-#         return JsonResponse({"total_users": data})
-
-#     if para == 'Last 7 days':
-#         print("last 7 days")
-#         data = list(total_users.filter(date_joined__gte=datetime.now() - timedelta(days=7), date_joined__lte=datetime.now()))
-#         data = serializers.serialize("json", data)
-#         data = json.loads(data)
-#         return JsonResponse({"total_users": data})
-
-#     if para == 'Last 30 days':
-#         print("last 30 days")
-#         data = list(total_users.filter(date_joined__gte=datetime.now() - timedelta(days=30), date_joined__lte=datetime.now()))
-#         data = serializers.serialize("json", data)
-#         data = json.loads(data)
-#         return JsonResponse({"total_users": data})
-
-#     if para == 'Last 90 days':
-#         print("last 90 days")
-#         data = list(total_users.filter(date_joined__gte=datetime.now() - timedelta(days=90), date_joined__lte=datetime.now()))
-#         data = serializers.serialize("json", data)
-#         data = json.loads(data)
-#         return JsonResponse({"total_users": data})
-
-#     if para == 'All':
-#         print("All")
-#         data = serializers.serialize("json", total_users)
-#         data = json.loads(data)
-#         return JsonResponse({"total_users": data})
-
-#     if para == 'Clear all filters':
-#         print("Clear all filters")
-#         data = serializers.serialize("json", total_users)
-#         data = json.loads(data)
-#         return JsonResponse({"total_users": data})
-
-#     if para == 'Last 5':
-#         return get_data(5)
-
-#     if para == 'Last 10':
-#         return get_data(10)
-
 
 def change_password(request):
     if request.user.is_authenticated:
@@ -958,12 +917,10 @@ def change_password(request):
 def send_link(request):
     if request.method == "POST":
         email = request.POST['email']
-        print(email)
         try:
-            print("try")
             obj = custom_user.objects.get(email=email)
-
-            Link = 'http://127.0.0.1:8001/admin_site/forgot_password/'
+            # Link = 'http://127.0.0.1:8001/admin_site/forgot_password/'
+            Link = 'http://185.146.21.235:7800/admin_site/forgot_password/'
             characters = string.ascii_letters + string.digits + punctuation
             token = ''.join(random.choice(characters) for i in range(50))
             encrypted_token = base64.b64encode(
@@ -983,7 +940,6 @@ def send_link(request):
                            [to], html_message=html_message)
             messages.success(request, "Please check your email box")
         except Exception as e:
-            print(e)
             messages.error(
                 request, "Entered email is not matched with any user!!!")
     return render(request, 'admin_site/forgot_password.html')

@@ -8,9 +8,6 @@ from datetime import datetime, date, timedelta
 from django.utils.html import format_html
 import copy
 
-from django_otp.admin import OTPAdminSite
-
-# admin.site.__class__ = OTPAdminSite
 # Register your models here.
 
 

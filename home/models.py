@@ -151,9 +151,30 @@ class application_data(models.Model):
         verbose_name_plural = "Application data"
 
 
+class Product(models.Model):
+    PID = models.AutoField(primary_key=True, auto_created=True)
+    # username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
+    productID = models.CharField(max_length=255, unique=True)
+    product = models.CharField(max_length=255, unique=True)
+    productPromo = models.CharField(max_length=255, null=True, blank=True)
+    promoPrice = models.FloatField(max_length=255, null=True, blank=True)
+    annaulSubProd = models.CharField(max_length=255, null=True, blank=True)
+    annaulSub = models.CharField(max_length=255, null=True, blank=True)
+    monthlySubProd = models.CharField(max_length=255, null=True, blank=True)
+    monthlySub = models.CharField(max_length=255, null=True, blank=True)
+    localeId = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.product}"
+
+    class Meta:
+        verbose_name_plural = "Product"
+
+
 class Purchase(models.Model):
     pid = models.AutoField(primary_key=True, auto_created=True)
-    username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
+    username = models.ForeignKey(custom_user, on_delete=models.CASCADE, null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
     status = models.CharField(max_length=20)
     auto_renew_status = models.BooleanField(default=False)
     is_in_billing_retry_period = models.BooleanField(default=False)
@@ -180,22 +201,3 @@ class Tag(models.Model):
     class Meta:
         verbose_name_plural = "Tag"
 
-
-class Product(models.Model):
-    PID = models.AutoField(primary_key=True, auto_created=True)
-    username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
-    productID = models.CharField(max_length=255, unique=True)
-    product = models.CharField(max_length=255, unique=True)
-    productPromo = models.CharField(max_length=255, null=True, blank=True)
-    promoPrice = models.FloatField(max_length=255, null=True, blank=True)
-    annaulSubProd = models.CharField(max_length=255, null=True, blank=True)
-    annaulSub = models.CharField(max_length=255, null=True, blank=True)
-    monthlySubProd = models.CharField(max_length=255, null=True, blank=True)
-    monthlySub = models.CharField(max_length=255, null=True, blank=True)
-    localeId = models.IntegerField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.PID} - {self.product}"
-
-    class Meta:
-        verbose_name_plural = "Product"

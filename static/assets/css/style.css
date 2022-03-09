@@ -79789,5 +79789,34 @@ a.header-brand1.admin_logo {
 }
 
 a.header-brand1.admin_logo:hover {
-    color: blue;
+    color: #6c5ffc !important;
+    text-shadow: 1px 1px 20px #04f2fd;
+}
+
+/* scroll */
+::-webkit-scrollbar-thumb {
+    background: #6c5ffc !important; 
+    border-radius: 10px;
+}
+
+/* logo */
+.side-header .header-brand1 {
+    display: flex;
+    align-items: center;
+}
+
+.side-header .header-brand1 span {
+    margin-left: 10px;
+}
+
+.sidenav-toggled .side-header .header-brand1 span {
+    display: none;
+}
+
+.sidenav-toggled-open .side-header .header-brand1 span {
+    display: inline-block !important;
+}
+
+#change_password:hover{
+    color: #6c5ffc !important;
 }

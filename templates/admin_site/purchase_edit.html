@@ -1,71 +1,7 @@
 {% extends 'admin_site/base.html' %}
 {% load static %}
 {% block styles %}
-    <style>
-    input.btn-primary,
-    button#closebtn {
-        margin-left: 20px;
-        padding: 7px;
-        border-radius: 6px;
-        border: none;
-        background-color: #6c5ffc;
-        line-height: 23px;
-    }
-
-    button#closebtn a {
-        color: #fff;
-
-    }
-
-    .edit_form_title {
-        margin-top: 30px;
-        border-radius: 7px 7px 0 0;
-        background-color: #fff;
-        padding: 1.2rem 1.5rem;
-        border-bottom: 1px solid #e9edf4;
-    }
-
-    .edit_form_title h3 {
-        margin: 0;
-    }
-
-    .form_body {
-        background-color: #fff;
-        padding: 1.2rem 1.5rem;
-        border-radius: 0 0 7px 7px;
-    }
-
-    .profile_field input {
-        border: 1px solid #e9edf4;
-        border-radius: 5px;
-        padding: 5px;
-    }
-
-    .profile_field {
-        margin-bottom: 11px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .profile_field strong {
-        color: #282f53;
-        font-size: 15px;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    input:focus-visible {
-        outline: none;
-    }
-
-    .btns {
-        margin-left: 800px;
-    }
-    #readonly{
-        background-color: #e9edf4;
-    }
-    </style>
+<link rel="stylesheet" href="{% static 'assets/css/purchase_edit.css' %}">
 {% endblock %}
 {% block content %}
     <div class="edit_form">
@@ -78,76 +14,76 @@
                 <div class="row">
                     <div class="col-lg-12 col-sm-12">
                         {% for row in result %}
-                            <input type="hidden" id="username" name="username" value="{{ row.username }}">
-                            <div class="col-lg-5">
+                            <input type="hidden" id="username" name="username" value="{{ row.pk }}">
+                            <div class="col-lg-6">
                                 <div class="profile_field">
                                     <strong>status</strong>
                                     <div class="name">
-                                        <input type="text" name="status" value="{{ row.status }}">
+                                        <input type="text" name="status" value="{{ row.fields.status }}">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-6">
                                 <div class="profile_field">
                                     <strong>Auto renew status</strong>
                                     <div class="name">
                                         <label>
-                                            <input type="checkbox" id="checkbox" name="auto_renew_status" {% if row.auto_renew_status %}checked{% endif %}>
+                                            <input type="checkbox" id="checkbox" name="auto_renew_status" {% if row.fields.auto_renew_status %}checked{% endif %}>
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-6">
                                 <div class="profile_field">
                                     <strong>Is in billing retry period</strong>
                                     <div class="name">
                                         <label>
-                                            <input type="checkbox" id="checkbox" name="is_in_billing_retry_period" {% if row.is_in_billing_retry_period %}checked{% endif %}>
+                                            <input type="checkbox" id="checkbox" name="is_in_billing_retry_period" {% if row.fields.is_in_billing_retry_period %}checked{% endif %}>
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-6">
                                 <div class="profile_field">
                                     <strong>Is in intro offer period</strong>
                                     <div class="name">
                                         <label>
-                                            <input type="checkbox" id="checkbox" name="is_in_intro_offer_period" {% if row.is_in_intro_offer_period %}checked{% endif %}>
+                                            <input type="checkbox" id="checkbox" name="is_in_intro_offer_period" {% if row.fields.is_in_intro_offer_period %}checked{% endif %}>
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-6">
                                 <div class="profile_field">
                                     <strong>Is trial period</strong>
                                     <div class="name">
                                         <label>
-                                            <input type="checkbox" id="checkbox" name="is_trial_period" {% if row.is_trial_period %}checked{% endif %}>
+                                            <input type="checkbox" id="checkbox" name="is_trial_period" {% if row.fields.is_trial_period %}checked{% endif %}>
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-6">
                                 <div class="profile_field">
                                     <strong>Start date</strong>
                                     <div class="name">
-                                        <input type="text" name="start_date" value="{{ row.start_date }}">
+                                        <input type="text" id="start_date" name="start_date" value="{{ row.fields.start_date }}">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-6">
                                 <div class="profile_field">
                                     <strong>End date</strong>
                                     <div class="name">
-                                        <input type="text" name="end_date" value="{{ row.end_date }}">
+                                        <input type="text" id="end_date" name="end_date" value="{{ row.fields.end_date }}">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-6">
                                 <div class="profile_field">
                                     <strong>Subscription type</strong>
                                     <div class="name">
-                                        <input type="text" name="subscription_type" value="{{ row.subscription_type }}">
+                                        <input type="text" name="subscription_type" value="{{ row.fields.subscription_type }}">
                                     </div>
                                 </div>
                             </div>
@@ -160,7 +96,7 @@
                             id="closebtn"
                             class="btn btn-secondary"
                             data-dismiss="modal">
-                        <a href="{% url 'custom_user' %}">Cancel</a>
+                        <a href="{% url 'Purchase' %}">Cancel</a>
                     </button>
                 </div>
             </form>
@@ -168,9 +104,24 @@
     </div>
 {% endblock %}
 {% block scripts %}
-    <script>
-        // $("btn-primary").click(function () {
-        //     alert("Record Updated")
-        // })
-    </script>
+<script>
+    function validateForm() {
+        let start_date = document.getElementById('start_date').value;
+        let end_date = document.getElementById('end_date').value;
+        var datePattern = /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
+        if (!start_date.match(datePattern)) {
+            alert("Please enter Start date in yyyy-mm-dd format");
+            $('#start_date').css({'border' : '1px solid red'});
+            $('#start_date').focus();
+            return false;
+        }
+
+        if (!end_date.match(datePattern)) {
+            alert("Please enter End date in yyyy-mm-dd format");
+            $('#end_date').css({'border' : '1px solid red'});
+            $('#end_date').focus();
+            return false;
+        }
+    }
+</script>
 {% endblock scripts %}

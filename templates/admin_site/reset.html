@@ -1,41 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Reset Password</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'assets/css/reset.css' %}">
 </head>
 
 <body>
     {% if messages %}
     {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    <div class="m-0 alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
         <strong id="g_msg">Message : {{ message }}</strong>
-        <button class="closebutton" type="button" onclick="parentNode.remove()" class="close" data-dismiss="alert"
+        <button class="close" type="button" onclick="parentNode.remove()" class="close" data-dismiss="alert"
             aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     {% endfor %}
     {% endif %}
-    <form action="" method="post">{% csrf_token %}
-        <div class="row">
-            <div class="form-group">
-                <label>New Password :</label>
-                <input type="password" id="new_password" class="form-control" name="new_password" placeholder="">
-            </div>
-            <div class="form-group">
-                <label>Confirm Password :</label>
-                <input type="password" id="confirm_password" class="form-control" name="confirm_password"
-                    placeholder="">
-            </div>
-            <div class="form-group">
-                <button id="submit_btn" type="submit" class="btn btn-primary">Submit</button>
+    <section class="login-reg-form">
+        <div class="login-reg-form-inner">
+            <h3><i class="fa fa-unlock fa-4x" aria-hidden="true"></i></h3>
+            <h2 class="text-center mb-3">Reset Password</h2>
+            <div class="panel-body">
+                <form action="" method="post">{% csrf_token %}
+                    <div class="form-group">
+                        <label>New Password :</label>
+                        <input type="password" id="new_password" class="form-control" name="new_password"
+                            placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password :</label>
+                        <input type="password" id="confirm_password" class="form-control" name="confirm_password"
+                            placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <button id="submit_btn" type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
+    </section>
 </body>
 
 </html>

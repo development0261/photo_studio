@@ -1,48 +1,7 @@
 {% extends 'admin_site/base.html' %}
 {% load static %}
 {% block styles %}
-<style>
-    .row {
-        margin-top: 27px !important;
-    }
-    {% comment %} filter_CSS {% endcomment %}
-    {% comment %} .filter_title h3 {
-        font-size: 1rem;
-        font-weight: 500;
-    }
-    .filter_title h3 {
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 1.2rem 1.5rem;
-    border-bottom: 1px solid #e9edf4;
-    margin-bottom: 0;
-}
-
-
-.filter_box {
-    background-color: #fff;
-    border-radius: 7px;
-}
-
-.filter_body {padding: 1.2rem 1.5rem;}
-h5.filter_title {
-    font-weight: 500;
-}
-.filter_data_list ul li a {
-    color: #2e3138;
-}
-.filter_data_list {
-    margin-top: 10px;
-    border-top: 1px solid #e9edf4;
-    padding-top: 10px;
-}
-.filter_data_list:first-child{
-    border: none;
-    margin-top: 0;
-    padding-top: 0;
-} {% endcomment %}
-{% comment %} end filter css {% endcomment %}
-</style>
+<link rel="stylesheet" href="{% static 'assets/css/app_data_model.css' %}">
 {% endblock %}
 {% block content %}
 <div class="row">
@@ -50,22 +9,14 @@ h5.filter_title {
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title mb-0">Application data</h3>
+                <div class="main-header-center ms-3 d-none d-lg-block">
+                    <input id='searchbar' class="form-control" placeholder="Search for results..." type="search">
+                </div>
             </div>
             <div class="card-body pt-4">
                 <div class="grid-margin">
                     <div class="">
                         <div class="panel panel-primary">
-                            {% comment %} <div class="tab-menu-heading border-0 p-0">
-                                <div class="tabs-menu1">
-                                    <!-- Tabs -->
-                                    <ul class="nav panel-tabs product-sale">
-                                        <li><a href="#tab5" class="active" data-bs-toggle="tab">All products</a></li>
-                                        <li><a href="#tab6" data-bs-toggle="tab" class="text-dark">Shipped</a></li>
-                                        <li><a href="#tab7" data-bs-toggle="tab" class="text-dark">Pending</a></li>
-                                        <li><a href="#tab8" data-bs-toggle="tab" class="text-dark">Cancelled</a></li>
-                                    </ul>
-                                </div>
-                            </div> {% endcomment %}
                             <div class="panel-body tabs-menu-body border-0 pt-0">
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="tab5">
@@ -73,58 +24,87 @@ h5.filter_title {
                                             <table id="data-table" class="table table-bordered text-nowrap mb-0">
                                                 <thead class="border-top">
                                                     <tr>
-                                                        {% comment %} <th class="bg-transparent border-bottom-0">UID</th> {% endcomment %}
-                                                        <th class="bg-transparent border-bottom-0">username</th>
-                                                        <th class="bg-transparent border-bottom-0">inApp Products</th>
-                                                        <th class="bg-transparent border-bottom-0">Purchase date</th>
-                                                        {% comment %} <th class="bg-transparent border-bottom-0">Purchased product
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Username
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
                                                         </th>
-                                                        <th class="bg-transparent border-bottom-0">Device Model</th> {% endcomment %}
-                                                        <th class="bg-transparent border-bottom-0">Operating system</th>
-                                                        {% comment %} <th class="bg-transparent border-bottom-0">Device Storage</th> {% endcomment %}
-                                                        <th class="bg-transparent border-bottom-0">Lunch count</th>
-                                                        {% comment %} <th class="bg-transparent border-bottom-0">Push Notification
-                                                            Status</th>
-                                                        <th class="bg-transparent border-bottom-0">Library permission
-                                                            Status</th>
-                                                        <th class="bg-transparent border-bottom-0">Latitude
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">inApp Products
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
                                                         </th>
-                                                        <th class="bg-transparent border-bottom-0">Longitude
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Purchase date
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
                                                         </th>
-                                                        <th class="bg-transparent border-bottom-0">Carrier</th>
-                                                        <th class="bg-transparent border-bottom-0">App Last Opened</th> {% endcomment %}
-                                                        <th class="bg-transparent border-bottom-0">Purchase attempts
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Operating system
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
                                                         </th>
-                                                        {% comment %} <th class="bg-transparent border-bottom-0">Grace Period</th>
-                                                        <th class="bg-transparent border-bottom-0">Remaining grace
-                                                            period days</th> {% endcomment %}
-                                                        <th class="bg-transparent border-bottom-0">Number of projects
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Lunch count
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
                                                         </th>
-                                                        <th class="bg-transparent border-bottom-0">Total time spent</th>
-                                                        <th class="bg-transparent border-bottom-0">total ads served</th>
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            Registered user
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Purchase attempts
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
                                                         </th>
-                                                        {% comment %} <th class="bg-transparent border-bottom-0">
-                                                            Push Notification token
-                                                        </th> {% endcomment %}
-                                                        <th class="bg-transparent border-bottom-0">
-                                                            Action
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Number of projects
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
                                                         </th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Total time spent
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">total ads served
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0">Registered user</th>
+                                                        <th class="bg-transparent border-bottom-0">Action</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody id="table_body">
                                                     {% for row in total_app_datas %}
                                                     <tr class="border-bottom">
-                                                        {% comment %} <td class="text-center">
-                                                            <div class="mt-0 mt-sm-2 d-block">
-                                                                <h6 class="mb-0 fs-14 fw-semibold">
-                                                                    {{ row.UID }}
-                                                                </h6>
-                                                            </div>
-                                                        </td> {% endcomment %}
                                                         <td class="text-center">
-                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                            <div class="mt-0 mt-sm-2 d-block app_view" id="application_data - {{row.username}} - {{row.UID}}">
                                                                 <h6 class="mb-0 fs-14 fw-semibold">
                                                                     {{ row.username }}
                                                                 </h6>
@@ -144,20 +124,6 @@ h5.filter_title {
                                                                 </h6>
                                                             </div>
                                                         </td>
-                                                        {% comment %} <td class="text-center">
-                                                            <div class="mt-0 mt-sm-2 d-block">
-                                                                <h6 class="mb-0 fs-14 fw-semibold">
-                                                                    {{ row.Purchased_product }}
-                                                                </h6>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <div class="mt-0 mt-sm-2 d-block">
-                                                                <h6 class="mb-0 fs-14 fw-semibold">
-                                                                    {{ row.Device_Model }}
-                                                                </h6>
-                                                            </div>
-                                                        </td> {% endcomment %}
                                                         <td class="text-center">
                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                 <h6 class="mb-0 fs-14 fw-semibold">
@@ -165,13 +131,6 @@ h5.filter_title {
                                                                 </h6>
                                                             </div>
                                                         </td>
-                                                        {% comment %} <td class="text-center">
-                                                            <div class="mt-0 mt-sm-2 d-block">
-                                                                <h6 class="mb-0 fs-14 fw-semibold">
-                                                                    {{ row.Device_Storage }}
-                                                                </h6>
-                                                            </div>
-                                                        </td> {% endcomment %}
                                                         <td class="text-center">
                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                 <h6 class="mb-0 fs-14 fw-semibold">
@@ -179,47 +138,6 @@ h5.filter_title {
                                                                 </h6>
                                                             </div>
                                                         </td>
-                                                        {% comment %} <td>
-                                                            <div class="mt-sm-1 d-block">
-                                                                <span
-                                                                    class="badge rounded-pill {% if row.Push_Notification_Status %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">
-                                                                    {{row.Push_Notification_Status }}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="mt-sm-1 d-block">
-                                                                <span
-                                                                    class="badge rounded-pill {% if row.Library_permission_Status %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.Library_permission_Status}}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <div class="mt-0 mt-sm-2 d-block">
-                                                                <h6 class="mb-0 fs-14 fw-semibold">
-                                                                    {{ row.latitude }}
-                                                                </h6>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <div class="mt-0 mt-sm-2 d-block">
-                                                                <h6 class="mb-0 fs-14 fw-semibold">
-                                                                    {{ row.longitude }}
-                                                                </h6>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <div class="mt-0 mt-sm-2 d-block">
-                                                                <h6 class="mb-0 fs-14 fw-semibold">
-                                                                    {{ row.Carrier }}
-                                                                </h6>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <div class="mt-0 mt-sm-2 d-block">
-                                                                <h6 class="mb-0 fs-14 fw-semibold">
-                                                                    {{ row.App_Last_Opened }}
-                                                                </h6>
-                                                            </div>
-                                                        </td> {% endcomment %}
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="ms-3 mt-0 mt-sm-2 d-block">
@@ -229,24 +147,6 @@ h5.filter_title {
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        {% comment %} <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{ row.Grace_Period }}
-                                                                    </h6>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{ row.Remaining_grace_period_days }}
-                                                                    </h6>
-                                                                </div>
-                                                            </div>
-                                                        </td> {% endcomment %}
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
@@ -260,7 +160,7 @@ h5.filter_title {
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
                                                                     <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{ row.Total_time_spent }}
+                                                                        {{ row.Total_time_spent }} (In sec.)
                                                                     </h6>
                                                                 </div>
                                                             </div>
@@ -277,18 +177,10 @@ h5.filter_title {
                                                         <td>
                                                             <div class="mt-sm-1 d-block">
                                                                 <span
-                                                                    class="badge rounded-pill {% if row.Registered_user %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.Registered_user}}</span>
+                                                                    class="badge rounded-pill {% if row.Registered_user %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.Registered_user}}
+                                                                </span>
                                                             </div>
                                                         </td>
-                                                        {% comment %} <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{ row.Push_Notification_token }}
-                                                                    </h6>
-                                                                </div>
-                                                            </div>
-                                                        </td> {% endcomment %}
                                                         <td>
                                                             <div class="g-2">
                                                                 <a href="/admin_site/EditAppData/application_data {{row.aid}}" class="btn text-primary btn-sm"
@@ -307,6 +199,29 @@ h5.filter_title {
                                                 </tbody>
                                             </table>
                                         </div>
+                                        <div class="pagination_div">
+                                            <div class="row align-items-center">
+                                                <div class="col-lg-6">
+                                                    <div class="show_entries">
+                                                        <label class="m-0 d-flex align-items-center">Show 
+                                                            <div class="table_length_outer mx-2">
+                                                            <select id="table_length">
+                                                                <option class="selected" value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                            </select>
+                                                        </div>
+                                                        entries</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="pages">
+                                                        <ul class="pagination m-0" id="app_user_Pagination"></ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -316,46 +231,37 @@ h5.filter_title {
             </div>
         </div>
     </div>
-    {% comment %} <div class="col-lg-4">
-        <div class="filter_box">
-            <div class="filter_title">
-                <h3>
-                    Filter
-                </h3>
+</div>
+
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="Modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="largeModalLabel">
+                </h5>
             </div>
-            <div class="filter_body">
-                <div class="filter_data_list">
-                    <h5 class="filter_title">
-                        By gender
-                    </h5>
-                    <ul>
-                        <li>
-                            <a href="#">All</a>
-                        </li>
-                        <li>
-                            <a href="#">Male</a>
-                        </li>
-                        <li>
-                            <a href="#">Female</a>
-                        </li>
-                        <li>
-                            <a href="#">Other</a>
-                        </li>
-                    </ul>
-                </div>
+            <div class="modalbody main-profile-modal-wrp">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
             </div>
         </div>
-    </div> {% endcomment %}
+    </div>
 </div>
+
 {% endblock %}
 {% block scripts %}
     import swal from 'sweetalert2';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
+    
+    {% comment %} delete data {% endcomment %}
     <script>
         $(".delete_class").click(function () {
             delete_id = $(this).attr('id')
-            alert(delete_id)
 
             swal({
                 title: "Are you sure?",
@@ -376,6 +282,384 @@ h5.filter_title {
             }).catch(swal.noop);
         });
 
+    </script>
+
+    {% comment %} view modal {% endcomment %}
+    <script>
+        $('.app_view').on('click', function () {
+            id = $(this).attr('id');
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/application_data/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`Application Data`)
+                    $(".modalbody").append(`
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>UID</strong>
+                                        <label>
+                                            ${data.UID}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>InApp Products</strong>
+                                        <label>
+                                            ${data.inApp_Products}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Purchase date</strong>
+                                        <label>
+                                            ${data.Purchase_date}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Purchased product</strong>
+                                        <label>
+                                            ${data.Purchased_product}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Device Model</strong>
+                                        <label>
+                                            ${data.Device_Model}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Operating system</strong>
+                                        <label>
+                                            ${data.operating_system}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Device Storage</strong>
+                                        <label>
+                                            ${data.Device_Storage}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Lunch count</strong>
+                                        <label>
+                                            ${data.Lunch_count}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Push Notification Status</strong>
+                                        <label>
+                                            ${data.Push_Notification_Status}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Library permission Status</strong>
+                                        <label>
+                                            ${data.Library_permission_Status}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Latitude</strong>
+                                        <label>
+                                            ${data.latitude}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Longitude</strong>
+                                        <label>
+                                            ${data.longitude}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Carrier</strong>
+                                        <label>
+                                            ${data.Carrier}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>App Last Opened</strong>
+                                        <label>
+                                            ${data.App_Last_Opened}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Purchase attempts</strong>
+                                        <label>
+                                            ${data.Purchase_attempts}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Grace Period</strong>
+                                        <label>
+                                            ${data.Grace_Period}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Remaining grace period days</strong>
+                                        <label>
+                                            ${data.Remaining_grace_period_days}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Number of projects</strong>
+                                        <label>
+                                            ${data.Number_of_projects}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Total time spent</strong>
+                                        <label>
+                                            ${data.Total_time_spent}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Total ads served</strong>
+                                        <label>
+                                            ${data.total_ads_served}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Registered user</strong>
+                                        <label>
+                                            ${data.Registered_user}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Push Notification token</strong>
+                                        <label>
+                                            ${data.Push_Notification_token}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            `);
+                    $(".modal-footer").append(`
+                        <button type="button" id="editbtn" class="btn btn-success">
+                            <a class="editbtn" href="/admin_site/EditAppData/application_data ${profileresult.res.pk}">Edit</a>
+                        </button>
+                    `);
+                    $("#Modal").modal('show');
+                }
+            })
+        })
+    </script>
+
+    {% comment %} refresh and close view modal {% endcomment %}
+    <script>
+        $(document).on('click', '#closebtn', function () {
+            $('#Modal').modal('hide');
+        })
+        $("#Modal").on("hidden.bs.modal", function () {
+            $("#largeModalLabel").html("");
+            $(".modalbody").html("");
+            $(".modal-footer").html(`<button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                    </button>`);
+        });
+    </script>
+
+    {% comment %} sorting {% endcomment %}
+    <script>
+        $('#data-table th.sortit').click(function () {
+            var table = $(this).parents('table').eq(0)
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        
+            this.asc = !this.asc
+            console.log(this.asc)
+            if (this.asc == true) {
+              console.log($(this).children('span').children('.sort-order'))
+              $(this).children('span').children('.sort-order').addClass('upOrder')
+              $(this).children('span').children('.sort-order').removeClass('downOrder')
+        
+            } else {
+              $(this).children('span').children('.sort-order').addClass('downOrder')
+              $(this).children('span').children('.sort-order').removeClass('upOrder')
+        
+            }
+            if (!this.asc) { rows = rows.reverse() }
+            for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+          })
+          function comparer(index) {
+            return function (a, b) {
+              var valA = getCellValue(a, index), valB = getCellValue(b, index)
+              return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+            }
+          }
+          function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
+    </script>
+
+    {% comment %} searchbar {% endcomment %}
+    <script>
+        $(document).ready(function () {
+            $("#searchbar").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#data-table tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+    {% comment %} pagination {% endcomment %}
+    <script>
+        function makePaginationTable(pageRange) {
+            function getPageList(totalPages, page, maxLength) {
+                if (maxLength < 5) throw "maxLength must be at least 5";
+        
+                function range(start, end) {
+                    return Array.from(Array(end - start + 1), (_, i) => i + start);
+                }
+            
+            
+                var sideWidth = maxLength < 9 ? 1 : 2;
+                var leftWidth = (maxLength - sideWidth * 2 - 3) >> 1;
+                var rightWidth = (maxLength - sideWidth * 2 - 2) >> 1;
+                if (totalPages <= maxLength) {
+                    // no breaks in list
+                    return range(1, totalPages);
+                }
+                if (page <= maxLength - sideWidth - 1 - rightWidth) {
+                    // no break on left of page
+                    return range(1, maxLength - sideWidth - 1)
+                    .concat(0, range(totalPages - sideWidth + 1, totalPages));
+                }
+                if (page >= totalPages - sideWidth - 1 - rightWidth) {
+                    // no break on right of page
+                    return range(1, sideWidth)
+                    .concat(0, range(totalPages - sideWidth - 1 - rightWidth - leftWidth, totalPages));
+                }
+                // Breaks on both sides
+                return range(1, sideWidth)
+                    .concat(0, range(page - leftWidth, page + rightWidth),
+                    0, range(totalPages - sideWidth + 1, totalPages));
+            }
+            
+                // Below is an example use of the above function.
+            $(function () {
+                // Number of items and limits the number of items per page
+                var numberOfItems = $("#table_body tr").length;
+            
+                var limitPerPage = pageRange;
+                // Total pages rounded upwards
+                var totalPages = Math.ceil(numberOfItems / limitPerPage);
+                // Number of buttons at the top, not counting prev/next,
+                // but including the dotted buttons.
+                // Must be at least 5:
+                var paginationSize = 7;
+                var currentPage;
+            
+                function showPage(whichPage) {
+            
+                    if (whichPage < 1 || whichPage > totalPages) return false;
+                    currentPage = whichPage;
+                    $("#table_body tr").hide()
+                    .slice((currentPage - 1) * limitPerPage,
+                        currentPage * limitPerPage).show();
+                    // Replace the navigation items (not prev/next):            
+                    $("#app_user_Pagination li").slice(1, -1).remove();
+                    getPageList(totalPages, currentPage, paginationSize).forEach(item => {
+                    $("<li>").addClass("page-item")
+                        .addClass(item ? "current-page" : "disabled")
+                        .toggleClass("active", item === currentPage).append(
+                        $("<a>").addClass("page-link").attr({
+                            href: "javascript:void(0)"
+                        }).text(item || "...")
+                        ).insertBefore("#app_user_Pagination #next-page");
+                    });
+                    // Disable prev/next when at first/last page:
+                    $("#app_user_Pagination #previous-page").toggleClass("disabled", currentPage === 1);
+                    $("#app_user_Pagination #next-page").toggleClass("disabled", currentPage === totalPages);
+                    return true;
+                }
+            
+                // Include the prev/next buttons:
+                $("#app_user_Pagination").append(
+                    $("<li>").addClass("page-item").attr({ id: "previous-page" }).append(
+                    $("<a>").addClass("page-link").attr({
+                        href: "javascript:void(0)"
+                    }).text("<")
+                    ),
+                    $("<li>").addClass("page-item").attr({ id: "next-page" }).append(
+                    $("<a>").addClass("page-link").attr({
+                        href: "javascript:void(0)"
+                    }).text(">")
+                    )
+                );
+                // Show the page links
+                $(".datatable-body").show();
+                showPage(1);
+            
+                // Use event delegation, as these items are recreated later    
+                $(document).on("click", "#app_user_Pagination li.current-page:not(.active)", function () {
+                    return showPage(+$(this).text());
+                });
+                $("#app_user_Pagination #next-page").on("click", function () {
+                    return showPage(currentPage + 1);
+                });
+            
+                $("#app_user_Pagination #previous-page").on("click", function () {
+                    return showPage(currentPage - 1);
+                });
+            });
+        }
+        makePaginationTable(10)
+        $(document).ready(function(){
+            $("select#table_length").change(function(){
+                var data = parseInt($(this).children("option:selected").val());
+                console.log(data, typeof data)
+                if(data==25){
+                    makePaginationTable(25)
+                }else if(data==50){
+                    makePaginationTable(50)
+                }else if(data==100){
+                    makePaginationTable(100)
+                }else if(data==10){
+                    makePaginationTable(10)
+                }
+            });
+        });
+        
     </script>
 {% endblock scripts %}
 

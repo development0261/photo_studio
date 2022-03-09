@@ -34,7 +34,6 @@ for row in users_obj:
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
-        print(attrs['username'])
         if custom_user.objects.filter(username=attrs['username']).exists():
             if not check_password(attrs['password'], custom_user.objects.get(username=attrs['username']).password):
                 return {"Error": "Invalid Password"}
@@ -84,18 +83,15 @@ def register(request):
                                 pat = re.compile(reg)
                                 mat = re.search(pat, password)
                                 if mat:
-                                    if len(social_token)>0 and len(social_registration) and len(social_account)>0:
-                                        user = custom_user.objects.create_user(
-                                            username=username, password=password, email=email)
-                                        user.save()
-                                        data = Profile(
-                                            username=user, name=name, mobile=mobile, gender=gender.upper(), social_token=social_token, social_registration=social_registration, social_account=social_account)
-                                        if 'profile_image' in request.FILES:
-                                            data.profile_image = profile_image
-                                        data.save()
-                                        return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
-                                    else:
-                                        return Response({"Error": "Enter valid social_token,social_registration and social_account!"}, status=status.HTTP_400_BAD_REQUEST)
+                                    user = custom_user.objects.create_user(
+                                        username=username, password=password, email=email)
+                                    user.save()
+                                    data = Profile(
+                                        username=user, name=name, mobile=mobile, gender=gender.upper(), social_token=social_token, social_registration=social_registration, social_account=social_account)
+                                    if 'profile_image' in request.FILES:
+                                        data.profile_image = profile_image
+                                    data.save()
+                                    return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
                                 else:
                                     return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                             else:
@@ -130,6 +126,49 @@ def register(request):
         else:
             return Response({"Error": "custom_user Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
 
+# @api_view(['POST'])
+# def social_media_registration(request):
+#     if request.method == "POST":
+#         username = request.POST['username']
+#         email = request.POST['email']
+#         password = request.POST['password']
+#         name = request.POST['name']
+#         social_token = request.POST['social_token']
+#         social_registration = request.POST['social_registration']
+#         social_account = request.POST['social_account']
+
+#         if 'profile_image' in request.FILES:
+#             profile_image = request.FILES['profile_image']
+
+#         if not custom_user.objects.filter(username=username).exists():
+#             if len(username) > 5:
+#                 if not custom_user.objects.filter(email=email).exists():
+#                     if(re.fullmatch(for_email, email)):
+#                         pat = re.compile(reg)
+#                         mat = re.search(pat, password)
+#                         if mat:
+#                             if len(social_token)>0 and len(social_registration) and len(social_account)>0:
+#                                 user = custom_user.objects.create_user(
+#                                     username=username, password=password, email=email)
+#                                 user.save()
+#                                 data = Profile(
+#                                     username=user, name=name, social_token=social_token, social_registration=social_registration, social_account=social_account)
+#                                 if 'profile_image' in request.FILES:
+#                                     data.profile_image = profile_image
+#                                 data.save()
+#                                 return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
+#                             else:
+#                                 return Response({"Error": "Enter valid social_token,social_registration and social_account!"}, status=status.HTTP_400_BAD_REQUEST)
+#                         else:
+#                             return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
+#                     else:
+#                         return Response({"Error": "Enter valid email address"}, status=status.HTTP_400_BAD_REQUEST)
+#                 else:
+#                     return Response({"Error": "custom_user Already Exist with this email address"}, status=status.HTTP_400_BAD_REQUEST)
+#             else:
+#                 return Response({"Error": "Username length must be greater than 6"}, status=status.HTTP_400_BAD_REQUEST)
+#         else:
+#             return Response({"Error": "custom_user Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def send_link(request):
@@ -140,7 +179,7 @@ def send_link(request):
             user_with_email = custom_user.objects.get(email=email)
             recipient_list.append(user_with_email.email)
 
-            # Link = 'http://127.0.0.1:8001/forgot_password/'
+            # Link = 'http://127.0.0.1:8001/home/forgot_password/'
             Link = 'http://185.146.21.235:7800/home/forgot_password/'
             characters = string.ascii_letters + string.digits + punctuation
             token = ''.join(random.choice(characters) for i in range(50))
@@ -607,7 +646,7 @@ def delete_account(request):
 
             return Response({"Success": "Your account is under deleting process and deleted in 30 days."}, status=status.HTTP_200_OK)
         else:
-            return Response({"Error": "custom_user not found"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])

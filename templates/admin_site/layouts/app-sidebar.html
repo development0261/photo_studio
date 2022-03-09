@@ -5,11 +5,8 @@
                 <div class="app-sidebar">
                     <div class="side-header">
                         <a class="header-brand1 admin_logo" href="{% url 'index' %}">
-                            {% comment %} <img src="{% static 'assets/images/brand/logo.png'%}" class="header-brand-img desktop-logo" alt="logo">
-                            <img src="{% static 'assets/images/brand/logo-1.png'%}" class="header-brand-img toggle-logo" alt="logo">
-                            <img src="{% static 'assets/images/brand/logo-2.png'%}" class="header-brand-img light-logo" alt="logo">
-                            <img src="{% static 'assets/images/brand/logo-3.png'%}" class="header-brand-img light-logo1" alt="logo"> {% endcomment %}
-                            Admin
+                            <img src="{% static 'assets/images/brand/logo-new.png'%}" style="height: 40px;" alt="logo">
+                            <span class="admin_name">Admin</span>
                         </a>
                         <!-- LOGO -->
                     </div>
@@ -25,26 +22,29 @@
                             <li class="sub-category">
                                 <h3>Tables</h3>
                             </li>
-                            <li class="slide">
-                                <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">HOME</span><i class="angle fe fe-chevron-right"></i></a>
-                                <ul class="slide-menu">
-                                    <li class="side-menu-label1"><a href="javascript:void(0)">HOME</a></li>
-                                    <li><a href="/admin_site/AdminUsers/" class="slide-item">Admin Users</a></li>
-                                    <li><a href="/admin_site/AppUsers/" class="slide-item">App Users</a></li>
-                                    {% for row in home_models %}
-                                    <li><a href="/admin_site/{{row}}/" class="slide-item">{{row}}</a></li>
-                                    {% endfor %}
-                                </ul>
+
+                            <li class="admin_tables">
+                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin_site/AdminUsers/"> <i class="side-menu__icon fa fa-angle-double-right"></i><span class="side-menu__label">Admin Users</span></a>
                             </li>
-                            <li class="slide">
-                                <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">TOTP devices</span><i class="angle fe fe-chevron-right"></i></a>
-                                <ul class="slide-menu">
-                                    <li class="side-menu-label1"><a href="javascript:void(0)">TOTP devices</a></li>
-                                    {% for row in totp %}
-                                    <li><a href="/admin_site/{{row}}/" class="slide-item">{{row}}</a></li>
-                                    {% endfor %}
-                                </ul>
+                            <li class="admin_tables">
+                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin_site/AppUsers/"> <i class="side-menu__icon fa fa-angle-right"></i><span class="side-menu__label">App Users</span></a>
                             </li>
+                            {% for row in home_models %}
+                            <li class="admin_tables">
+                                <a class="side-menu__item" data-bs-toggle="slide"
+                                    {% if row == "User Preference" %}
+                                        href="/admin_site/user_preference/"                                            
+                                    {% elif row == "Application Data" %}
+                                        href="/admin_site/application_data/"
+                                    {% else %} href="/admin_site/{{row}}/" {% endif %}>
+                                    <i class="side-menu__icon fa fa-angle-right"></i>
+                                    <span class="side-menu__label">
+                                        {{row}}
+                                    </span>
+                                </a>
+                            </li>
+                            {% endfor %}
+
                             {% comment %} <li class="sub-category">
                                 <h3>UI Kit</h3>
                             </li>

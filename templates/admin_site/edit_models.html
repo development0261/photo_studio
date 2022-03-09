@@ -1,71 +1,7 @@
 {% extends 'admin_site/base.html' %}
 {% load static %}
 {% block styles %}
-<style>
-    input.btn-primary,
-    button#closebtn {
-        margin-left: 20px;
-        padding: 7px;
-        border-radius: 6px;
-        border: none;
-        background-color: #6c5ffc;
-        line-height: 23px;
-    }
-
-    button#closebtn a {
-        color: #fff;
-
-    }
-
-    .edit_form_title {
-        margin-top: 30px;
-        border-radius: 7px 7px 0 0;
-        background-color: #fff;
-        padding: 1.2rem 1.5rem;
-        border-bottom: 1px solid #e9edf4;
-    }
-
-    .edit_form_title h3 {
-        margin: 0;
-    }
-
-    .form_body {
-        background-color: #fff;
-        padding: 1.2rem 1.5rem;
-        border-radius: 0 0 7px 7px;
-    }
-
-    .profile_field input {
-        border: 1px solid #e9edf4;
-        border-radius: 5px;
-        padding: 5px;
-    }
-
-    .profile_field {
-        margin-bottom: 11px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .profile_field strong {
-        color: #282f53;
-        font-size: 15px;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    input:focus-visible {
-        outline: none;
-    }
-
-    .btns {
-        margin-left: 800px;
-    }
-    #readonly{
-        background-color: #e9edf4;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'assets/css/edit_models.css' %}">
 {% endblock %}
 {% block content %}
     <div class="edit_form">
@@ -78,7 +14,7 @@
                 <div class="row">
                     <div class="col-lg-12 col-sm-12">
                         {% for row in result %}
-                            <div class="col-lg-5">
+                            <div class="col-lg-6">
                                 <div class="profile_field">
                                     <strong>Username</strong>
                                     <div class="name">
@@ -86,7 +22,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-6">
                                 <div class="profile_field">
                                     <strong>First name</strong>
                                     <div class="name">
@@ -94,7 +30,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-6">
                                 <div class="profile_field">
                                     <strong>Last name</strong>
                                     <div class="name">
@@ -104,7 +40,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-6">
                                 <div class="profile_field">
                                     <strong>Email</strong>
                                     <div class="name">
@@ -130,10 +66,3 @@
         </div>
     </div>
 {% endblock %}
-{% block scripts %}
-    <script>
-        // $("btn-primary").click(function () {
-        //     alert("Record Updated")
-        // })
-    </script>
-{% endblock scripts %}

@@ -1,168 +1,7 @@
 {% extends 'admin_site/base.html' %}
 {% load static %}
 {% block styles %}
-<style>
-    .row {
-        margin-top: 27px !important;
-    }
-
-    .tab-content i,
-    .tabs-menu2 ul li .active {
-        color: #27cf09;
-    }
-
-    i.fa.fa-eye {
-        cursor: pointer;
-    }
-
-    .main-profile-modal-wrp {
-        position: relative;
-        padding: 1rem;
-    }
-
-    .profile-field {
-        position: relative;
-        margin-bottom: 10px;
-        width: 100%;
-        display: flex;
-    }
-
-    .profile-field strong {
-
-        font-size: 14px;
-
-        display: inline-block;
-        color: Black;
-        width: 40%;
-    }
-
-    .profile-field label {
-        width: 60%;
-    }
-
-    .avtar-profile {
-        width: 150px;
-        height: 150px;
-    }
-
-    .avtar-profile img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-
-    h5#largeModalLabel {
-        font-size: 25px;
-        color: #05c3fb;
-    }
-
-    #Modal {
-        margin: 10px !important;
-    }
-
-        {
-        % comment %
-    }
-
-    model edit form {
-        % endcomment %
-    }
-
-    .profile_field strong {
-        color: #282f53;
-        font-size: 15px;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    .modalbody .profile_field input {
-        border: 1px solid #e9edf4;
-        border-radius: 5px;
-        padding: 5px;
-    }
-
-    .profile_field {
-        margin-bottom: 11px;
-    }
-
-        {
-        % comment %
-    }
-
-    end model edit form css {
-        % endcomment %
-    }
-
-        {
-        % comment %
-    }
-
-    filter_CSS {
-        % endcomment %
-    }
-
-    .filter_title h3 {
-        font-size: 1rem;
-        font-weight: 500;
-    }
-
-    .filter_title h3 {
-        font-size: 1rem;
-        font-weight: 500;
-        padding: 1.2rem 1.5rem;
-        border-bottom: 1px solid #e9edf4;
-        margin-bottom: 0;
-    }
-
-    .filter_box {
-        background-color: #fff;
-        border-radius: 7px;
-    }
-
-    .filter_body {
-        padding: 1.2rem 1.5rem;
-    }
-
-    h5.filter_title {
-        font-weight: 500;
-    }
-
-    .filter_data_list ul li a {
-        color: #2e3138;
-    }
-
-    .filter_data_list {
-        margin-top: 10px;
-        border-top: 1px solid #e9edf4;
-        padding-top: 10px;
-    }
-
-    .filter_data_list:first-child {
-        border: none;
-        margin-top: 0;
-        padding-top: 0;
-    }
-
-    .filter_body a.active {
-        color: #6c5ffc !important;
-    }
-
-    li:hover {
-        background-color: #efeff4;
-    }
-
-    h6:hover {
-        background-color: #efeff4;
-    }
-
-        {
-        % comment %
-    }
-
-    end filter css {
-        % endcomment %
-    }
-</style>
+<link rel="stylesheet" href="{% static 'assets/css/admin_user.css' %}">
 {% endblock %}
 {% block content %}
 <form method="post">
@@ -172,6 +11,9 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title mb-0">Admin Users</h3>
+                    <div class="main-header-center ms-3 d-none d-lg-block">
+                        <input id='searchbar' class="form-control" placeholder="Search for results..." type="search">
+                    </div>
                 </div>
                 <div class="card-body pt-4">
                     <div class="grid-margin">
@@ -184,21 +26,65 @@
                                                 <thead class="border-top">
                                                     <tr>
                                                         <th class="bg-transparent border-bottom-0">Id</th>
-                                                        <th class="bg-transparent border-bottom-0">Username</th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Username
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+
                                                         <!-- <th class="bg-transparent border-bottom-0">Password</th> -->
-                                                        <th class="bg-transparent border-bottom-0">Firstname</th>
-                                                        <th class="bg-transparent border-bottom-0">Lastname</th>
-                                                        <th class="bg-transparent border-bottom-0">Email Address</th>
-                                                        <th class="bg-transparent border-bottom-0">Active</th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Firstname
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Lastname
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Email Address
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+                                                        {% comment %} <th class="bg-transparent border-bottom-0">Active</th>
                                                         <th class="bg-transparent border-bottom-0">Staff Status</th>
-                                                        <th class="bg-transparent border-bottom-0">Superuser Status</th>
-                                                        <th class="bg-transparent border-bottom-0">Last Login</th>
-                                                        <th class="bg-transparent border-bottom-0">Date Joined</th>
+                                                        <th class="bg-transparent border-bottom-0">Superuser Status</th> {% endcomment %}
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Last Login
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Date Joined
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
                                                         {% comment %} <th class="bg-transparent border-bottom-0">Confirm
                                                             Token</th> {% endcomment %}
                                                         <th class="bg-transparent border-bottom-0">app_datas</th>
                                                         <th class="bg-transparent border-bottom-0">Preferences</th>
-                                                        <th class="bg-transparent border-bottom-0">products</th>
+                                                        {% comment %} <th class="bg-transparent border-bottom-0">products</th> {% endcomment %}
                                                         <th class="bg-transparent border-bottom-0">profiles</th>
                                                         <th class="bg-transparent border-bottom-0">purchases</th>
                                                         <th class="bg-transparent border-bottom-0">tags</th>
@@ -253,7 +139,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        {% comment %} <td>
                                                             <div class="mt-sm-1 d-block">
                                                                 <span
                                                                     class="badge rounded-pill {% if i.is_active %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{i.is_active }}</span>
@@ -270,7 +156,7 @@
                                                                 <span
                                                                     class="badge rounded-pill {% if i.is_superuser %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{i.is_superuser }}</span>
                                                             </div>
-                                                        </td>
+                                                        </td> {% endcomment %}
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
@@ -319,7 +205,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        {% comment %} <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
                                                                     <h6 class="mb-0 fs-14 fw-semibold"
@@ -329,7 +215,7 @@
                                                                     </h6>
                                                                 </div>
                                                             </div>
-                                                        </td>
+                                                        </td> {% endcomment %}
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
@@ -421,12 +307,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    
     {% comment %} view {% endcomment %}
     <script>
         $("h6").click(function () {
             id = $(this).attr('id')
             if (id.substring(id.length - 5) == 'False') {
-                alert("Add Data First!!");
+                alert("There is no data!!");
             }
             else {
                 if (id.substring(0, 7) == 'Profile') {
@@ -442,7 +329,9 @@
                                             <div class="profile-field">
                                                 <strong>Profile Image</strong>
                                                 <div class="avtar-profile">
-                                                    <img src="/media/${data.profile_image}" style="width: 60%;">
+                                                    ${
+                                                        data.profile_image!="" ? `<img src="/media/${data.profile_image}" style="width: 50%;">`:`No image`
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -450,7 +339,9 @@
                                             <div class="profile-field">
                                                 <strong>Avatar</strong>
                                                 <div class="avtar-profile">
-                                                    <img src="/media/${data.avatar}" style="width: 60%;">
+                                                    ${
+                                                        data.avatar !="" ? `<img src="/media/${data.avatar}" style="width: 50%;">`:`No Image`
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -910,7 +801,9 @@
                                             <div class="profile-field">
                                                 <strong>Signature</strong>
                                                 <div class="avtar-profile">
-                                                    <img src="/media/${data.signature}" style="width: 60%;">
+                                                    ${
+                                                        data.signature !="" ? `<img src="/media/${data.signature}" style="width: 50%;">`:`No Image`
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -1200,6 +1093,7 @@
             }
         });
     </script>
+
     {% comment %} refresh and close view modal {% endcomment %}
     <script>
         $(document).on('click', '#closebtn', function () {
@@ -1213,6 +1107,7 @@
                     </button>`);
         });
     </script>
+
     {% comment %} delete modal(sweet alert) {% endcomment %}
     <script>
         $(".delete_class").click(function () {
@@ -1236,12 +1131,54 @@
                 }).catch(swal.noop);
         });
     </script>
+
     {% comment %} filters {% endcomment %}
     <script>
         $('.filter_body a').on('click', function () {
-            {% comment %} alert("yess") {% endcomment %}
             $('.filter_body a.active').removeClass('active');
             $(this).addClass('active');
         });
+    </script>
+
+    {% comment %} searchbar {% endcomment %}
+    <script>
+        $(document).ready(function () {
+            $("#searchbar").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#data-table tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
+
+    {% comment %} sorting {% endcomment %}
+    <script>
+        $('#data-table th.sortit').click(function () {
+            var table = $(this).parents('table').eq(0)
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        
+            this.asc = !this.asc
+            console.log(this.asc)
+            if (this.asc == true) {
+              console.log($(this).children('span').children('.sort-order'))
+              $(this).children('span').children('.sort-order').addClass('upOrder')
+              $(this).children('span').children('.sort-order').removeClass('downOrder')
+        
+            } else {
+              $(this).children('span').children('.sort-order').addClass('downOrder')
+              $(this).children('span').children('.sort-order').removeClass('upOrder')
+        
+            }
+            if (!this.asc) { rows = rows.reverse() }
+            for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+          })
+          function comparer(index) {
+            return function (a, b) {
+              var valA = getCellValue(a, index), valB = getCellValue(b, index)
+              return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+            }
+          }
+          function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
     </script>
 {% endblock scripts %}

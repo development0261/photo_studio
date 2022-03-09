@@ -25,7 +25,8 @@ urlpatterns = [
     path('DeleteAppData/<str:para>', views.delete_app_data, name="delete_app_data"),
 
     path('Purchase/', views.purchase_model, name="Purchase"),
-    path('Purchase/<str:info>', views.view_purchase, name="view_purchase"),
+    path('Purchase/<str:info>', views.view_purchases, name="view_purchases"),
+    path('specific_purchase/<str:info>', views.view_purchase, name="view_purchase"),
     path('DeletePurchase/<str:para>', views.delete_purchase, name="delete_purchase"),
     
     path('Tag/', views.tag_model, name="Tag"),
@@ -34,6 +35,7 @@ urlpatterns = [
 
     path('Product/', views.product_model, name="Product"),
     path('Product/<str:info>', views.view_product, name="view_product"),
+    path('specific_product/<str:info>', views.specific_product, name="specific_product"),
     path('DeleteProduct/<str:para>', views.delete_product, name="delete_product"),
 
     path('UserEdit/<str:para>', views.user_edit, name="user_edit"),

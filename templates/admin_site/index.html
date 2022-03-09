@@ -1,25 +1,7 @@
 {% extends 'admin_site/base.html' %}
 {% load static %}
 {% block styles %}
-<style>
-    .col-lg-12.col-md-12.col-sm-12.col-xl-12 {
-        margin-top: 27px;
-    }
-
-    .table_link {
-        text-decoration: none;
-        color: inherit;
-    }
-    .table_link:hover {
-        background-color: #e5f9ff;
-        text-decoration: none;
-        color: inherit;
-    }
-    button.closebutton {
-        margin-left: 757px;
-        border: 1px green;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'assets/css/index.css' %}">
 {% endblock %}
 {% block content %}
 {% if messages %}
@@ -35,13 +17,13 @@
 <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-            <div class="card overflow-hidden">
-                <a class="table_link" href="{% url 'custom_user' %}">
-                    <div class="card-body" id="total_users">
+            <div class="card overflow-hidden  box-size">
+                <a class="table_link" href="{% url 'adminusers' %}">
+                    <div class="card-body" id="total_admins">
                         <div class="d-flex">
                             <div class="mt-2">
-                                <h6 class="">Total Users</h6>
-                                <h2 class="mb-0 number-font">{{total_users.count}}</h2>
+                                <h6 class="">Total Admin Users</h6>
+                                <h2 class="mb-0 number-font">{{total_admins.count}}</h2>
                             </div>
                             <div class="ms-auto">
                                 <div class="chart-wrapper mt-1">
@@ -57,7 +39,29 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-            <div class="card overflow-hidden">
+            <div class="card overflow-hidden  box-size">
+                <a class="table_link" href="{% url 'custom_user' %}">
+                    <div class="card-body" id="total_locals">
+                        <div class="d-flex">
+                            <div class="mt-2">
+                                <h6 class="">Total App Users</h6>
+                                <h2 class="mb-0 number-font">{{total_locals.count}}</h2>
+                            </div>
+                            <div class="ms-auto">
+                                <div class="chart-wrapper mt-1">
+                                    <canvas id="saleschart" class="h-8 w-9 chart-dropshadow"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="text-muted fs-12"><span class="text-secondary"><i
+                                    class="fe fe-arrow-up-circle  text-secondary"></i> 5%</span>
+                            Last week</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+            <div class="card overflow-hidden  box-size">
                 <a class="table_link" href="{% url 'Profile' %}">
 
                     <div class="card-body" id="total_profiles">
@@ -80,7 +84,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-            <div class="card overflow-hidden">
+            <div class="card overflow-hidden  box-size">
                 <a class="table_link" href="{% url 'user_preference' %}">
 
                     <div class="card-body" id="total_details">
@@ -103,7 +107,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-            <div class="card overflow-hidden">
+            <div class="card overflow-hidden  box-size">
                 <a class="table_link" href="{% url 'application_data' %}">
 
                     <div class="card-body" id="total_app_datas">
@@ -126,7 +130,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-            <div class="card overflow-hidden">
+            <div class="card overflow-hidden  box-size">
                 <a class="table_link" href="{% url 'Purchase' %}">
 
                     <div class="card-body" id="total_purchases">
@@ -149,7 +153,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-            <div class="card overflow-hidden">
+            <div class="card overflow-hidden  box-size">
                 <a class="table_link" href="{% url 'Tag' %}">
 
                     <div class="card-body" id="total_tags">
@@ -172,7 +176,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-            <div class="card overflow-hidden">
+            <div class="card overflow-hidden  box-size">
                 <a class="table_link" href="{% url 'Product' %}">
 
                     <div class="card-body" id="total_products">
@@ -195,7 +199,7 @@
             </div>
         </div>
         <!-- <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-            <div class="card overflow-hidden">
+            <div class="card overflow-hidden  box-size">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="mt-2">
@@ -216,7 +220,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-            <div class="card overflow-hidden">
+            <div class="card overflow-hidden  box-size">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="mt-2">
@@ -237,7 +241,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-            <div class="card overflow-hidden">
+            <div class="card overflow-hidden  box-size">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="mt-2">

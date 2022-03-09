@@ -1,82 +1,7 @@
 {% extends 'admin_site/base.html' %}
 {% load static %}
 {% block styles %}
-<style>
-    input.btn-primary,
-    button#closebtn {
-        margin-left: 20px;
-        padding: 7px;
-        border-radius: 6px;
-        border: none;
-        background-color: #6c5ffc;
-        line-height: 23px;
-    }
-
-    button#closebtn a {
-        color: #fff;
-
-    }
-
-    .edit_form_title {
-        margin-top: 30px;
-        border-radius: 7px 7px 0 0;
-        background-color: #fff;
-        padding: 1.2rem 1.5rem;
-        border-bottom: 1px solid #e9edf4;
-    }
-
-    .edit_form_title h3 {
-        margin: 0;
-    }
-
-    .form_body {
-        background-color: #fff;
-        padding: 1.2rem 1.5rem;
-        border-radius: 0 0 7px 7px;
-    }
-
-    .profile_field input {
-        border: 1px solid #e9edf4;
-        border-radius: 5px;
-        padding: 5px;
-    }
-
-    .profile_field {
-        margin-bottom: 11px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .profile_field strong {
-        color: #282f53;
-        font-size: 15px;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    input:focus-visible {
-        outline: none;
-    }
-
-    .btns {
-        margin-left: 800px;
-    }
-
-    #readonly {
-        background-color: #e9edf4;
-    }
-
-    label#edit_img {
-        font-size: 12px;
-        margin-left: 165px;
-        display: contents;
-    }
-
-    input[type="file"] {
-        width: 172px;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'assets/css/preference_edit.css' %}">
 {% endblock %}
 {% block content %}
 <div class="edit_form">
@@ -90,18 +15,23 @@
                 <div class="col-lg-12 col-sm-12">
                     {% for row in result %}
                     <input type="hidden" id="username" name="username" value="{{ row.username }}">
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Signature</strong>
                             <div class="name">
                                 <label id="edit_img">
-                                    Currently : <a href="/media/{{ row.signature }}">{{ row.signature }}</a><br>
+                                    {% if row.signature %}
+                                        Currently : <a href="/media/{{ row.signature }}">{{ row.signature }}</a>
+                                        <input type="checkbox" id="signature_check" name="signature_check">
+                                        <label class='signature_check' for="signature_check">Clear</label>
+                                        <br>
+                                    {% endif %}
                                     Change: <input type="file" name="signature">
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Export quality</strong>
                             <div class="name">
@@ -109,7 +39,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Language</strong>
                             <div class="name">
@@ -119,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>User stared templates</strong>
                             <div class="name">
@@ -127,7 +57,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>User stared backgrounds</strong>
                             <div class="name">
@@ -137,7 +67,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>User stared stickers</strong>
                             <div class="name">
@@ -147,7 +77,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>User stared Textart</strong>
                             <div class="name">
@@ -157,7 +87,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>User stared colors</strong>
                             <div class="name">
@@ -167,7 +97,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>User stared fonts</strong>
                             <div class="name">
@@ -177,7 +107,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Most used fonts</strong>
                             <div class="name">
@@ -187,7 +117,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>User custom colors</strong>
                             <div class="name">
@@ -197,7 +127,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Instagram follower</strong>
                             <div class="name">
@@ -207,7 +137,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Grid snapping</strong>
                             <div class="name">
@@ -217,7 +147,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>User recent text</strong>
                             <div class="name">
@@ -227,7 +157,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Appearance mode</strong>
                             <div class="name">
@@ -235,7 +165,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Enable iCloud backup</strong>
                             <div class="name">
@@ -245,7 +175,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Save projects automatically</strong>
                             <div class="name">
@@ -253,7 +183,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Save projects on export</strong>
                             <div class="name">
@@ -263,7 +193,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Notifications permission</strong>
                             <div class="name">
@@ -271,7 +201,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>InApp notifications permission</strong>
                             <div class="name">
@@ -281,7 +211,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Photo library permission</strong>
                             <div class="name">
@@ -289,7 +219,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Digital riyals rewards</strong>
                             <div class="name">
@@ -299,7 +229,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Enable touch</strong>
                             <div class="name">
@@ -309,7 +239,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>App theme</strong>
                             <div class="name">
@@ -319,7 +249,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Always crop</strong>
                             <div class="name">
@@ -344,10 +274,3 @@
     </div>
 </div>
 {% endblock %}
-{% block scripts %}
-<script>
-        // $("btn-primary").click(function () {
-        //     alert("Record Updated")
-        // })
-</script>
-{% endblock scripts %}
