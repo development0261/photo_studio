@@ -79788,11 +79788,6 @@ a.header-brand1.admin_logo {
     font-size: 30px;
 }
 
-a.header-brand1.admin_logo:hover {
-    color: #6c5ffc !important;
-    text-shadow: 1px 1px 20px #04f2fd;
-}
-
 /* scroll */
 ::-webkit-scrollbar-thumb {
     background: #6c5ffc !important; 
