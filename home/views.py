@@ -1,5 +1,5 @@
 
-from xml.dom import ValidationErr
+from xml.dom import ValidationErr  #C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Python 3.9
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.forms import ValidationError
 from NewProject.settings import TIME_ZONE
@@ -30,7 +30,6 @@ users_obj = custom_user.objects.filter(is_active=False)
 for row in users_obj:
     if row.delete_date + timedelta(days=30):
         users_obj.delete()
-
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -538,7 +537,7 @@ def app_data(request):
                                             Purchase_date=Purchase_date,
                                             Purchased_product=Purchased_product,
                                             Device_Model=Device_Model,
-                                            iOS=iOS,
+                                            iOS=operating_system,
                                             Device_Storage=Device_Storage,
                                             Lunch_count=Lunch_count,
                                             Push_Notification_Status=Push_Notification_Status,
