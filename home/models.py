@@ -8,6 +8,9 @@ from django.contrib.postgres.fields import ArrayField
 class custom_user(AbstractUser):
     delete_date = models.DateTimeField(null=True, blank=True)
     confirm_token = models.CharField(null=True, blank=True, max_length=50)
+    social_token = models.CharField(max_length=255, null=True, blank=True)
+    social_registration = models.CharField(max_length=255, null=True, blank=True)
+    social_account = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "custom_user"
@@ -27,9 +30,6 @@ class Profile(models.Model):
     gender = models.CharField(
         max_length=7, choices=GENDER_CHOICES, null=True, blank=True)
     profile_image = models.ImageField(null=True, blank=True)
-    social_token = models.CharField(max_length=255, null=True, blank=True)
-    social_registration = models.CharField(max_length=255, null=True, blank=True)
-    social_account = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     pass_update = models.DateField(blank=True, null=True)
     pass_forgot = models.DateField(blank=True, null=True)

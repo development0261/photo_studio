@@ -1,7 +1,5 @@
 
-from xml.dom import ValidationErr  #C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Python 3.9
 from django.contrib.auth import get_user_model, login, logout, authenticate
-from django.forms import ValidationError
 from NewProject.settings import TIME_ZONE
 from .models import custom_user
 from .models import Profile, user_preference, application_data, Purchase, Product
@@ -102,72 +100,60 @@ def register(request):
                             pat = re.compile(reg)
                             mat = re.search(pat, password)
                             if mat:
-                                if len(social_token)>0 and len(social_registration) and len(social_account)>0:
-                                    user = custom_user.objects.create_user(
-                                        username=username, password=password, email=email)
-                                    user.save()
-                                    data = Profile(
-                                        username=user, name=name, mobile=mobile, gender=gender.upper())
-                                    if 'profile_image' in request.FILES:
-                                        data.profile_image = profile_image
-                                    data.save()
-                                    return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
-                                else:
-                                    return Response({"Error": "Enter valid social_token,social_registration and social_account!"}, status=status.HTTP_400_BAD_REQUEST)
+                                user = custom_user.objects.create_user(
+                                    username=username, password=password, email=email)
+                                user.save()
+                                data = Profile(
+                                    username=user, name=name, mobile=mobile, gender=gender.upper())
+                                if 'profile_image' in request.FILES:
+                                    data.profile_image = profile_image
+                                data.save()
+                                return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
                             else:
                                 return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                         else:
                             return Response({"Error": "Enter valid email address"}, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return Response({"Error": "custom_user Already Exist with this email address"}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"Error": "User Already Exist with this email address"}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response({"Error": "Username length must be greater than 6"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"Error": "custom_user Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Error": "User Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(['POST'])
-# def social_media_registration(request):
-#     if request.method == "POST":
-#         username = request.POST['username']
-#         email = request.POST['email']
-#         password = request.POST['password']
-#         name = request.POST['name']
-#         social_token = request.POST['social_token']
-#         social_registration = request.POST['social_registration']
-#         social_account = request.POST['social_account']
+@api_view(['POST'])
+def social_media_registration(request):
+    if request.method == "POST":
+        social_token = request.POST['social_token']
+        social_registration = request.POST['social_registration']
+        social_account = request.POST['social_account']
 
-#         if 'profile_image' in request.FILES:
-#             profile_image = request.FILES['profile_image']
+        if 'profile_image' in request.FILES:
+            profile_image = request.FILES['profile_image']
 
-#         if not custom_user.objects.filter(username=username).exists():
-#             if len(username) > 5:
-#                 if not custom_user.objects.filter(email=email).exists():
-#                     if(re.fullmatch(for_email, email)):
-#                         pat = re.compile(reg)
-#                         mat = re.search(pat, password)
-#                         if mat:
-#                             if len(social_token)>0 and len(social_registration) and len(social_account)>0:
-#                                 user = custom_user.objects.create_user(
-#                                     username=username, password=password, email=email)
-#                                 user.save()
-#                                 data = Profile(
-#                                     username=user, name=name, social_token=social_token, social_registration=social_registration, social_account=social_account)
-#                                 if 'profile_image' in request.FILES:
-#                                     data.profile_image = profile_image
-#                                 data.save()
-#                                 return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
-#                             else:
-#                                 return Response({"Error": "Enter valid social_token,social_registration and social_account!"}, status=status.HTTP_400_BAD_REQUEST)
-#                         else:
-#                             return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
-#                     else:
-#                         return Response({"Error": "Enter valid email address"}, status=status.HTTP_400_BAD_REQUEST)
-#                 else:
-#                     return Response({"Error": "custom_user Already Exist with this email address"}, status=status.HTTP_400_BAD_REQUEST)
-#             else:
-#                 return Response({"Error": "Username length must be greater than 6"}, status=status.HTTP_400_BAD_REQUEST)
-#         else:
-#             return Response({"Error": "custom_user Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
+        if 'username' in request.POST:
+            username = request.FILES['username']
+        else:
+            username = social_token
+
+        if 'email' in request.POST:
+            email = request.FILES['email']
+        else:
+            email = social_account
+
+        if social_token:
+            if not custom_user.objects.filter(social_token=social_token).exists():
+                user = custom_user.objects.create_user(
+                    username=username[0:10], password=social_token, email=email,
+                    social_token=social_token, social_registration=social_registration, social_account=social_account)
+                user.save()
+
+                # data = Profile(username=user, name=name)
+                # if 'profile_image' in request.FILES:
+                #     data.profile_image = profile_image
+                # data.save()
+                return Response({"Success":"OK"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"Error": "User Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def send_link(request):

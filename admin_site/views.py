@@ -31,22 +31,26 @@ def loginprocess(request):
         password = request.POST['password']
         try:
             user = custom_user.objects.get(email=email)
-            if user.check_password(password):
-                otp_gen = string.digits
-                confirm_otp = ''.join(random.choice(otp_gen) for i in range(6))
-                send_mail(
-                    subject="OTP Verification",
-                    message="Your OTP is  :  " + confirm_otp,
-                    from_email='demo.logixbuiltinfo@gmail.com',
-                    recipient_list=[email],
-                    fail_silently=False,
-                )
-                user.confirm_token = confirm_otp
-                user.save()
-                messages.success(request, 'Check your mail Inbox.')
-                return redirect('login')
+            if user.is_superuser:
+                if user.check_password(password):
+                    otp_gen = string.digits
+                    confirm_otp = ''.join(random.choice(otp_gen) for i in range(6))
+                    send_mail(
+                        subject="OTP Verification",
+                        message="Your OTP is  :  " + confirm_otp,
+                        from_email='demo.logixbuiltinfo@gmail.com',
+                        recipient_list=[email],
+                        fail_silently=False,
+                    )
+                    user.confirm_token = confirm_otp
+                    user.save()
+                    messages.success(request, 'Check your mail Inbox.')
+                    return redirect('login')
+                else:
+                    messages.error(request, 'Please check your password!!!')
+                    return redirect("login")
             else:
-                messages.error(request, 'Please check your password!!!')
+                messages.error(request, 'You arenot admin user!!!')
                 return redirect("login")
         except Exception as e:
             messages.error(request, 'Please check your email!!!')
