@@ -6,7 +6,7 @@ from .models import Profile, user_preference, application_data, Purchase, Produc
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from .serializers import UserSerializer, UserSerializerWithToken, RegistrationSerializer
+from .serializers import UserSerializer, UserSerializerWithToken, RegistrationSerializer, SocialSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
@@ -147,11 +147,16 @@ def social_media_registration(request):
                     social_token=social_token, social_registration=social_registration, social_account=social_account)
                 user.save()
 
-                # data = Profile(username=user, name=name)
-                # if 'profile_image' in request.FILES:
-                #     data.profile_image = profile_image
-                # data.save()
-                return Response({"Success":"OK"}, status=status.HTTP_200_OK)
+                data = Profile(username=user)
+                if 'profile_image' in request.FILES:
+                    data.profile_image = profile_image
+                data.save()
+
+                user_obj = custom_user.objects.get(social_token=social_token)
+                profile_obj = Profile.objects.get(username=user_obj.id)
+                serializer_class = SocialSerializer(profile_obj)
+                print(serializer_class.data)
+                return Response({"Data":serializer_class.data}, status=status.HTTP_200_OK)
             else:
                 return Response({"Error": "User Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
 
