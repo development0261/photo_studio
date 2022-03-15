@@ -155,10 +155,12 @@ def social_media_registration(request):
                 user_obj = custom_user.objects.get(social_token=social_token)
                 profile_obj = Profile.objects.get(username=user_obj.id)
                 serializer_class = SocialSerializer(profile_obj)
-                print(serializer_class.data)
                 return Response({"Data":serializer_class.data}, status=status.HTTP_200_OK)
             else:
-                return Response({"Error": "User Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
+                user_obj = custom_user.objects.get(social_token=social_token)
+                profile_obj = Profile.objects.get(username=user_obj.id)
+                serializer_class = SocialSerializer(profile_obj)
+                return Response({"Data":serializer_class.data}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def send_link(request):

@@ -135,7 +135,7 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 #         'PORT': '5432',
 #     }
 # }
- 
+
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',

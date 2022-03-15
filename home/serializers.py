@@ -53,6 +53,8 @@ class SocialSerializer(serializers.ModelSerializer):
     def get_user(self, register):
         return {
             "social_token":register.username.social_token,
+            "social_account":register.username.social_account,
+            "social_registration":register.username.social_registration,
         }
     class Meta:
         model = Profile
