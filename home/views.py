@@ -160,7 +160,7 @@ def social_media_registration(request):
                 user_obj = custom_user.objects.get(social_token=social_token)
                 profile_obj = Profile.objects.get(username=user_obj.id)
                 serializer_class = SocialSerializer(profile_obj)
-                return Response({"Data":serializer_class.data}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"Data":serializer_class.data}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def send_link(request):
