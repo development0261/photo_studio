@@ -49,6 +49,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class SocialSerializer(serializers.ModelSerializer):
+    token = serializers.SerializerMethodField(read_only=True)
     user = serializers.SerializerMethodField(read_only=True,source="username")
     def get_user(self, register):
         return {
@@ -59,3 +60,7 @@ class SocialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = "__all__"
+
+    def get_token(self, obj):
+        token = RefreshToken.for_user(obj.username)
+        return str(token.access_token)

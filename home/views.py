@@ -24,10 +24,10 @@ reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!
 for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 punctuation = "!#$%&()*+, -./:;<=>?@[\]^_`{|}~"
 
-users_obj = custom_user.objects.filter(is_active=False)
-for row in users_obj:
-    if row.delete_date + timedelta(days=30):
-        users_obj.delete()
+# users_obj = custom_user.objects.filter(is_active=False)
+# for row in users_obj:
+#     if row.delete_date + timedelta(days=30):
+#         users_obj.delete()
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -625,20 +625,20 @@ def purchase_history(request):
             return Response({"Error": "custom_user Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def delete_account(request):
-    if request.method == "POST":
-        username = request.POST['username']
-        user_obj = custom_user.objects.get(username=username)
-        if user_obj:
-            user_obj.is_active = False
-            user_obj.delete_date = datetime.now()
-            user_obj.save()
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def delete_account(request):
+#     if request.method == "POST":
+#         username = request.POST['username']
+#         user_obj = custom_user.objects.get(username=username)
+#         if user_obj:
+#             user_obj.is_active = False
+#             user_obj.delete_date = datetime.now()
+#             user_obj.save()
 
-            return Response({"Success": "Your account is under deleting process and deleted in 30 days."}, status=status.HTTP_200_OK)
-        else:
-            return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)
+#             return Response({"Success": "Your account is under deleting process and deleted in 30 days."}, status=status.HTTP_200_OK)
+#         else:
+#             return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
