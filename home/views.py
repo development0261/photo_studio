@@ -64,9 +64,6 @@ def register(request):
         name = request.POST['name']
         mobile = request.POST['mobile']
         gender = request.POST['gender']
-        social_token = request.POST['social_token']
-        social_registration = request.POST['social_registration']
-        social_account = request.POST['social_account']
 
         if 'profile_image' in request.FILES:
             profile_image = request.FILES['profile_image']
@@ -84,7 +81,7 @@ def register(request):
                                         username=username, password=password, email=email)
                                     user.save()
                                     data = Profile(
-                                        username=user, name=name, mobile=mobile, gender=gender.upper(), social_token=social_token, social_registration=social_registration, social_account=social_account)
+                                        username=user, name=name, mobile=mobile, gender=gender.upper())
                                     if 'profile_image' in request.FILES:
                                         data.profile_image = profile_image
                                     data.save()
