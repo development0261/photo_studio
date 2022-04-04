@@ -85,7 +85,9 @@ def register(request):
                                     if 'profile_image' in request.FILES:
                                         data.profile_image = profile_image
                                     data.save()
-                                    return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
+                                    temp_obj = custom_user.objects.get(username=username)
+                                    serializer_class = RegistrationSerializer(temp_obj)
+                                    return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
                                 else:
                                     return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                             else:
@@ -105,7 +107,9 @@ def register(request):
                                 if 'profile_image' in request.FILES:
                                     data.profile_image = profile_image
                                 data.save()
-                                return Response({"Success": "Registration Successfully"}, status=status.HTTP_200_OK)
+                                temp_obj = custom_user.objects.get(username=username)
+                                serializer_class = RegistrationSerializer(temp_obj)
+                                return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
                             else:
                                 return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                         else:
@@ -115,7 +119,9 @@ def register(request):
             else:
                 return Response({"Error": "Username length must be greater than 6"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"Error": "User Already Exist with this username"}, status=status.HTTP_400_BAD_REQUEST)
+            temp_obj = custom_user.objects.get(username=username)
+            serializer_class = RegistrationSerializer(temp_obj)
+            return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def social_media_registration(request):

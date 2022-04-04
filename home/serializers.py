@@ -40,9 +40,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True,source="username")
     def get_user(self, register):
         return {
-            "email":register.username.email,
-            "username":register.username.username,
-            "password":register.username.password,
+            "email":register.email,
+            "username":register.username,
+            "password":register.password,
         }
     class Meta:
         model = Profile
