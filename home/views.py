@@ -119,9 +119,11 @@ def register(request):
             else:
                 return Response({"Error": "Username length must be greater than 6"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            temp_obj = custom_user.objects.get(username=username)
-            serializer_class = RegistrationSerializer(temp_obj)
-            return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
+            # temp_obj = custom_user.objects.get(username=username)
+            # serializer_class = RegistrationSerializer(temp_obj)
+            # return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
+            return Response({"Error": "User Already Exists!!!"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def social_media_registration(request):
@@ -633,14 +635,13 @@ def purchase_history(request):
 def delete_account(request):
     if request.method == "POST":
         username = request.POST['username']
-        user_obj = custom_user.objects.get(username=username)
-        if user_obj:
+        try:
+            user_obj = custom_user.objects.get(username=username)
             user_obj.is_active = False
             user_obj.delete_date = datetime.now()
             user_obj.save()
-
             return Response({"Success": "Your account is under deleting process and deleted in 30 days."}, status=status.HTTP_200_OK)
-        else:
+        except Exception as e:
             return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
