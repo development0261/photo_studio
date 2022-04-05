@@ -48,6 +48,18 @@ class RegistrationSerializer(serializers.ModelSerializer):
         model = Profile
         fields = "__all__"
 
+class ProfileSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField(read_only=True,source="username")
+    def get_user(self, register):
+        return {
+            "email":register.username.email,
+            "username":register.username.username,
+            "password":register.username.password,
+        }
+    class Meta:
+        model = Profile
+        fields = "__all__"
+
 class SocialSerializer(serializers.ModelSerializer):
     token = serializers.SerializerMethodField(read_only=True)
     user = serializers.SerializerMethodField(read_only=True,source="username")

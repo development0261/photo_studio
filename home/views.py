@@ -6,7 +6,7 @@ from .models import Profile, user_preference, application_data, Purchase, Produc
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from .serializers import UserSerializer, UserSerializerWithToken, RegistrationSerializer, SocialSerializer
+from .serializers import UserSerializer, UserSerializerWithToken, RegistrationSerializer, SocialSerializer, ProfileSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
@@ -344,7 +344,7 @@ def specific_user(request):
     if request.method == "GET":
         username = request.GET['username']
         queryset = Profile.objects.filter(username__username=username)
-        serializer_class = RegistrationSerializer(queryset, many=True)
+        serializer_class = ProfileSerializer(queryset, many=True)
         return Response({'data': serializer_class.data}, status=status.HTTP_200_OK)
 
 
@@ -352,25 +352,26 @@ def specific_user(request):
 @permission_classes([IsAuthenticated])
 def user_count(request):
     queryset = Profile.objects.all()
-    serializer_class = RegistrationSerializer(queryset, many=True)
+    serializer_class = ProfileSerializer(queryset, many=True)
     return Response({'Total users': len(serializer_class.data)}, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def genderwise(request):
     gen = request.GET['gender']
-    obj1 = Profile.objects.filter(gender=gen.upper())
-    serializer_class = RegistrationSerializer(obj1, many=True)
+    print(gen)
+    obj1 = Profile.objects.filter(gender=gen)
+    serializer_class = ProfileSerializer(obj1, many=True)
     return Response({f'Total users with {gen} gender': len(serializer_class.data)}, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def countrywise(request):
     con = request.GET['country']
-    obj1 = Profile.objects.filter(country=con.upper())
-    serializer_class = RegistrationSerializer(obj1, many=True)
+    obj1 = Profile.objects.filter(country=con)
+    serializer_class = ProfileSerializer(obj1, many=True)
     return Response({f'Users with {con} country': serializer_class.data}, status=status.HTTP_200_OK)
 
 
