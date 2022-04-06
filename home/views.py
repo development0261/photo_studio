@@ -1,5 +1,7 @@
 
+import json
 from django.contrib.auth import get_user_model, login, logout, authenticate
+from django.http import JsonResponse
 from NewProject.settings import TIME_ZONE
 from .models import custom_user
 from .models import Profile, user_preference, application_data, Purchase, Product
@@ -81,13 +83,52 @@ def register(request):
                                         username=username, password=password, email=email)
                                     user.save()
                                     data = Profile(
-                                        username=user, name=name, mobile=mobile, gender=gender.upper())
+                                        username=user, name=name, mobile=mobile, gender=gender)
                                     if 'profile_image' in request.FILES:
                                         data.profile_image = profile_image
                                     data.save()
                                     temp_obj = custom_user.objects.get(username=username)
-                                    serializer_class = RegistrationSerializer(temp_obj)
-                                    return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
+                                    pro_obj = Profile.objects.get(username=temp_obj)
+                                    if pro_obj.profile_image:
+                                        img = pro_obj.profile_image
+                                    else:
+                                        img = ""
+                                    if pro_obj.avatar:
+                                        img1 = pro_obj.avatar
+                                    else:
+                                        img1 = ""
+                                    if pro_obj.bitmoji:
+                                        img2 = pro_obj.bitmoji
+                                    else:
+                                        img2 = ""
+                                    Data = {
+                                        "user": {
+                                            "email": temp_obj.email,
+                                            "username": temp_obj.username,
+                                            "password": temp_obj.password,
+                                        },
+                                        "name": pro_obj.name,
+                                        "email": pro_obj.email,
+                                        "mobile": pro_obj.mobile,
+                                        "gender": pro_obj.gender,
+                                        "profile_image": img,
+                                        "pass_update": pro_obj.pass_update,
+                                        "pass_forgot": pro_obj.pass_forgot,
+                                        "updated_at": pro_obj.updated_at,
+                                        "dob": pro_obj.dob,
+                                        "city": pro_obj.city,
+                                        "country": pro_obj.country,
+                                        "lat": pro_obj.lat,
+                                        "long": pro_obj.long,
+                                        "snap": pro_obj.snap,
+                                        "fb": pro_obj.fb,
+                                        "insta": pro_obj.insta,
+                                        "website": pro_obj.website,
+                                        "avatar": img1,
+                                        "bitmoji": img2,
+                                        # "username": pro_obj.username,
+                                    }
+                                    return Response({"data":Data}, status=status.HTTP_200_OK)
                                 else:
                                     return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                             else:
@@ -103,13 +144,52 @@ def register(request):
                                     username=username, password=password, email=email)
                                 user.save()
                                 data = Profile(
-                                    username=user, name=name, mobile=mobile, gender=gender.upper())
+                                    username=user, name=name, mobile=mobile, gender=gender)
                                 if 'profile_image' in request.FILES:
                                     data.profile_image = profile_image
                                 data.save()
                                 temp_obj = custom_user.objects.get(username=username)
-                                serializer_class = RegistrationSerializer(temp_obj)
-                                return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
+                                pro_obj = Profile.objects.get(username=temp_obj)
+                                if pro_obj.profile_image:
+                                    img = pro_obj.profile_image
+                                else:
+                                    img = ""
+                                if pro_obj.avatar:
+                                    img1 = pro_obj.avatar
+                                else:
+                                    img1 = ""
+                                if pro_obj.bitmoji:
+                                    img2 = pro_obj.bitmoji
+                                else:
+                                    img2 = ""
+                                Data = {
+                                    "user": {
+                                        "email": temp_obj.email,
+                                        "username": temp_obj.username,
+                                        "password": temp_obj.password,
+                                    },
+                                    "name": pro_obj.name,
+                                    "email": pro_obj.email,
+                                    "mobile": pro_obj.mobile,
+                                    "gender": pro_obj.gender,
+                                    "profile_image": img,
+                                    "pass_update": pro_obj.pass_update,
+                                    "pass_forgot": pro_obj.pass_forgot,
+                                    "updated_at": pro_obj.updated_at,
+                                    "dob": pro_obj.dob,
+                                    "city": pro_obj.city,
+                                    "country": pro_obj.country,
+                                    "lat": pro_obj.lat,
+                                    "long": pro_obj.long,
+                                    "snap": pro_obj.snap,
+                                    "fb": pro_obj.fb,
+                                    "insta": pro_obj.insta,
+                                    "website": pro_obj.website,
+                                    "avatar": img1,
+                                    "bitmoji": img2,
+                                    # "username": pro_obj.username,
+                                }
+                                return Response({"data":Data}, status=status.HTTP_200_OK)
                             else:
                                 return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                         else:
@@ -320,7 +400,7 @@ def profile(request, para=None):
             if date_of_Birth != "":
                 user.dob = date_of_Birth
             user.city = city
-            user.country = country.upper()
+            user.country = country
             if user_Latitude != "":
                 user.lat = user_Latitude
             if user_Longitude != "":
