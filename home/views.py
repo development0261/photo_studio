@@ -56,6 +56,20 @@ def logoutProcess(request):
     logout(request)
     return Response({"Message": "Successfully Logged Out"}, status=status.HTTP_200_OK)
 
+import pandas as pd
+file_name = 'media/test_ali.xlsx'
+dfs = pd.read_excel(file_name, sheet_name=None)
+print(dfs)
+print('start')
+rows = []
+with open(file_name, "r", encoding="unicode_escape") as f:
+    for line in f:
+        rows.append(line.split(","))
+print(rows)
+# for row in dfs:
+#     for i in dfs[row]:
+#         print(i)
+#         print("--------!")
 
 @api_view(['POST'])
 def register(request):
@@ -616,7 +630,7 @@ def app_data(request):
                                             Purchase_date=Purchase_date,
                                             Purchased_product=Purchased_product,
                                             Device_Model=Device_Model,
-                                            iOS=operating_system,
+                                            operating_system=operating_system,
                                             Device_Storage=Device_Storage,
                                             Lunch_count=Lunch_count,
                                             Push_Notification_Status=Push_Notification_Status,
