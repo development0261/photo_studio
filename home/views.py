@@ -56,16 +56,16 @@ def logoutProcess(request):
     logout(request)
     return Response({"Message": "Successfully Logged Out"}, status=status.HTTP_200_OK)
 
-import pandas as pd
-file_name = 'media/test_ali.xlsx'
-dfs = pd.read_excel(file_name, sheet_name=None)
-print(dfs)
-print('start')
-rows = []
-with open(file_name, "r", encoding="unicode_escape") as f:
-    for line in f:
-        rows.append(line.split(","))
-print(rows)
+# import pandas as pd
+# file_name = 'media/test_ali.xlsx'
+# dfs = pd.read_excel(file_name, sheet_name=None)
+# print(dfs)
+# print('start')
+# rows = []
+# with open(file_name, "r", encoding="unicode_escape") as f:
+#     for line in f:
+#         rows.append(line.split(","))
+# print(rows)
 # for row in dfs:
 #     for i in dfs[row]:
 #         print(i)
@@ -474,7 +474,6 @@ def countrywise(request):
 def details(request):
     if request.method == "POST":
         username = request.POST['username']
-        signature = request.FILES['signature']
         export_quality = request.POST['export_quality']
         Language = request.POST['Language']
         user_stared_templates = request.POST['user_stared_templates']
@@ -499,6 +498,11 @@ def details(request):
         enable_touch = request.POST['enable_touch']
         app_theme = request.POST['app_theme']
         always_crop = request.POST['always_crop']
+
+        if 'signature' in request.FILES:
+            signature = request.FILES['signature']
+        else:
+            signature = None
 
         try:
             user = custom_user.objects.get(username=username)
