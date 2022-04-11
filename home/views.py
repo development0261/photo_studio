@@ -589,7 +589,8 @@ def app_data(request):
         Lunch_count = request.POST['Lunch_count']
         Push_Notification_Status = request.POST['Push_Notification_Status']
         Library_permission_Status = request.POST['Library_permission_Status']
-        Latest_Geolocation = request.POST['Latest_Geolocation']
+        latitude = request.POST['latitude']
+        longitude = request.POST['longitude']
         Carrier = request.POST['Carrier']
         App_Last_Opened = request.POST['App_Last_Opened']
         Purchase_attempts = request.POST['Purchase_attempts']
@@ -614,7 +615,8 @@ def app_data(request):
             app_data_obj.Lunch_count = Lunch_count
             app_data_obj.Push_Notification_Status = Push_Notification_Status
             app_data_obj.Library_permission_Status = Library_permission_Status
-            app_data_obj.Latest_Geolocation = Latest_Geolocation
+            app_data_obj.latitude = latitude
+            app_data_obj.longitude = longitude
             app_data_obj.Carrier = Carrier
             app_data_obj.App_Last_Opened = App_Last_Opened
             app_data_obj.Purchase_attempts = Purchase_attempts
@@ -644,7 +646,8 @@ def app_data(request):
                                             Lunch_count=Lunch_count,
                                             Push_Notification_Status=Push_Notification_Status,
                                             Library_permission_Status=Library_permission_Status,
-                                            Latest_Geolocation=Latest_Geolocation,
+                                            latitude = latitude,
+                                            longitude = longitude,
                                             Carrier=Carrier,
                                             App_Last_Opened=App_Last_Opened,
                                             Purchase_attempts=Purchase_attempts,
