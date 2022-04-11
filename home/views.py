@@ -77,11 +77,17 @@ def logoutProcess(request):
 def register(request):
     if request.method == "POST":
         username = request.POST['username']
+        print(username)
         email = request.POST['email']
+        print(email)
         password = request.POST['password']
+        print(password)
         name = request.POST['name']
+        print(name)
         mobile = request.POST['mobile']
+        print(mobile)
         gender = request.POST['gender']
+        print(gender)
 
         if 'profile_image' in request.FILES:
             profile_image = request.FILES['profile_image']
@@ -96,7 +102,7 @@ def register(request):
                                 mat = re.search(pat, password)
                                 if mat:
                                     user = custom_user.objects.create_user(
-                                        username=username, password=password, email=email)
+                                        username=username, password=password.encode().decode("ISO-8859-1"), email=email)
                                     user.save()
                                     data = Profile(
                                         username=user, name=name, mobile=mobile, gender=gender)
@@ -476,7 +482,7 @@ def countrywise(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def details(request):
+def preferences(request):
     if request.method == "POST":
         username = request.POST['username']
         export_quality = request.POST['export_quality']
@@ -540,36 +546,36 @@ def details(request):
                                     app_theme=app_theme,
                                     always_crop=always_crop)
                     data.save()
-                    return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
+                    return Response({"Success": "preferences Added."}, status=status.HTTP_200_OK)
             except:
-                details_obj = user_preference.objects.get(username=user.id)
-                details_obj.signature = signature
-                details_obj.export_quality = export_quality
-                details_obj.Language = Language
-                details_obj.user_stared_templates = user_stared_templates
-                details_obj.user_stared_backgrounds = user_stared_backgrounds
-                details_obj.user_stared_stickers = user_stared_stickers
-                details_obj.user_stared_Textart = user_stared_Textart
-                details_obj.user_stared_colors = user_stared_colors
-                details_obj.user_stared_fonts = user_stared_fonts
-                details_obj.most_used_fonts = most_used_fonts
-                details_obj.user_custom_colors = user_custom_colors
-                details_obj.instagram_follower = instagram_follower
-                details_obj.grid_snapping = grid_snapping
-                details_obj.user_recent_text = user_recent_text
-                details_obj.appearance_mode = appearance_mode
-                details_obj.enable_iCloud_backup = enable_iCloud_backup
-                details_obj.save_projects_automatically = save_projects_automatically
-                details_obj.save_projects_on_export = save_projects_on_export
-                details_obj.notifications_permission = notifications_permission
-                details_obj.inApp_notifications_permission = inApp_notifications_permission
-                details_obj.photo_library_permission = photo_library_permission
-                details_obj.digital_riyals_rewards = digital_riyals_rewards
-                details_obj.enable_touch = enable_touch
-                details_obj.app_theme = app_theme
-                details_obj.always_crop = always_crop
-                details_obj.save()
-                return Response({"Success": "User details updated."}, status=status.HTTP_200_OK)
+                preferences_obj = user_preference.objects.get(username=user.id)
+                preferences_obj.signature = signature
+                preferences_obj.export_quality = export_quality
+                preferences_obj.Language = Language
+                preferences_obj.user_stared_templates = user_stared_templates
+                preferences_obj.user_stared_backgrounds = user_stared_backgrounds
+                preferences_obj.user_stared_stickers = user_stared_stickers
+                preferences_obj.user_stared_Textart = user_stared_Textart
+                preferences_obj.user_stared_colors = user_stared_colors
+                preferences_obj.user_stared_fonts = user_stared_fonts
+                preferences_obj.most_used_fonts = most_used_fonts
+                preferences_obj.user_custom_colors = user_custom_colors
+                preferences_obj.instagram_follower = instagram_follower
+                preferences_obj.grid_snapping = grid_snapping
+                preferences_obj.user_recent_text = user_recent_text
+                preferences_obj.appearance_mode = appearance_mode
+                preferences_obj.enable_iCloud_backup = enable_iCloud_backup
+                preferences_obj.save_projects_automatically = save_projects_automatically
+                preferences_obj.save_projects_on_export = save_projects_on_export
+                preferences_obj.notifications_permission = notifications_permission
+                preferences_obj.inApp_notifications_permission = inApp_notifications_permission
+                preferences_obj.photo_library_permission = photo_library_permission
+                preferences_obj.digital_riyals_rewards = digital_riyals_rewards
+                preferences_obj.enable_touch = enable_touch
+                preferences_obj.app_theme = app_theme
+                preferences_obj.always_crop = always_crop
+                preferences_obj.save()
+                return Response({"Success": "User preferences updated."}, status=status.HTTP_200_OK)
         except:
             return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
