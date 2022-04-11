@@ -698,17 +698,16 @@ def purchase_history(request):
     if request.method == "POST":
         try:
             username = request.POST['username']
-            status = request.POST['status']
+            pstatus = request.POST['pstatus']
             auto_renew_status = request.POST['auto_renew_status']
             is_in_billing_retry_period = request.POST['is_in_billing_retry_period']
             is_in_intro_offer_period = request.POST['is_in_intro_offer_period']
             is_trial_period = request.POST['is_trial_period']
-
             user = custom_user.objects.get(username=username)
             if user:
                 obj = Purchase(
                     username=user,
-                    status=status,
+                    pstatus=pstatus,
                     auto_renew_status=auto_renew_status,
                     is_in_billing_retry_period=is_in_billing_retry_period,
                     is_in_intro_offer_period=is_in_intro_offer_period,
@@ -718,29 +717,31 @@ def purchase_history(request):
                 return Response({"Success": "Data Added"}, status=status.HTTP_200_OK)
             else:
                 return Response({"Error": "custom_user Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
-        except:
+        except Exception as e:
+            print(e)
             return Response({"Error": "Record with same user exists"}, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == "PUT":
         username = request.POST['username']
-        status = request.POST['status']
+        pstatus = request.POST['pstatus']
         auto_renew_status = request.POST['auto_renew_status']
         is_in_billing_retry_period = request.POST['is_in_billing_retry_period']
         is_in_intro_offer_period = request.POST['is_in_intro_offer_period']
         is_trial_period = request.POST['is_trial_period']
 
-        user = custom_user.objects.get(username=username)
-        if user:
-            purchase_obj = custom_user.objects.get(username=username).purchase
-            purchase_obj.status = status
+        try:
+            user = custom_user.objects.get(username=username)
+            purchase_obj = Purchase.objects.get(username=user)
+            purchase_obj.pstatus = pstatus
             purchase_obj.auto_renew_status = auto_renew_status
             purchase_obj.is_in_billing_retry_period = is_in_billing_retry_period
             purchase_obj.is_in_intro_offer_period = is_in_intro_offer_period
             purchase_obj.is_trial_period = is_trial_period
             purchase_obj.save()
             return Response({"Success": "Data Updated"}, status=status.HTTP_200_OK)
-        else:
-            return Response({"Error": "custom_user Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            print(e)
+            return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])

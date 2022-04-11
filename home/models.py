@@ -175,17 +175,17 @@ class Purchase(models.Model):
     pid = models.AutoField(primary_key=True, auto_created=True)
     username = models.ForeignKey(custom_user, on_delete=models.CASCADE, null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
-    status = models.CharField(max_length=20)
+    pstatus = models.CharField(max_length=20)
     auto_renew_status = models.BooleanField(default=False)
     is_in_billing_retry_period = models.BooleanField(default=False)
     is_in_intro_offer_period = models.BooleanField(default=False)
     is_trial_period = models.BooleanField(default=False)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
     subscription_type = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.username} - {self.status}"
+        return f"{self.username} - {self.pstatus}"
 
     class Meta:
         verbose_name_plural = "Purchase"
