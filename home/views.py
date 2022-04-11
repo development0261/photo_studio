@@ -41,6 +41,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
                 serializer = UserSerializerWithToken(self.user).data
                 for k, v in serializer.items():
                     data[k] = v
+                from django.contrib.auth.models import update_last_login
+                user_obj = authenticate(username=attrs['username'], password=attrs['password'])
+                update_last_login(None, user_obj)
                 return data
         else:
             return {"Error": "Account with this username is not exists"}
@@ -48,7 +51,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -176,34 +178,37 @@ def register(request):
                                     img2 = pro_obj.bitmoji
                                 else:
                                     img2 = ""
-                                Data = {
-                                    "user": {
-                                        "email": temp_obj.email,
-                                        "username": temp_obj.username,
-                                        "password": temp_obj.password,
-                                    },
-                                    "name": pro_obj.name,
-                                    "email": pro_obj.email,
-                                    "mobile": pro_obj.mobile,
-                                    "gender": pro_obj.gender,
-                                    "profile_image": img,
-                                    "pass_update": pro_obj.pass_update,
-                                    "pass_forgot": pro_obj.pass_forgot,
-                                    "updated_at": pro_obj.updated_at,
-                                    "dob": pro_obj.dob,
-                                    "city": pro_obj.city,
-                                    "country": pro_obj.country,
-                                    "lat": pro_obj.lat,
-                                    "long": pro_obj.long,
-                                    "snap": pro_obj.snap,
-                                    "fb": pro_obj.fb,
-                                    "insta": pro_obj.insta,
-                                    "website": pro_obj.website,
-                                    "avatar": img1,
-                                    "bitmoji": img2,
-                                    # "username": pro_obj.username,
-                                }
-                                return Response({"data":Data}, status=status.HTTP_200_OK)
+                                # Data = {
+                                #     "user": {
+                                #         "email": temp_obj.email,
+                                #         "username": temp_obj.username,
+                                #         "password": temp_obj.password,
+                                #     },
+                                #     "name": pro_obj.name,
+                                #     "email": pro_obj.email,
+                                #     "mobile": pro_obj.mobile,
+                                #     "gender": pro_obj.gender,
+                                #     "profile_image": img,
+                                #     "pass_update": pro_obj.pass_update,
+                                #     "pass_forgot": pro_obj.pass_forgot,
+                                #     "updated_at": pro_obj.updated_at,
+                                #     "dob": pro_obj.dob,
+                                #     "city": pro_obj.city,
+                                #     "country": pro_obj.country,
+                                #     "lat": pro_obj.lat,
+                                #     "long": pro_obj.long,
+                                #     "snap": pro_obj.snap,
+                                #     "fb": pro_obj.fb,
+                                #     "insta": pro_obj.insta,
+                                #     "website": pro_obj.website,
+                                #     "avatar": img1,
+                                #     "bitmoji": img2,
+                                #     # "username": pro_obj.username,
+                                # }
+                                temp_obj = custom_user.objects.get(username=username)
+                                serializer_class = RegistrationSerializer(pro_obj)
+                                return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
+                                # return Response({"data":Data}, status=status.HTTP_200_OK)
                             else:
                                 return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                         else:

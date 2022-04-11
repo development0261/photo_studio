@@ -177,16 +177,16 @@ def profile_model(request):
                     dob__lte=datetime.now() - timedelta(days=(365*40)))
 
             if val == 'Male':
-                total_profiles = total_profiles.filter(gender="Male")
+                total_profiles = total_profiles.filter(gender__iexact="Male")
             if val == 'Female':
-                total_profiles = total_profiles.filter(gender="Female")
+                total_profiles = total_profiles.filter(gender__iexact="Female")
             if val == 'Other':
-                total_profiles = total_profiles.filter(gender="Other")
+                total_profiles = total_profiles.filter(gender__iexact="Other")
 
             if val == 'India':
-                total_profiles = total_profiles.filter(country="India")
+                total_profiles = total_profiles.filter(country__iexact="India")
             if val == 'USA':
-                total_profiles = total_profiles.filter(country="USA")
+                total_profiles = total_profiles.filter(country__iexact="USA")
 
         return render(request, "admin_site/profile_model.html", {'total_profiles': total_profiles})
     else:
@@ -236,7 +236,8 @@ def product_model(request):
 def view_profile(request, info):
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split('-')
-        obj = Profile.objects.filter(name=infolist[2])
+        user_obj = custom_user.objects.get(username=infolist[1])
+        obj = Profile.objects.filter(username=user_obj)
         data = serializers.serialize("json", obj)
         data = json.loads(data[1:-1])
         return JsonResponse({"res": data})
@@ -504,6 +505,7 @@ def profile_edit(request, para):
                     obj.profile_image = None
             if profile_image != "":
                 obj.profile_image = profile_image
+                
             obj.gender = gender
             if dob != "None":
                 obj.dob = dob

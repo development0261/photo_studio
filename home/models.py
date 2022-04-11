@@ -29,7 +29,7 @@ class Profile(models.Model):
     )
     gender = models.CharField(
         max_length=7, choices=GENDER_CHOICES, null=True, blank=True)
-    profile_image = models.ImageField(null=True, blank=True)
+    profile_image = models.ImageField(null=True, blank=True, upload_to='')
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     pass_update = models.DateField(blank=True, null=True)
     pass_forgot = models.DateField(blank=True, null=True)
