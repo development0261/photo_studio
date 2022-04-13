@@ -77,17 +77,11 @@ def logoutProcess(request):
 def register(request):
     if request.method == "POST":
         username = request.POST['username']
-        print(username)
         email = request.POST['email']
-        print(email)
         password = request.POST['password']
-        print(password)
         name = request.POST['name']
-        print(name)
         mobile = request.POST['mobile']
-        print(mobile)
         gender = request.POST['gender']
-        print(gender)
 
         if 'profile_image' in request.FILES:
             profile_image = request.FILES['profile_image']
