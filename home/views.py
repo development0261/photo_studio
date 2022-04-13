@@ -82,8 +82,8 @@ def register(request):
         name = request.POST['name']
         mobile = request.POST['mobile']
         gender = request.POST['gender']
-        firstname = request.POST.get('firstname')
-        lastname = request.POST.get('lastname')
+        first_name = request.POST.get('firstname')
+        last_name = request.POST.get('lastname')
 
         if 'profile_image' in request.FILES:
             profile_image = request.FILES['profile_image']
@@ -98,7 +98,7 @@ def register(request):
                                 mat = re.search(pat, password)
                                 if mat:
                                     user = custom_user.objects.create_user(
-                                        username=username, password=password.encode().decode("ISO-8859-1"), email=email, firstname=firstname, lastname=lastname)
+                                        username=username, password=password.encode().decode("ISO-8859-1"), email=email, first_name=first_name, last_name=last_name)
                                     user.save()
                                     data = Profile(
                                         username=user, name=name, mobile=mobile, gender=gender)
@@ -159,7 +159,7 @@ def register(request):
                             mat = re.search(pat, password)
                             if mat:
                                 user = custom_user.objects.create_user(
-                                    username=username, password=password, email=email)
+                                    username=username, password=password, email=email, first_name=first_name, last_name=last_name)
                                 user.save()
                                 data = Profile(
                                     username=user, name=name, mobile=mobile, gender=gender)
