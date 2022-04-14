@@ -268,12 +268,14 @@ def forgot_password(request, t):
                     if new_pass == confirm_pass:
                         obj1 = custom_user.objects.get(
                             confirm_token=decrypted_token)
-                        print(obj1)
                         obj1.set_password(new_pass)
-                        obj2 = Profile.objects.get(username=obj1.id)
-                        obj2.pass_forgot = datetime.now()
                         obj1.save()
-                        obj2.save()
+                        try:
+                            obj2 = Profile.objects.get(username=obj1.id)
+                            obj2.pass_forgot = datetime.now()
+                            obj2.save()
+                        except:
+                            profile_obj = Profile.objects.create(username=obj1, pass_forgot=datetime.now())
                         return Response({"Success": "Password updated Successfully."}, status=status.HTTP_200_OK)
                     else:
                         return Response({"Error": "New password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
