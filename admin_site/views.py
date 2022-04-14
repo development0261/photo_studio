@@ -157,7 +157,7 @@ country_list1 = set(country_list1)
 country_list = []
 for i in country_list1:
     print(i)
-    if i=='None':
+    if i=='NONE':
         pass
     else:
         country_list.append(i)
