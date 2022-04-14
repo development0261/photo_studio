@@ -20,7 +20,6 @@ class Profile(models.Model):
     uid = models.AutoField(primary_key=True, auto_created=True)
     username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, null=True, blank=True)
-    email = models.CharField(max_length=50, null=True, blank=True)
     mobile = models.CharField(max_length=20, null=True, blank=True)
     GENDER_CHOICES = (
         ('Male', 'Male'),

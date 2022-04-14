@@ -229,12 +229,11 @@
                                 <li>
                                     <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
                                 </li>
-                                <li>
-                                    <a href="{% url 'Profile' %}?filter=India" {% if request.GET.filter == 'India' %} class="active" {% endif %}>India</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'Profile' %}?filter=USA" {% if request.GET.filter == 'USA' %} class="active" {% endif %}>USA</a>
-                                </li>
+                                {% for row in country_list %}
+                                    <li>
+                                        <a href="{% url 'Profile' %}?filter={{row}}" {% if request.GET.filter == row %} class="active" {% endif %}>{{row}}</a>
+                                    </li>
+                                {% endfor %}
                             </ul>
                         </div>
                     

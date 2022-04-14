@@ -147,6 +147,11 @@ def app_user(request):
     else:
         return redirect("login")
 
+countries = Profile.objects.values('country').distinct()
+country_list = []
+for i in countries:
+    country_list.append(i['country'].upper())
+country_list = set(country_list)
 
 def profile_model(request):
     if request.user.is_authenticated:
@@ -183,12 +188,11 @@ def profile_model(request):
             if val == 'Other':
                 total_profiles = total_profiles.filter(gender__iexact="Other")
 
-            if val == 'India':
-                total_profiles = total_profiles.filter(country__iexact="India")
-            if val == 'USA':
-                total_profiles = total_profiles.filter(country__iexact="USA")
+            for i in country_list:
+                if i == val:
+                    total_profiles = total_profiles.filter(country__iexact=val)
 
-        return render(request, "admin_site/profile_model.html", {'total_profiles': total_profiles})
+        return render(request, "admin_site/profile_model.html", {'total_profiles': total_profiles, 'country_list':country_list})
     else:
         return redirect("login")
 

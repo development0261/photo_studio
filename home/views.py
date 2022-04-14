@@ -183,12 +183,12 @@ def social_media_registration(request):
             profile_image = request.FILES['profile_image']
 
         if 'username' in request.POST:
-            username = request.FILES['username']
+            username = request.POST['username']
         else:
             username = social_token
 
         if 'email' in request.POST:
-            email = request.FILES['email']
+            email = request.POST['email']
         else:
             email = social_account
 
@@ -221,7 +221,7 @@ def send_link(request):
         recipient_list = []
         if custom_user.objects.filter(email=email).exists():
             user_with_email = custom_user.objects.get(email=email)
-            recipient_list.append(user_with_email.email)
+            recipient_list.append(user_with_email.email) 
 
             # Link = 'http://127.0.0.1:8001/home/forgot_password/'
             Link = 'http://185.146.21.235:7800/home/forgot_password/'
@@ -248,7 +248,7 @@ def send_link(request):
                            [to], html_message=html_message)
             return Response({"Success": "Check Your email for Forgot Password"}, status=status.HTTP_200_OK)
         else:
-            return Response({"Error": "custom_user Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
@@ -268,63 +268,60 @@ def forgot_password(request, t):
                     if new_pass == confirm_pass:
                         obj1 = custom_user.objects.get(
                             confirm_token=decrypted_token)
+                        print(obj1)
                         obj1.set_password(new_pass)
-                        obj2 = custom_user.objects.get(
-                            confirm_token=decrypted_token).profile
+                        obj2 = Profile.objects.get(username=obj1.id)
                         obj2.pass_forgot = datetime.now()
                         obj1.save()
                         obj2.save()
-                        return Response({"Success": "password updated Successfully."}, status=status.HTTP_200_OK)
+                        return Response({"Success": "Password updated Successfully."}, status=status.HTTP_200_OK)
                     else:
-                        return Response({"Error": "new password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
+                        return Response({"Error": "New password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"Error": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response({"Error": "Oops!! Please check your Token"}, status=status.HTTP_401_UNAUTHORIZED)
         else:
-            return Response({"Error": "custom_user Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_password(request):
     if request.method == "POST":
-        username = request.POST['username']
         password = request.POST['password']
         new_pass = request.POST['new_pass']
         confirm_pass = request.POST['confirm_pass']
-        if custom_user.objects.filter(username=username).exists():
-            user = authenticate(username=username, password=password)
+        if custom_user.objects.filter(username=request.user).exists():
+            user = authenticate(username=request.user, password=password)
             if user:
                 pat = re.compile(reg)
                 mat = re.search(pat, new_pass)
                 if mat:
                     if new_pass == confirm_pass:
-                        obj1 = custom_user.objects.get(username=username)
+                        obj1 = custom_user.objects.get(username=request.user)
                         obj1.set_password(new_pass)
                         obj2 = custom_user.objects.get(
-                            username=username).profile
+                            username=request.user).profile
                         obj2.pass_update = datetime.now()
                         obj1.save()
                         obj2.save()
-                        return Response({"Success": "password updated Successfully."}, status=status.HTTP_200_OK)
+                        return Response({"Success": "Password updated Successfully."}, status=status.HTTP_200_OK)
                     else:
-                        return Response({"Error": "new password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
+                        return Response({"Error": "New password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"Error": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response({"Error": "username and password doesnot matched."}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({"Error": "Password Not matched!!!"}, status=status.HTTP_401_UNAUTHORIZED)
         else:
-            return Response({"Error": "custom_user Not Exist with this username"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"Error": "User Not Exist with this username"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def profile(request, para=None):
     if request.method == "POST":
-        username = request.POST['username']
         email = request.POST['email']
-        password = request.POST['password']
         name = request.POST['name']
         mobile = request.POST['mobile']
         gender = request.POST['gender']
@@ -356,41 +353,44 @@ def profile(request, para=None):
         else:
             bitmoji = None
 
-        user1 = authenticate(username=username, password=password)
-        if user1:
-            user = custom_user.objects.get(username=username).profile
-            user.name = name
-            user.email = email
-            user.mobile = mobile
-            user.gender = gender
-            user.profile_image = profile_image
-            if date_of_Birth != "":
-                user.dob = date_of_Birth
-            user.city = city
-            user.country = country
-            if user_Latitude != "":
-                user.lat = user_Latitude
-            if user_Longitude != "":
-                user.long = user_Longitude
-            user.snap = snapchat
-            user.fb = facebook
-            user.insta = instagram
-            user.website = website
-            user.avatar = avatar_image
-            user.bitmoji = bitmoji
-            user.updated_at = datetime.now()
-            user.save()
-            return Response({"Success": "Profile Updated"}, status=status.HTTP_200_OK)
-        else:
-            return Response({"Error": "custom_user Not Exist with this username and password"}, status=status.HTTP_401_UNAUTHORIZED)
-
+        try:
+            user_obj = custom_user.objects.get(email=email)
+            return Response({"Error": "Email already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            try:
+                user_obj = custom_user.objects.get(username=request.user)
+                profile_obj = Profile.objects.get(username=user_obj.id)
+                profile_obj.name = name
+                user_obj.email = email
+                profile_obj.mobile = mobile
+                profile_obj.gender = gender
+                profile_obj.profile_image = profile_image
+                if date_of_Birth != "":
+                    profile_obj.dob = date_of_Birth
+                profile_obj.city = city
+                profile_obj.country = country
+                if user_Latitude != "":
+                    profile_obj.lat = user_Latitude
+                if user_Longitude != "":
+                    profile_obj.long = user_Longitude
+                profile_obj.snap = snapchat
+                profile_obj.fb = facebook
+                profile_obj.insta = instagram
+                profile_obj.website = website
+                profile_obj.avatar = avatar_image
+                profile_obj.bitmoji = bitmoji
+                profile_obj.updated_at = datetime.now()
+                profile_obj.save()
+                user_obj.save()
+                return Response({"Success": "Profile Updated"}, status=status.HTTP_200_OK)
+            except:
+                return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def specific_user(request):
     if request.method == "GET":
-        username = request.GET['username']
-        queryset = Profile.objects.filter(username__username=username)
+        queryset = Profile.objects.filter(username__username=request.user)
         serializer_class = ProfileSerializer(queryset, many=True)
         return Response({'data': serializer_class.data}, status=status.HTTP_200_OK)
 
@@ -407,8 +407,7 @@ def user_count(request):
 @permission_classes([IsAuthenticated])
 def genderwise(request):
     gen = request.GET['gender']
-    print(gen)
-    obj1 = Profile.objects.filter(gender=gen)
+    obj1 = Profile.objects.filter(gender__iexact=gen)
     serializer_class = ProfileSerializer(obj1, many=True)
     return Response({f'Total users with {gen} gender': len(serializer_class.data)}, status=status.HTTP_200_OK)
 
@@ -417,7 +416,7 @@ def genderwise(request):
 @permission_classes([IsAuthenticated])
 def countrywise(request):
     con = request.GET['country']
-    obj1 = Profile.objects.filter(country=con)
+    obj1 = Profile.objects.filter(country__iexact=con)
     serializer_class = ProfileSerializer(obj1, many=True)
     return Response({f'Users with {con} country': serializer_class.data}, status=status.HTTP_200_OK)
 
@@ -426,7 +425,6 @@ def countrywise(request):
 @permission_classes([IsAuthenticated])
 def preferences(request):
     if request.method == "POST":
-        username = request.POST['username']
         export_quality = request.POST['export_quality']
         Language = request.POST['Language']
         user_stared_templates = request.POST['user_stared_templates']
@@ -458,7 +456,7 @@ def preferences(request):
             signature = None
 
         try:
-            user = custom_user.objects.get(username=username)
+            user = custom_user.objects.get(username=request.user)
             try:
                 if user:
                     data = user_preference(username=user,
@@ -526,7 +524,6 @@ def preferences(request):
 @permission_classes([IsAuthenticated])
 def app_data(request):
     if request.method == "POST":
-        username = request.POST['username']
         UID = request.POST['UID']
         inApp_Products = request.POST['inApp_Products']
         Purchase_date = request.POST['Purchase_date']
@@ -550,103 +547,109 @@ def app_data(request):
         Registered_user = request.POST['Registered_user']
         Push_Notification_token = request.POST['Push_Notification_token']
 
-        user = custom_user.objects.get(username=username)
         try:
-            app_data_obj = application_data.objects.get(username=user.id)
-            app_data_obj.UID = UID
-            app_data_obj.inApp_Products = inApp_Products
-            app_data_obj.Purchase_date = Purchase_date
-            app_data_obj.Purchased_product = Purchased_product
-            app_data_obj.Device_Model = Device_Model
-            app_data_obj.operating_system = operating_system
-            app_data_obj.Device_Storage = Device_Storage
-            app_data_obj.Lunch_count = Lunch_count
-            app_data_obj.Push_Notification_Status = Push_Notification_Status
-            app_data_obj.Library_permission_Status = Library_permission_Status
-            app_data_obj.latitude = latitude
-            app_data_obj.longitude = longitude
-            app_data_obj.Carrier = Carrier
-            app_data_obj.App_Last_Opened = App_Last_Opened
-            app_data_obj.Purchase_attempts = Purchase_attempts
-            app_data_obj.Grace_Period = Grace_Period
-            app_data_obj.Remaining_grace_period_days = Remaining_grace_period_days
-            app_data_obj.Number_of_projects = Number_of_projects
-            app_data_obj.Total_time_spent = Total_time_spent
-            app_data_obj.total_ads_served = total_ads_served
-            app_data_obj.Registered_user = Registered_user
-            app_data_obj.Push_Notification_token = Push_Notification_token
-            app_data_obj.save()
-            return Response({"Success": "Details Updated."}, status=status.HTTP_200_OK)
-        except Exception as e:
-            if user:
-                try:
-                    application_data.objects.get(UID=UID)
-                    return Response({"Error": "UID already exists.Plese check your UID!!!"}, status=status.HTTP_400_BAD_REQUEST)
-                except:
-                    data = application_data(username=user,
-                                            UID=UID,
-                                            inApp_Products=inApp_Products,
-                                            Purchase_date=Purchase_date,
-                                            Purchased_product=Purchased_product,
-                                            Device_Model=Device_Model,
-                                            operating_system=operating_system,
-                                            Device_Storage=Device_Storage,
-                                            Lunch_count=Lunch_count,
-                                            Push_Notification_Status=Push_Notification_Status,
-                                            Library_permission_Status=Library_permission_Status,
-                                            latitude = latitude,
-                                            longitude = longitude,
-                                            Carrier=Carrier,
-                                            App_Last_Opened=App_Last_Opened,
-                                            Purchase_attempts=Purchase_attempts,
-                                            Grace_Period=Grace_Period,
-                                            Remaining_grace_period_days=Remaining_grace_period_days,
-                                            Number_of_projects=Number_of_projects,
-                                            Total_time_spent=Total_time_spent,
-                                            total_ads_served=total_ads_served,
-                                            Registered_user=Registered_user,
-                                            Push_Notification_token=Push_Notification_token)
-                    data.save()
-                    return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
-            else:
-                return Response({"Error": "custom_user not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+            user = custom_user.objects.get(username=request.user)
+            try:
+                app_data_obj = application_data.objects.get(username=user.id)
+                app_data_obj.UID = UID
+                app_data_obj.inApp_Products = inApp_Products
+                app_data_obj.Purchase_date = Purchase_date
+                app_data_obj.Purchased_product = Purchased_product
+                app_data_obj.Device_Model = Device_Model
+                app_data_obj.operating_system = operating_system
+                app_data_obj.Device_Storage = Device_Storage
+                app_data_obj.Lunch_count = Lunch_count
+                app_data_obj.Push_Notification_Status = Push_Notification_Status
+                app_data_obj.Library_permission_Status = Library_permission_Status
+                app_data_obj.latitude = latitude
+                app_data_obj.longitude = longitude
+                app_data_obj.Carrier = Carrier
+                app_data_obj.App_Last_Opened = App_Last_Opened
+                app_data_obj.Purchase_attempts = Purchase_attempts
+                app_data_obj.Grace_Period = Grace_Period
+                app_data_obj.Remaining_grace_period_days = Remaining_grace_period_days
+                app_data_obj.Number_of_projects = Number_of_projects
+                app_data_obj.Total_time_spent = Total_time_spent
+                app_data_obj.total_ads_served = total_ads_served
+                app_data_obj.Registered_user = Registered_user
+                app_data_obj.Push_Notification_token = Push_Notification_token
+                app_data_obj.save()
+                return Response({"Success": "Details Updated."}, status=status.HTTP_200_OK)
+            except Exception as e:
+                data = application_data(username=user,
+                                        UID=UID,
+                                        inApp_Products=inApp_Products,
+                                        Purchase_date=Purchase_date,
+                                        Purchased_product=Purchased_product,
+                                        Device_Model=Device_Model,
+                                        operating_system=operating_system,
+                                        Device_Storage=Device_Storage,
+                                        Lunch_count=Lunch_count,
+                                        Push_Notification_Status=Push_Notification_Status,
+                                        Library_permission_Status=Library_permission_Status,
+                                        latitude = latitude,
+                                        longitude = longitude,
+                                        Carrier=Carrier,
+                                        App_Last_Opened=App_Last_Opened,
+                                        Purchase_attempts=Purchase_attempts,
+                                        Grace_Period=Grace_Period,
+                                        Remaining_grace_period_days=Remaining_grace_period_days,
+                                        Number_of_projects=Number_of_projects,
+                                        Total_time_spent=Total_time_spent,
+                                        total_ads_served=total_ads_served,
+                                        Registered_user=Registered_user,
+                                        Push_Notification_token=Push_Notification_token)
+                data.save()
+                return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
+        except:
+            return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+            
 
-
-@api_view(['POST'])
+@api_view(['GET'])
 def email_verification(request):
-    if request.method == "POST":
+    if request.method == "GET":
         email = request.GET['email']
-        user = custom_user.objects.filter(email=email)
-        if user:
+        try:
+            user = custom_user.objects.get(email=email)
             return Response({"Error": "Email already in use"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
+        except:
             return Response({"Success": "Email successfully added"}, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 def username_verification(request):
-    if request.method == "POST":
+    if request.method == "GET":
         username = request.GET['username']
-        user = custom_user.objects.filter(username=username)
-        if user:
+        try:
+            user = custom_user.objects.get(username=username)
             return Response({"Error": "Username already in use"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
+        except:
             return Response({"Success": "Username successfully added"}, status=status.HTTP_200_OK)
 
 
-@api_view(['PUT', 'POST'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def purchase_history(request):
     if request.method == "POST":
+        pstatus = request.POST['pstatus']
+        auto_renew_status = request.POST['auto_renew_status']
+        is_in_billing_retry_period = request.POST['is_in_billing_retry_period']
+        is_in_intro_offer_period = request.POST['is_in_intro_offer_period']
+        is_trial_period = request.POST['is_trial_period']
+
         try:
-            username = request.POST['username']
-            pstatus = request.POST['pstatus']
-            auto_renew_status = request.POST['auto_renew_status']
-            is_in_billing_retry_period = request.POST['is_in_billing_retry_period']
-            is_in_intro_offer_period = request.POST['is_in_intro_offer_period']
-            is_trial_period = request.POST['is_trial_period']
-            user = custom_user.objects.get(username=username)
-            if user:
+            user = custom_user.objects.get(username=request.user)
+            try:
+                purchase_obj = Purchase.objects.get(username=user.id)
+                purchase_obj.pstatus = pstatus
+                purchase_obj.auto_renew_status = auto_renew_status
+                purchase_obj.is_in_billing_retry_period = is_in_billing_retry_period
+                purchase_obj.is_in_intro_offer_period = is_in_intro_offer_period
+                purchase_obj.is_trial_period = is_trial_period
+                purchase_obj.save()
+                return Response({"Success": "Data Updated"}, status=status.HTTP_200_OK)
+            except Exception as e:
+                print(e)
                 obj = Purchase(
                     username=user,
                     pstatus=pstatus,
@@ -657,32 +660,7 @@ def purchase_history(request):
                 )
                 obj.save()
                 return Response({"Success": "Data Added"}, status=status.HTTP_200_OK)
-            else:
-                return Response({"Error": "custom_user Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
-        except Exception as e:
-            print(e)
-            return Response({"Error": "Record with same user exists"}, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == "PUT":
-        username = request.POST['username']
-        pstatus = request.POST['pstatus']
-        auto_renew_status = request.POST['auto_renew_status']
-        is_in_billing_retry_period = request.POST['is_in_billing_retry_period']
-        is_in_intro_offer_period = request.POST['is_in_intro_offer_period']
-        is_trial_period = request.POST['is_trial_period']
-
-        try:
-            user = custom_user.objects.get(username=username)
-            purchase_obj = Purchase.objects.get(username=user)
-            purchase_obj.pstatus = pstatus
-            purchase_obj.auto_renew_status = auto_renew_status
-            purchase_obj.is_in_billing_retry_period = is_in_billing_retry_period
-            purchase_obj.is_in_intro_offer_period = is_in_intro_offer_period
-            purchase_obj.is_trial_period = is_trial_period
-            purchase_obj.save()
-            return Response({"Success": "Data Updated"}, status=status.HTTP_200_OK)
-        except Exception as e:
-            print(e)
+        except:
             return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
@@ -690,9 +668,8 @@ def purchase_history(request):
 @permission_classes([IsAuthenticated])
 def delete_account(request):
     if request.method == "POST":
-        username = request.POST['username']
         try:
-            user_obj = custom_user.objects.get(username=username)
+            user_obj = custom_user.objects.get(username=request.user)
             user_obj.is_active = False
             user_obj.delete_date = datetime.now()
             user_obj.save()
@@ -705,7 +682,6 @@ def delete_account(request):
 @permission_classes([IsAuthenticated])
 def product(request):
     if request.method == "POST":
-        username = request.POST['username']
         productID = request.POST['productID']
         product = request.POST['product']
         productPromo = request.POST['productPromo']
@@ -716,11 +692,22 @@ def product(request):
         monthlySub = request.POST['monthlySub']
         localeId = request.POST['localeId']
 
-        user_obj = custom_user.objects.get(username=username)
-        if user_obj:
+        try:
+            user_obj = custom_user.objects.get(username=request.user)
             try:
+                product1 = Product.objects.get(product=product)
+                product1.productPromo = productPromo
+                product1.promoPrice = promoPrice
+                product1.annaulSubProd = annaulSubProd
+                product1.annaulSub = annaulSub
+                product1.monthlySubProd = monthlySubProd
+                product1.monthlySub = monthlySub
+                product1.localeId = localeId
+                product1.save()
+                return Response({"Success": "Product Details Updated."}, status=status.HTTP_200_OK)
+            except Exception as e:
                 product1 = Product.objects.create(
-                    username=user_obj,
+                    # username=user_obj,
                     productID=productID,
                     product=product,
                     productPromo=productPromo,
@@ -732,17 +719,5 @@ def product(request):
                     localeId=localeId
                 )
                 return Response({"Success": "Product Details Added."}, status=status.HTTP_200_OK)
-
-            except:
-                product1 = Product.objects.filter(product=product).first()
-                product1.productPromo = productPromo
-                product1.promoPrice = promoPrice
-                product1.annaulSubProd = annaulSubProd
-                product1.annaulSub = annaulSub
-                product1.monthlySubProd = monthlySubProd
-                product1.monthlySub = monthlySub
-                product1.localeId = localeId
-                product1.save()
-                return Response({"Success": "Product Details Updated."}, status=status.HTTP_200_OK)
-        else:
-            return Response({"Error": "custom_user not found"}, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)
