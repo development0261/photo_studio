@@ -24,7 +24,7 @@ from django.contrib.auth.hashers import check_password
 custom_user = get_user_model()
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
 for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-punctuation = "!#$%&()*+, -./:;<=>?@[\]^_`{|}~"
+punctuation = "!#$%&()*+, -.:;<=>?@[\]^_`{|}~"
 
 users_obj = custom_user.objects.filter(is_active=False)
 for row in users_obj:
