@@ -150,8 +150,8 @@ def app_user(request):
 countries = Profile.objects.values('country').distinct()
 country_list = []
 for i in countries:
-    if i != 'None':
-        country_list.append(i['country'].upper())
+    if i != 'None' or i !='none':
+        country_list.append(str(i['country']).upper())
 country_list = set(country_list)
 
 def profile_model(request):
