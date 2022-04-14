@@ -148,22 +148,23 @@ def app_user(request):
     else:
         return redirect("login")
 
-countries = Profile.objects.values('country').distinct()
-country_list1 = []
-for i in countries:
-    if i != 'None' or i !='none':
-        country_list1.append(str(i['country']).upper())
-country_list1 = set(country_list1)
-country_list = []
-for i in country_list1:
-    print(i)
-    if i=='NONE':
-        pass
-    else:
-        country_list.append(i)
-
 
 def profile_model(request):
+    # country filter
+    countries = Profile.objects.values('country').distinct()
+    country_list1 = []
+    for i in countries:
+        if i != 'None' or i !='none':
+            country_list1.append(str(i['country']).upper())
+    country_list1 = set(country_list1)
+    country_list = []
+    for i in country_list1:
+        print(i)
+        if i=='NONE':
+            pass
+        else:
+            country_list.append(i)
+
     if request.user.is_authenticated:
         total_profiles = Profile.objects.all()
         if 'filter' in request.GET:
