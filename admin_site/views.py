@@ -1,5 +1,6 @@
 from datetime import date, datetime, timedelta
 import copy
+from typing import final
 from django.shortcuts import redirect, render
 from home.models import Product, Profile, Purchase, Tag, application_data, custom_user, user_preference
 from home.models import custom_user
@@ -153,7 +154,13 @@ for i in countries:
     if i != 'None' or i !='none':
         country_list.append(str(i['country']).upper())
 country_list = set(country_list)
-country_list.remove('None')
+country_list = []
+for i in country_list:
+    if i=='None':
+        pass
+    else:
+        country_list.append(i)
+
 
 def profile_model(request):
     if request.user.is_authenticated:
