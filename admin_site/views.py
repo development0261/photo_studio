@@ -153,6 +153,7 @@ for i in countries:
     if i != 'None' or i !='none':
         country_list.append(str(i['country']).upper())
 country_list = set(country_list)
+country_list.remove('None')
 
 def profile_model(request):
     if request.user.is_authenticated:
