@@ -150,7 +150,6 @@ def app_user(request):
 
 
 def profile_model(request):
-    # country filter
     countries = Profile.objects.values('country').distinct()
     country_list1 = []
     for i in countries:
@@ -159,7 +158,6 @@ def profile_model(request):
     country_list1 = set(country_list1)
     country_list = []
     for i in country_list1:
-        print(i)
         if i=='NONE':
             pass
         else:
@@ -491,7 +489,8 @@ def profile_edit(request, para):
             name = request.POST['name']
             email = request.POST['email']
             mobile = request.POST['mobile']
-            profile_image = request.POST['profile_image']
+            if 'profile_img' in request.FILES:
+                profile_img = request.FILES['profile_img']
             if 'profile_image_check' in request.POST:
                 profile_image_check = request.POST['profile_image_check']
             gender = request.POST['gender']
@@ -504,10 +503,12 @@ def profile_edit(request, para):
             fb = request.POST['fb']
             insta = request.POST['insta']
             website = request.POST['website']
-            avatar = request.POST['avatar']
+            if 'avatar' in request.FILES:
+                avatar = request.FILES['avatar']
             if 'avatar_check' in request.POST:
                 avatar_check = request.POST['avatar_check']
-            bitmoji = request.POST['bitmoji']
+            if 'bitmoji' in request.FILES:
+                bitmoji = request.POST['bitmoji']
             if 'bitmoji_check' in request.POST:
                 bitmoji_check = request.POST['bitmoji_check']
 
@@ -518,8 +519,9 @@ def profile_edit(request, para):
             if 'profile_image_check' in request.POST:
                 if profile_image_check:
                     obj.profile_image = None
-            if profile_image != "":
-                obj.profile_image = profile_image
+            if 'profile_img' in request.FILES:
+                if profile_img != "":
+                    obj.profile_image = profile_img
                 
             obj.gender = gender
             if dob != "None":
@@ -537,13 +539,15 @@ def profile_edit(request, para):
             if 'avatar_check' in request.POST:
                 if avatar_check:
                     obj.avatar = None
-            if avatar != "":
-                obj.avatar = avatar
+            if 'avatar' in request.FILES:
+                if avatar != "":
+                    obj.avatar = avatar
             if 'bitmoji_check' in request.POST:
                 if bitmoji_check:
                     obj.bitmoji = None
-            if bitmoji != "":
-                obj.bitmoji = bitmoji
+            if 'bitmoji' in request.FILES:
+                if bitmoji != "":
+                    obj.bitmoji = bitmoji
             obj.save()
 
             return redirect('Profile')

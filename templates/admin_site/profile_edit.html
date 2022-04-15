@@ -9,7 +9,7 @@
         <h3>Edit Form</h3>
     </div>
     <div class="form_body">
-        <form method="post" name="form" onsubmit="return validateForm()">
+        <form method="post" name="form" onsubmit="return validateForm()" enctype='multipart/form-data'>
             {% csrf_token %}
             <div class="row">
                 <div class="col-lg-12 col-sm-12">
@@ -62,7 +62,7 @@
                                         <label class='profile_image_check' for="profile_image_check">Clear</label>
                                         <br>
                                     {% endif %}
-                                    Change: <input type="file" name="profile_image">
+                                    Change: <input type="file" name="profile_img">
                                 </label>
                             </div>
                         </div>
