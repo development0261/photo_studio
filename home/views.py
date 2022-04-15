@@ -363,6 +363,7 @@ def profile(request, para=None):
                 user_obj = custom_user.objects.get(username=request.user)
                 profile_obj = Profile.objects.get(username=user_obj.id)
                 profile_obj.name = name
+                profile_obj.email = email
                 user_obj.email = email
                 profile_obj.mobile = mobile
                 profile_obj.gender = gender
@@ -613,9 +614,9 @@ def email_verification(request):
         email = request.GET['email']
         try:
             user = custom_user.objects.get(email=email)
-            return Response({"Error": "Email already in use"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Error": "Email already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response({"Success": "Email successfully added"}, status=status.HTTP_200_OK)
+            return Response({"Success": "Email is available."}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -624,9 +625,9 @@ def username_verification(request):
         username = request.GET['username']
         try:
             user = custom_user.objects.get(username=username)
-            return Response({"Error": "Username already in use"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Error": "Username already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response({"Success": "Username successfully added"}, status=status.HTTP_200_OK)
+            return Response({"Success": "Username is available."}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
