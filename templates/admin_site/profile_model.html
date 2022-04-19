@@ -52,7 +52,7 @@
                                                                 </th>
                                                                 <th class="bg-transparent border-bottom-0 sortit">
                                                                     <span style="display:flex">Registration date
-                                                                    <div class="sort-order ml-2">
+                                                                    <div class="sort-order ml-2 upOrder">
                                                                     <i class="fa fa-caret-up" aria-hidden="true"></i>
                                                                     <i class="fa fa-caret-down" aria-hidden="true"></i>
                                                                     </div>
@@ -115,7 +115,7 @@
                                                                         <div class="d-flex">
                                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                                 <h6 class="mb-0 fs-14 fw-semibold">
-                                                                                    {{ row.created_at }}
+                                                                                    <span style="display:none">{{row.created_at|date:"U"}}</span>{{row.created_at}}
                                                                                 </h6>
                                                                             </div>
                                                                         </div>
@@ -287,21 +287,21 @@
 
     <!-- Modal -->
     <div class="modal fade bd-example-modal-lg" id="Modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="largeModalLabel">
-                </h5>
-            </div>
-            <div class="modalbody main-profile-modal-wrp">
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
-                    Close
-                </button>
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="largeModalLabel">
+                    </h5>
+                </div>
+                <div class="modalbody main-profile-modal-wrp">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
     </div>
 
 {% endblock %}

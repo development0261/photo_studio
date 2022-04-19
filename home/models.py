@@ -43,7 +43,8 @@ class Profile(models.Model):
     website = models.CharField(max_length=100, null=True, blank=True)
     avatar = models.ImageField(null=True, blank=True)
     bitmoji = models.ImageField(null=True, blank=True)
-    delete_account = models.BooleanField(default=False) 
+    delete_account = models.BooleanField(default=False)
+    expiration_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.username} - {self.name}"

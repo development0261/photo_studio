@@ -16,7 +16,8 @@ from django.core.mail import send_mail
 import random
 import string
 import re
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, date
+import pytz
 from rest_framework import status
 import base64
 from django.contrib.auth.hashers import check_password
@@ -229,9 +230,14 @@ def send_link(request):
             token = ''.join(random.choice(characters) for i in range(50))
             encrypted_token = base64.b64encode(
                 token.encode("ascii")).decode("ascii")
+            encrypted_token = encrypted_token.replace("/",".")
             user = custom_user.objects.get(email=email)
             user.confirm_token = token
             user.save()
+            profile_obj = custom_user.objects.get(email=email).profile
+            profile_obj.expiration_date = datetime.today()
+            profile_obj.save()
+
 
             from django.core import mail
             from django.template.loader import render_to_string
@@ -242,7 +248,7 @@ def send_link(request):
                 'mail_template.html', {'token': f'{Link}{encrypted_token}'})
             plain_message = strip_tags(html_message)
             from_email = 'From <demo.logixbuiltinfo@gmail.com>'
-            to = recipient_list[0]
+            to = recipient_list[0]  
 
             mail.send_mail(subject, plain_message, from_email,
                            [to], html_message=html_message)
@@ -250,42 +256,49 @@ def send_link(request):
         else:
             return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
 
-
 @api_view(['POST'])
 def forgot_password(request, t):
     if request.method == "POST":
+        t.replace(".",'/')
         decrypted_token = base64.b64decode(t).decode("ascii")
         email = request.POST['email']
         new_pass = request.POST['new_pass']
         confirm_pass = request.POST['confirm_pass']
 
-        if custom_user.objects.filter(email=email).exists():
-            if custom_user.objects.filter(confirm_token=decrypted_token).exists():
-                reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
-                pat = re.compile(reg)
-                mat = re.search(pat, new_pass)
-                if mat:
-                    if new_pass == confirm_pass:
-                        obj1 = custom_user.objects.get(
-                            confirm_token=decrypted_token)
-                        obj1.set_password(new_pass)
-                        obj1.save()
-                        try:
-                            obj2 = Profile.objects.get(username=obj1.id)
-                            obj2.pass_forgot = datetime.now()
-                            obj2.save()
-                        except:
-                            profile_obj = Profile.objects.create(username=obj1, pass_forgot=datetime.now())
-                        return Response({"Success": "Password updated Successfully."}, status=status.HTTP_200_OK)
+        token_obj = custom_user.objects.all()
+        for row in token_obj:
+            if row.confirm_token != None:
+                if len(row.confirm_token) > 7:
+                    profile_obj = custom_user.objects.get(email=email).profile
+                    if (profile_obj.expiration_date + timedelta(days=1))>pytz.utc.localize(datetime.now()):
+                        if custom_user.objects.filter(email=email).exists():
+                            if custom_user.objects.filter(confirm_token=decrypted_token).exists():
+                                reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
+                                pat = re.compile(reg)
+                                mat = re.search(pat, new_pass)
+                                if mat:
+                                    if new_pass == confirm_pass:
+                                        obj1 = custom_user.objects.get(
+                                            confirm_token=decrypted_token)
+                                        obj1.set_password(new_pass)
+                                        obj1.save()
+                                        try:
+                                            obj2 = Profile.objects.get(username=obj1.id)
+                                            obj2.pass_forgot = datetime.now()
+                                            obj2.save()
+                                        except:
+                                            profile_obj = Profile.objects.create(username=obj1, pass_forgot=datetime.now())
+                                        return Response({"Success": "Password updated Successfully."}, status=status.HTTP_200_OK)
+                                    else:
+                                        return Response({"Error": "New password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
+                                else:
+                                    return Response({"Error": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
+                            else:
+                                return Response({"Error": "Oops!! Please check your Token"}, status=status.HTTP_401_UNAUTHORIZED)
+                        else:
+                            return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
                     else:
-                        return Response({"Error": "New password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    return Response({"Error": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response({"Error": "Oops!! Please check your Token"}, status=status.HTTP_401_UNAUTHORIZED)
-        else:
-            return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
-
+                        return Response({"Error": "Oops! Your Token is Expired!!!"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -652,7 +665,6 @@ def purchase_history(request):
                 purchase_obj.save()
                 return Response({"Success": "Data Updated"}, status=status.HTTP_200_OK)
             except Exception as e:
-                print(e)
                 obj = Purchase(
                     username=user,
                     pstatus=pstatus,
