@@ -90,7 +90,7 @@ def index(request):
     if request.user.is_authenticated:
         admins = custom_user.objects.filter(is_superuser=True)
         locals = custom_user.objects.filter(is_superuser=False)
-        total_profiles = Profile.objects.all()
+        total_profiles = Profile.objects.all().order_by('-created_at')
         total_details = user_preference.objects.all()
         total_app_datas = application_data.objects.all()
         total_purchases = Purchase.objects.all()
@@ -163,7 +163,7 @@ def profile_model(request):
             country_list.append(i)
 
     if request.user.is_authenticated:
-        total_profiles = Profile.objects.all()
+        total_profiles = Profile.objects.all().order_by('-created_at')
         if 'filter' in request.GET:
             val = request.GET['filter']
             if val == 'today':
