@@ -24,7 +24,6 @@ reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!
 
 # Create your views here.
 
-
 def loginprocess(request):
     if 'otpSubmit' in request.POST:
         email = request.POST['email']
