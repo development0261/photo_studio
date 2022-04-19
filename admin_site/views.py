@@ -1,6 +1,5 @@
 from datetime import date, datetime, timedelta
 import copy
-from typing import final
 from django.shortcuts import redirect, render
 from home.models import Product, Profile, Purchase, Tag, application_data, custom_user, user_preference
 from home.models import custom_user
