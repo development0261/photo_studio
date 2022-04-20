@@ -485,7 +485,7 @@ def profile_edit(request, para):
         if request.method == "POST":
             username = request.POST['username']
             name = request.POST['name']
-            email = request.POST['email']
+            # email = request.POST['email']
             mobile = request.POST['mobile']
             if 'profile_img' in request.FILES:
                 profile_img = request.FILES['profile_img']
@@ -512,7 +512,7 @@ def profile_edit(request, para):
 
             obj = Profile.objects.get(username=int(username))
             obj.name = name
-            obj.email = email
+            # obj.email = email
             obj.mobile = mobile
             if 'profile_image_check' in request.POST:
                 if profile_image_check:

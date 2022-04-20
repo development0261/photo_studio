@@ -115,7 +115,7 @@ def register(request):
                                     if 'profile_image' in request.FILES:
                                         data.profile_image = profile_image
                                     data.save()
-                                    temp_obj = custom_user.objects.get(username=username)
+                                    temp_obj = custom_user.objects.get(username=username)                                                           
                                     pro_obj = Profile.objects.get(username=temp_obj)
                                     if pro_obj.profile_image:
                                         img = pro_obj.profile_image
@@ -385,7 +385,8 @@ def profile(request, para=None):
                 user_obj = custom_user.objects.get(username=request.user)
                 profile_obj = Profile.objects.get(username=user_obj.id)
                 profile_obj.name = name
-                profile_obj.email = email
+                # profile_obj.email = email
+                print(email)
                 user_obj.email = email
                 profile_obj.mobile = mobile
                 profile_obj.gender = gender

@@ -42,14 +42,14 @@
                                                                     </div>
                                                                 </span>
                                                                 </th>
-                                                                <th class="bg-transparent border-bottom-0 sortit">
+                                                                {% comment %} <th class="bg-transparent border-bottom-0 sortit">
                                                                     <span style="display:flex">Email
                                                                         <div class="sort-order ml-2">
                                                                         <i class="fa fa-caret-up" aria-hidden="true"></i>
                                                                         <i class="fa fa-caret-down" aria-hidden="true"></i>
                                                                         </div>
                                                                     </span>
-                                                                </th>
+                                                                </th> {% endcomment %}
                                                                 <th class="bg-transparent border-bottom-0 sortit">
                                                                     <span style="display:flex">Registration date
                                                                     <div class="sort-order ml-2 downOrder">
@@ -102,7 +102,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </td>
-                                                                    <td class="text-center">
+                                                                    {% comment %} <td class="text-center">
                                                                         <div class="d-flex">
                                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                                 <h6 class="mb-0 fs-14 fw-semibold">
@@ -110,7 +110,7 @@
                                                                                 </h6>
                                                                             </div>
                                                                         </div>
-                                                                    </td>
+                                                                    </td> {% endcomment %}
                                                                     <td class="text-center">
                                                                         <div class="d-flex">
                                                                             <div class="mt-0 mt-sm-2 d-block">
@@ -412,14 +412,6 @@
                                         <strong>Date of Birth</strong>
                                         <label>
                                             ${data.dob}
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="profile-field">
-                                        <strong>Email</strong>
-                                        <label>
-                                            ${data.email}
                                         </label>
                                     </div>
                                 </div>
