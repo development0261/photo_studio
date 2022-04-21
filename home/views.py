@@ -69,91 +69,6 @@ def logoutProcess(request):
     logout(request)
     return Response({"Message": "Successfully Logged Out"}, status=status.HTTP_200_OK)
 
-# import pandas as pd
-# file_name = 'media/test_ali.xlsx'
-# dfs = pd.read_excel(file_name, sheet_name=None)
-# temp_username = []
-# temp_password = []
-# temp_email = []
-
-# for row in dfs:
-#     usernames = (dfs[row]["username"]).to_string(index=False)
-#     passwords = (dfs[row]["password"]).to_string(index=False)
-#     emails = (dfs[row]["email"]).to_string(index=False)
-#     temp_username.append(usernames)
-#     temp_password.append(passwords)
-#     temp_email.append(emails)
-
-# temp_username = temp_username[0].replace('\n',',').split(',')
-# temp_password = temp_password[0].replace('\n',',').split(',')
-# temp_email = temp_email[0].replace('\n',',').split(',')
-
-# print('start')
-# final_dict = {"username":[],"password":[],"email":[]}
-# for i in range(len(temp_username)):
-#     final_dict["username"].append(temp_username[i].strip())
-#     final_dict["password"].append(temp_password[i].strip())
-#     final_dict["email"].append(temp_email[i].strip())
-# print(final_dict)
-
-@api_view(['POST'])
-def test_register(request):
-    if request.method == "POST":
-        import json
-        mydata = json.loads(request.body)
-        # print(mydata)
-        username  = mydata.get('username')
-        # print(username)
-        email  = mydata.get('email')
-        # print(email)
-        password  = mydata.get('password')
-        # print(password)
-
-        
-        if not custom_user.objects.filter(username=username).exists():
-            if len(username) > 5:
-                if not custom_user.objects.filter(email=email).exists():
-                    # if(re.fullmatch(for_email, email)):
-                    # pat = re.compile(reg)
-                    # mat = re.search(pat, password)
-                    # if mat:
-                    user = custom_user.objects.create_user(
-                        username=username, password=password, email=email)
-                    user.save()
-                    data = Profile(
-                        username=user)
-                    data.save()
-                    temp_obj = custom_user.objects.get(username=username)
-                    pro_obj = Profile.objects.get(username=temp_obj)
-                    if pro_obj.profile_image:
-                        img = pro_obj.profile_image
-                    else:
-                        img = ""
-                    if pro_obj.avatar:
-                        img1 = pro_obj.avatar
-                    else:
-                        img1 = ""
-                    if pro_obj.bitmoji:
-                        img2 = pro_obj.bitmoji
-                    else:
-                        img2 = ""
-                    temp_obj = custom_user.objects.get(username=username)
-                    serializer_class = RegistrationSerializer(pro_obj)
-                    return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
-                    # else:
-                    #     return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
-                    # else:
-                    #     return Response({"Error": "Enter valid email address"}, status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    return Response({"Error": "User Already Exist with this email address"}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response({"Error": "Username length must be greater than 6"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            # temp_obj = custom_user.objects.get(username=username)
-            # serializer_class = RegistrationSerializer(temp_obj)
-            # return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
-            return Response({"Error": "User Already Exists!!!"}, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['POST'])
 def register(request):
@@ -166,6 +81,17 @@ def register(request):
         gender = request.POST['gender']
         first_name = request.POST.get('firstname')
         last_name = request.POST.get('lastname')
+        # import json
+        # mydata = json.loads(request.body)
+        # username  = mydata.get('username')
+        # print(username)
+        # password  = mydata.get('password')
+        # email  = mydata.get('email')
+        # name  = mydata.get('name')
+        # mobile  = mydata.get('mobile')
+        # gender  = mydata.get('gender')
+        # first_name  = mydata.get('first_name')
+        # last_name  = mydata.get('last_name')
 
         if 'profile_image' in request.FILES:
             profile_image = request.FILES['profile_image']
