@@ -120,7 +120,8 @@
                                                         <td class="text-center">
                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                 <h6 class="mb-0 fs-14 fw-semibold">
-                                                                    {{ row.Purchase_date }}
+                                                                    <span style="display:none">{{row.Purchase_date|date:"U"}}</span>{{row.Purchase_date}}
+                                                                    {% comment %} {{ row.Purchase_date }} {% endcomment %}
                                                                 </h6>
                                                             </div>
                                                         </td>
