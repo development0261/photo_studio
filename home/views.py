@@ -69,24 +69,24 @@ def logoutProcess(request):
     logout(request)
     return Response({"Message": "Successfully Logged Out"}, status=status.HTTP_200_OK)
 
-import pandas as pd
-file_name = 'media/test_ali.xlsx'
-dfs = pd.read_excel(file_name, sheet_name=None)
-temp_username = []
-temp_password = []
-temp_email = []
+# import pandas as pd
+# file_name = 'media/test_ali.xlsx'
+# dfs = pd.read_excel(file_name, sheet_name=None)
+# temp_username = []
+# temp_password = []
+# temp_email = []
 
-for row in dfs:
-    usernames = (dfs[row]["username"]).to_string(index=False)
-    passwords = (dfs[row]["password"]).to_string(index=False)
-    emails = (dfs[row]["email"]).to_string(index=False)
-    temp_username.append(usernames)
-    temp_password.append(passwords)
-    temp_email.append(emails)
+# for row in dfs:
+#     usernames = (dfs[row]["username"]).to_string(index=False)
+#     passwords = (dfs[row]["password"]).to_string(index=False)
+#     emails = (dfs[row]["email"]).to_string(index=False)
+#     temp_username.append(usernames)
+#     temp_password.append(passwords)
+#     temp_email.append(emails)
 
-temp_username = temp_username[0].replace('\n',',').split(',')
-temp_password = temp_password[0].replace('\n',',').split(',')
-temp_email = temp_email[0].replace('\n',',').split(',')
+# temp_username = temp_username[0].replace('\n',',').split(',')
+# temp_password = temp_password[0].replace('\n',',').split(',')
+# temp_email = temp_email[0].replace('\n',',').split(',')
 
 # print('start')
 # final_dict = {"username":[],"password":[],"email":[]}
@@ -153,9 +153,6 @@ def test_register(request):
             # serializer_class = RegistrationSerializer(temp_obj)
             # return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
             return Response({"Error": "User Already Exists!!!"}, status=status.HTTP_400_BAD_REQUEST)
-
-print("Yessssssssssssssssssssssssssss")
-
 
 
 @api_view(['POST'])
