@@ -120,14 +120,18 @@
                                                                 <td>
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
-                                                                            <h6 class="mb-0 fs-14 fw-semibold">{{ row.start_date }}</h6>
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                <span style="display:none">{{row.start_date|date:"U"}}</span>{{row.start_date}}
+                                                                            </h6>
                                                                         </div>
                                                                     </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
-                                                                            <h6 class="mb-0 fs-14 fw-semibold">{{ row.end_date }}</h6>
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                <span style="display:none">{{row.end_date|date:"U"}}</span>{{row.end_date}}
+                                                                            </h6>
                                                                         </div>
                                                                     </div>
                                                                 </td>
