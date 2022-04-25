@@ -195,10 +195,10 @@ span.toggletooltip::after {
 
 
  /* searchbar  */
-input#searchbar {
-    position: absolute;
-    right: 8%;
+ input#searchbar {
+    position: relative;
     top: 2%;
+    left: 70%;
 }
 
 button.btn.btn-light {
