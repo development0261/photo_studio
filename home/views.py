@@ -63,6 +63,16 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
+@api_view(['POST'])
+def all_profile(request):
+    if request.method == "POST":
+        from django.core import serializers
+        temp_obj = custom_user.objects.get(username=request.user)                                                           
+        pro_obj = Profile.objects.all()
+        print(pro_obj)
+        serializer_class = serializers.serialize("json", pro_obj)
+        return Response({"Data": serializer_class}, status=status.HTTP_200_OK)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def logoutProcess(request):
