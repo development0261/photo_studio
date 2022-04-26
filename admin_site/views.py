@@ -84,25 +84,29 @@ def models(request):
             home_models.append(i.__name__)
     return {'home_models': home_models}
 
+def all_table_data():
+    admins = custom_user.objects.filter(is_superuser=True)
+    locals = custom_user.objects.filter(is_superuser=False)
+    total_profiles = Profile.objects.all().order_by('-created_at')
+    total_details = user_preference.objects.all()
+    total_app_datas = application_data.objects.all()
+    total_purchases = Purchase.objects.all()
+    total_tags = Tag.objects.all()
+    total_products = Product.objects.all()
+    all_data = {'admins':admins, 'locals':locals, 'total_profiles':total_profiles, 'total_details':total_details, 'total_app_datas':total_app_datas, 'total_purchases':total_purchases, 'total_tags':total_tags, 'total_products':total_products}
+    return all_data
 
 def index(request):
     if request.user.is_authenticated:
-        admins = custom_user.objects.filter(is_superuser=True)
-        locals = custom_user.objects.filter(is_superuser=False)
-        total_profiles = Profile.objects.all().order_by('-created_at')
-        total_details = user_preference.objects.all()
-        total_app_datas = application_data.objects.all()
-        total_purchases = Purchase.objects.all()
-        total_tags = Tag.objects.all()
-        total_products = Product.objects.all()
-        return render(request, "admin_site/index.html", {'total_admins': admins,
-                                                         'total_locals': locals,
-                                                         'total_profiles': total_profiles,
-                                                         'total_details': total_details,
-                                                         'total_app_datas': total_app_datas,
-                                                         'total_purchases': total_purchases,
-                                                         'total_tags': total_tags,
-                                                         'total_products': total_products,
+        
+        return render(request, "admin_site/index.html", {'total_admins': all_table_data()['admins'],
+                                                         'total_locals': all_table_data()['locals'],
+                                                         'total_profiles': all_table_data()['total_profiles'],
+                                                         'total_details': all_table_data()['total_details'],
+                                                         'total_app_datas': all_table_data()['total_app_datas'],
+                                                         'total_purchases': all_table_data()['total_purchases'],
+                                                         'total_tags': all_table_data()['total_tags'],
+                                                         'total_products': all_table_data()['total_products'],
                                                          })
     else:
         return redirect("login")
@@ -162,9 +166,15 @@ def profile_model(request):
             country_list.append(i)
 
     if request.user.is_authenticated:
+        from django.core.paginator import Paginator
         total_profiles = Profile.objects.all().order_by('-created_at')
+        p = Paginator(total_profiles, 10)
+        page_number = request.GET.get('page')
+        page_obj = p.get_page(page_number)
+
         if 'filter' in request.GET:
             val = request.GET['filter']
+
             if val == 'today':
                 total_profiles = total_profiles.filter(
                     pass_update__exact=datetime.now())
@@ -199,7 +209,7 @@ def profile_model(request):
                 if i == val:
                     total_profiles = total_profiles.filter(country__iexact=val)
 
-        return render(request, "admin_site/profile_model.html", {'total_profiles': total_profiles, 'country_list':country_list})
+        return render(request, "admin_site/profile_model.html", {'total_profiles': page_obj, 'country_list':country_list})
     else:
         return redirect("login")
 

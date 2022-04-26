@@ -69,7 +69,6 @@ def all_profile(request):
         from django.core import serializers
         temp_obj = custom_user.objects.get(username=request.user)                                                           
         pro_obj = Profile.objects.all()
-        print(pro_obj)
         serializer_class = serializers.serialize("json", pro_obj)
         return Response({"Data": serializer_class}, status=status.HTTP_200_OK)
 
@@ -109,14 +108,14 @@ def register(request):
         if not custom_user.objects.filter(username=username).exists():
             if len(username) > 5:
                 if not custom_user.objects.filter(email=email).exists():
-                    if len(mobile) > 0:
+                    if mobile is not None:
                         if not Profile.objects.filter(mobile=mobile).exists() and len(mobile) > 0:
                             if(re.fullmatch(for_email, email)):
                                 pat = re.compile(reg)
                                 mat = re.search(pat, password)
                                 if mat:
                                     user = custom_user.objects.create_user(
-                                        username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+                                        username=username, password=password, email=email)
                                         # username=username, password=password.encode().decode("ISO-8859-1"), email=email, first_name=first_name, last_name=last_name) 
                                     user.save()
                                     data = Profile(
@@ -395,7 +394,6 @@ def profile(request, para=None):
                 profile_obj = Profile.objects.get(username=user_obj.id)
                 profile_obj.name = name
                 # profile_obj.email = email
-                print(email)
                 user_obj.email = email
                 profile_obj.mobile = mobile
                 profile_obj.gender = gender

@@ -20,7 +20,7 @@
                             <p><a href="#" class="bar-button">
                                 <i class="fa fa-bars"></i>
                             </a></p>
-                    </div>
+                        </div>
                     </div>
                     <div class="card-body pt-4">
                         <div class="grid-margin">
@@ -163,21 +163,64 @@
                                                             <div class="show_entries">
                                                                 <label class="m-0 d-flex align-items-center">Show 
                                                                     <div class="table_length_outer mx-2">
-                                                                    <select id="table_length">
-                                                                        <option class="selected" value="10">10</option>
-                                                                        <option value="25">25</option>
-                                                                        <option value="50">50</option>
-                                                                        <option value="100">100</option>
-                                                                    </select>
-                                                                </div>
+                                                                        <select id="table_length">
+                                                                            <option class="selected" value="10">10</option>
+                                                                            <option value="25">25</option>
+                                                                            <option value="50">50</option>
+                                                                            <option value="100">100</option>
+                                                                        </select>
+                                                                    </div>
                                                                 entries</label>
                                                             </div>
                                                         </div>
+                                                        <!--Pagination-->
                                                         <div class="col-lg-6">
-                                                            <div class="pages">
-                                                                <ul class="pagination m-0" id="app_user_Pagination"></ul>
-                                                            </div>
+                                                            <nav aria-label="Page navigation example">
+                                                                <ul class="pagination justify-content-center">
+                                                                {% if total_profiles.has_previous %}
+                                                                    <li class="page-item">
+                                                                    <a class="page-link" href="?page={{ total_profiles.previous_page_number }}">Previous</a>
+                                                                </li>
+                                                                {% else %}
+                                                                    <li class="page-item disabled">
+                                                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+                                                                </li>
+                                                                {% endif %}
+
+                                                                {% if total_profiles.number|add:'-4' > 1 %}
+                                                                    <li class="page-item"><a class="page-link" href="?page={{ total_profiles.number|add:'-5' }}">&hellip;</a></li>
+                                                                {% endif %}
+
+                                                                {% for i in total_profiles.paginator.page_range %}
+                                                                    {% if total_profiles.number == i %}
+                                                                        <li class="page-item active" aria-current="page">
+                                                                    <span class="page-link">
+                                                                        {{ i }}
+                                                                        <span class="sr-only">(current)</span>
+                                                                    </span>
+                                                                    </li>
+                                                                    {% elif i > total_profiles.number|add:'-5' and i < total_profiles.number|add:'5' %}
+                                                                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                                                    {% endif %}
+                                                                {% endfor %}
+
+                                                                {% if total_profiles.paginator.num_pages > total_profiles.number|add:'4' %}
+                                                                <li class="page-item"><a class="page-link" href="?page={{ total_profiles.number|add:'5' }}">&hellip;</a></li>
+                                                                {% endif %}
+
+                                                                {% if total_profiles.has_next %}
+                                                                    <li class="page-item">
+                                                                    <a class="page-link" href="?page={{ total_profiles.next_page_number }}">Next</a>
+                                                                </li>
+                                                                {% else %}
+                                                                    <li class="page-item disabled">
+                                                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+                                                                </li>
+                                                                {% endif %}
+                                                            </ul>
+                                                            </nav>
                                                         </div>
+                                                        <!--end of Pagination-->
                                                     </div>
                                                 </div>
                                             </div>
@@ -335,6 +378,7 @@
         });
 
     </script>
+
     {% comment %} filters {% endcomment %}
     <script>
         $('.filter_body a').on('click', function () {
@@ -600,7 +644,7 @@
     </script>
 
     {% comment %} pagination {% endcomment %}
-    <script>
+    {% comment %} <script>
         function makePaginationTable(pageRange) {
             function getPageList(totalPages, page, maxLength) {
                 if (maxLength < 5) throw "maxLength must be at least 5";
@@ -717,5 +761,5 @@
             });
         });
         
-    </script>
+    </script> {% endcomment %}
 {% endblock scripts %}

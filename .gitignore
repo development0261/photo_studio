@@ -5,7 +5,4 @@ home/migrations
 home/migrations/*
 
 node_modules
-Gruntfile.js
-package.json
 package-lock.json
-server.js

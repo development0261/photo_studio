@@ -55,12 +55,12 @@
                                             </a>
                                         </div> {% endcomment %}
                                         <!-- SEARCH -->
-                                        <div class="dropdown  d-flex">
+                                        {% comment %} <div class="dropdown  d-flex">
                                             <a class="nav-link icon theme-layout nav-link-bg layout-setting">
                                                  <span class="dark-layout"><i class="fe fe-moon"></i></span>
                                                 <span class="light-layout"><i class="fe fe-sun"></i></span>
                                             </a>
-                                        </div>
+                                        </div> {% endcomment %}
                                         <!-- Theme-Layout -->
                                         <div class="dropdown d-flex">
                                             <a class="nav-link icon full-screen-link nav-link-bg">
@@ -199,9 +199,9 @@
                                         <div class="dropdown d-flex profile-1">
                                             <a href="javascript:void(0)" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
                                                 {% if user.profile.profile_image %}
-                                                    <img src="/media/{{user.profile.profile_image}}" alt="profile-user" class="avatar  profile-user brround cover-image">
+                                                    <img src="/media/{{user.profile.profile_image}}" alt=" " class="avatar  profile-user brround cover-image">
                                                 {% else %}
-                                                    <img src="{% static 'assets/images/users/21.jpg'%}" alt="profile-user" class="avatar  profile-user brround cover-image">
+                                                    <img src="{% static 'assets/images/users/21.jpg'%}" alt="" class="avatar  profile-user brround cover-image">
                                                 {% endif %}
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
