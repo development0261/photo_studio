@@ -109,6 +109,7 @@ class user_preference(models.Model):
     )
     app_theme = models.CharField(max_length=7, choices=app_choices)  # (list)
     always_crop = models.BooleanField(default=False)  # (boolean)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.username} - {self.udid}"
@@ -143,6 +144,7 @@ class application_data(models.Model):
     Registered_user = models.BooleanField(default=False)
     Push_Notification_token = models.CharField(
         max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.username} - {self.UID}"
@@ -163,6 +165,7 @@ class Product(models.Model):
     monthlySubProd = models.CharField(max_length=255, null=True, blank=True)
     monthlySub = models.CharField(max_length=255, null=True, blank=True)
     localeId = models.IntegerField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.product}"
@@ -183,6 +186,7 @@ class Purchase(models.Model):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     subscription_type = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.username} - {self.pstatus}"
@@ -194,6 +198,7 @@ class Purchase(models.Model):
 class Tag(models.Model):
     username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
     tag = ArrayField(models.CharField(max_length=50), null=True, max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.username} - {self.tag}"

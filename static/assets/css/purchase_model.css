@@ -31,10 +31,10 @@ i.fa.fa-caret-up, i.fa.fa-caret-down {
     padding: 10px 17px;
 }
 
-input#searchbar {
-    position: relative;
-    top: 2%;
-    left: 70%;
+/* searchbar  */
+.main-header-center{
+    margin-left: auto !important;
+    margin-right: 4px;
 }
 
  /* pagination  */

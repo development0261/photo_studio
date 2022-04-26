@@ -10,7 +10,7 @@
                 <div class="card-header">
                     <h3 class="card-title mb-0">Purchases</h3>
                     <div class="main-header-center ms-3 d-none d-lg-block">
-                        <input id='searchbar' class="form-control" placeholder="Search for results..." type="search">
+                        <input id='searchbar' class="form-control" placeholder="Search for results..." type="search"  {% if request.GET.search %} value="{{request.GET.search}}" {% endif %} onkeydown="search(this)"/>
                     </div>
                 </div>
                 <div class="card-body pt-4">
@@ -93,7 +93,7 @@
                                                                 <td>
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
-                                                                            <h6 class="mb-0 fs-14 fw-semibold puchase_view" id="{{row.username}} - {{ row.status }}">{{ row.status }}</h6>
+                                                                            <h6 class="mb-0 fs-14 fw-semibold puchase_view" id="{{row.username}} - {{ row.pstatus }}">{{ row.pstatus }}</h6>
                                                                         </div>
                                                                     </div>
                                                                 </td>
@@ -158,25 +158,70 @@
                                             </div>
                                             <div class="pagination_div">
                                                 <div class="row align-items-center">
-                                                    <div class="col-lg-6">
-                                                        <div class="show_entries">
-                                                            <label class="m-0 d-flex align-items-center">Show 
-                                                                <div class="table_length_outer mx-2">
+                                                    <!--show entries-->
+                                                <div class="col-lg-6">
+                                                    <div class="show_entries">
+                                                        <label class="m-0 d-flex align-items-center">Show 
+                                                            <div class="table_length_outer mx-2">
                                                                 <select id="table_length">
-                                                                    <option class="selected" value="10">10</option>
-                                                                    <option value="25">25</option>
-                                                                    <option value="50">50</option>
-                                                                    <option value="100">100</option>
+                                                                    <option value="10" {% if request.GET.show == '10' %} selected {% endif %}>10</option>
+                                                                    <option value="25" {% if request.GET.show == '25' %} selected {% endif %}>25</option>
+                                                                    <option value="50" {% if request.GET.show == '50' %} selected {% endif %}>50</option>
+                                                                    <option value="100" {% if request.GET.show == '100' %} selected {% endif %}>100</option>
                                                                 </select>
                                                             </div>
-                                                            entries</label>
-                                                        </div>
+                                                        entries</label>
                                                     </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="pages">
-                                                            <ul class="pagination m-0" id="app_user_Pagination"></ul>
-                                                        </div>
-                                                    </div>
+                                                </div>
+                                                <!--end show entries-->
+                                                <!--Pagination-->
+                                                <div class="col-lg-6">
+                                                    <nav aria-label="Page navigation example">
+                                                        <ul class="pagination justify-content-center">
+                                                        {% if total_purchases.has_previous %}
+                                                            <li class="page-item">
+                                                            <a class="page-link" href="?page={{ total_purchases.previous_page_number }}">Previous</a>
+                                                        </li>
+                                                        {% else %}
+                                                            <li class="page-item disabled">
+                                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+                                                        </li>
+                                                        {% endif %}
+
+                                                        {% if total_purchases.number|add:'-4' > 1 %}
+                                                            <li class="page-item"><a class="page-link" href="?page={{ total_purchases.number|add:'-5' }}">&hellip;</a></li>
+                                                        {% endif %}
+
+                                                        {% for i in total_purchases.paginator.page_range %}
+                                                            {% if total_purchases.number == i %}
+                                                                <li class="page-item active" aria-current="page">
+                                                            <span class="page-link">
+                                                                {{ i }}
+                                                                <span class="sr-only">(current)</span>
+                                                            </span>
+                                                            </li>
+                                                            {% elif i > total_purchases.number|add:'-5' and i < total_purchases.number|add:'5' %}
+                                                                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                                            {% endif %}
+                                                        {% endfor %}
+
+                                                        {% if total_purchases.paginator.num_pages > total_purchases.number|add:'4' %}
+                                                        <li class="page-item"><a class="page-link" href="?page={{ total_purchases.number|add:'5' }}">&hellip;</a></li>
+                                                        {% endif %}
+
+                                                        {% if total_purchases.has_next %}
+                                                            <li class="page-item">
+                                                            <a class="page-link" href="?page={{ total_purchases.next_page_number }}">Next</a>
+                                                        </li>
+                                                        {% else %}
+                                                            <li class="page-item disabled">
+                                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+                                                        </li>
+                                                        {% endif %}
+                                                    </ul>
+                                                    </nav>
+                                                </div>
+                                                <!--end of Pagination-->
                                                 </div>
                                             </div>
                                         </div>
@@ -256,7 +301,7 @@
                                 <div class="profile-field">
                                     <strong>Status</strong>
                                     <label>
-                                        ${data.status}
+                                        ${data.pstatus}
                                     </label>
                                 </div>
                             </div>
@@ -371,134 +416,21 @@
           function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
     </script>
 
-    {% comment %} searchbar {% endcomment %}
+    {% comment %} searchbar backend {% endcomment %}
     <script>
-        $(document).ready(function () {
-            $("#searchbar").on("keyup", function () {
-                var value = $(this).val().toLowerCase();
-                $("#data-table tbody tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-                });
-            });
-        });
+        function search(ele) {
+            if(event.key === 'Enter') {
+                event.preventDefault()
+                window.location.href = "{% url 'Purchase' %}?search="+ele.value;  
+            }
+        }
     </script>
 
-    {% comment %} pagination {% endcomment %}
+    {% comment %} show data backend {% endcomment %}
     <script>
-        function makePaginationTable(pageRange) {
-            function getPageList(totalPages, page, maxLength) {
-                if (maxLength < 5) throw "maxLength must be at least 5";
-        
-                function range(start, end) {
-                    return Array.from(Array(end - start + 1), (_, i) => i + start);
-                }
-            
-                var sideWidth = maxLength < 9 ? 1 : 2;
-                var leftWidth = (maxLength - sideWidth * 2 - 3) >> 1;
-                var rightWidth = (maxLength - sideWidth * 2 - 2) >> 1;
-                if (totalPages <= maxLength) {
-                    // no breaks in list
-                    return range(1, totalPages);
-                }
-                if (page <= maxLength - sideWidth - 1 - rightWidth) {
-                    // no break on left of page
-                    return range(1, maxLength - sideWidth - 1)
-                    .concat(0, range(totalPages - sideWidth + 1, totalPages));
-                }
-                if (page >= totalPages - sideWidth - 1 - rightWidth) {
-                    // no break on right of page
-                    return range(1, sideWidth)
-                    .concat(0, range(totalPages - sideWidth - 1 - rightWidth - leftWidth, totalPages));
-                }
-                // Breaks on both sides
-                return range(1, sideWidth)
-                    .concat(0, range(page - leftWidth, page + rightWidth),
-                    0, range(totalPages - sideWidth + 1, totalPages));
-            }
-            
-                // Below is an example use of the above function.
-            $(function () {
-                // Number of items and limits the number of items per page
-                var numberOfItems = $("#table_body tr").length;
-            
-                var limitPerPage = pageRange;
-                // Total pages rounded upwards
-                var totalPages = Math.ceil(numberOfItems / limitPerPage);
-                // Number of buttons at the top, not counting prev/next,
-                // but including the dotted buttons.
-                // Must be at least 5:
-                var paginationSize = 7;
-                var currentPage;
-            
-                function showPage(whichPage) {
-            
-                    if (whichPage < 1 || whichPage > totalPages) return false;
-                    currentPage = whichPage;
-                    $("#table_body tr").hide()
-                    .slice((currentPage - 1) * limitPerPage,
-                        currentPage * limitPerPage).show();
-                    // Replace the navigation items (not prev/next):            
-                    $("#app_user_Pagination li").slice(1, -1).remove();
-                    getPageList(totalPages, currentPage, paginationSize).forEach(item => {
-                    $("<li>").addClass("page-item")
-                        .addClass(item ? "current-page" : "disabled")
-                        .toggleClass("active", item === currentPage).append(
-                        $("<a>").addClass("page-link").attr({
-                            href: "javascript:void(0)"
-                        }).text(item || "...")
-                        ).insertBefore("#app_user_Pagination #next-page");
-                    });
-                    // Disable prev/next when at first/last page:
-                    $("#app_user_Pagination #previous-page").toggleClass("disabled", currentPage === 1);
-                    $("#app_user_Pagination #next-page").toggleClass("disabled", currentPage === totalPages);
-                    return true;
-                }
-            
-                // Include the prev/next buttons:
-                $("#app_user_Pagination").append(
-                    $("<li>").addClass("page-item").attr({ id: "previous-page" }).append(
-                    $("<a>").addClass("page-link").attr({
-                        href: "javascript:void(0)"
-                    }).text("<")
-                    ),
-                    $("<li>").addClass("page-item").attr({ id: "next-page" }).append(
-                    $("<a>").addClass("page-link").attr({
-                        href: "javascript:void(0)"
-                    }).text(">")
-                    )
-                );
-                // Show the page links
-                $(".datatable-body").show();
-                showPage(1);
-            
-                // Use event delegation, as these items are recreated later    
-                $(document).on("click", "#app_user_Pagination li.current-page:not(.active)", function () {
-                    return showPage(+$(this).text());
-                });
-                $("#app_user_Pagination #next-page").on("click", function () {
-                    return showPage(currentPage + 1);
-                });
-            
-                $("#app_user_Pagination #previous-page").on("click", function () {
-                    return showPage(currentPage - 1);
-                });
-            });
-        }
-        makePaginationTable(10)
-        $(document).ready(function(){
-            $("select#table_length").change(function(){
-                var data = parseInt($(this).children("option:selected").val());
-                if(data==25){
-                    makePaginationTable(25)
-                }else if(data==50){
-                    makePaginationTable(50)
-                }else if(data==100){
-                    makePaginationTable(100)
-                }else if(data==10){
-                    makePaginationTable(10)
-                }
-            });
-        });
-        
+        $('#table_length').change(function() {
+            var val = $(this).val();
+            window.location.href = "{% url 'Purchase' %}?show="+val;
+        })
     </script>
 {% endblock scripts %}

@@ -194,11 +194,10 @@ span.toggletooltip::after {
 
 
 
- /* searchbar  */
- input#searchbar {
-    position: relative;
-    top: 2%;
-    left: 70%;
+/* searchbar  */
+.main-header-center{
+    margin-left: auto !important;
+    margin-right: 4px;
 }
 
 button.btn.btn-light {
