@@ -73,23 +73,23 @@ def logoutProcess(request):
 @api_view(['POST'])
 def register(request):
     if request.method == "POST":
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        name = request.POST['name']
-        mobile = request.POST['mobile']
-        gender = request.POST['gender']
-        first_name = request.POST.get('firstname')
-        last_name = request.POST.get('lastname')
-        # import json
-        # mydata = json.loads(request.body)
-        # username  = mydata.get('username')
-        # print(username)
-        # password  = mydata.get('password')
-        # email  = mydata.get('email')
-        # name  = mydata.get('name')
-        # mobile  = mydata.get('mobile')
-        # gender  = mydata.get('gender')
+        # username = request.POST['username']
+        # email = request.POST['email']
+        # password = request.POST['password']
+        # name = request.POST['name']
+        # mobile = request.POST['mobile']
+        # gender = request.POST['gender']
+        # first_name = request.POST.get('firstname')
+        # last_name = request.POST.get('lastname')
+        import json
+        mydata = json.loads(request.body)
+        username  = mydata.get('username')
+        print(username)
+        password  = mydata.get('password')
+        email  = mydata.get('email')
+        name  = mydata.get('name')
+        mobile  = mydata.get('mobile')
+        gender  = mydata.get('gender')
         # first_name  = mydata.get('first_name')
         # last_name  = mydata.get('last_name')
 
@@ -142,7 +142,7 @@ def register(request):
                             mat = re.search(pat, password)
                             if mat:
                                 user = custom_user.objects.create_user(
-                                    username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+                                    username=username, password=password, email=email)
                                 user.save()
                                 data = Profile(
                                     username=user, name=name, mobile=mobile, gender=gender)
