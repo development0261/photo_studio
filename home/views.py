@@ -63,15 +63,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
-@api_view(['POST'])
-def all_profile(request):
-    if request.method == "POST":
-        from django.core import serializers
-        temp_obj = custom_user.objects.get(username=request.user)                                                           
-        pro_obj = Profile.objects.all()
-        serializer_class = serializers.serialize("json", pro_obj)
-        return Response({"Data": serializer_class}, status=status.HTTP_200_OK)
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def logoutProcess(request):
@@ -241,8 +232,8 @@ def send_link(request):
             user_with_email = custom_user.objects.get(email=email)
             recipient_list.append(user_with_email.email) 
 
-            # Link = 'http://127.0.0.1:8001/home/forgot_password/'
-            Link = 'http://185.146.21.235:7800/home/forgot_password/'
+            # Link = 'http://127.0.0.1:8001/home/reset-password/'
+            Link = 'http://185.146.21.235:7800/home/reset-password/'
             characters = string.ascii_letters + string.digits + punctuation
             token = ''.join(random.choice(characters) for i in range(50))
             encrypted_token = base64.b64encode(
@@ -255,14 +246,13 @@ def send_link(request):
             profile_obj.expiration_date = datetime.today()
             profile_obj.save()
 
-
             from django.core import mail
             from django.template.loader import render_to_string
             from django.utils.html import strip_tags
 
             subject = 'Forgot Password'
             html_message = render_to_string(
-                'mail_template.html', {'token': f'{Link}{encrypted_token}'})
+                'mail_template.html', {'token': f'{Link}?token={encrypted_token}&amp;email={email}'})
             plain_message = strip_tags(html_message)
             from_email = 'From <demo.logixbuiltinfo@gmail.com>'
             to = recipient_list[0]  
@@ -274,10 +264,11 @@ def send_link(request):
             return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['POST'])
-def forgot_password(request, t):
+def reset_password(request):
+    token = request.GET.get('token')
     if request.method == "POST":
-        t.replace(".",'/')
-        decrypted_token = base64.b64decode(t).decode("ascii")
+        token.replace(".",'/')
+        decrypted_token = base64.b64decode(token).decode("ascii")
         email = request.POST['email']
         new_pass = request.POST['new_pass']
         confirm_pass = request.POST['confirm_pass']
