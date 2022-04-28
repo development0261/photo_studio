@@ -267,7 +267,7 @@ def send_link(request):
 def reset_password(request):
     token = request.GET.get('token')
     if request.method == "POST":
-        token.replace(".",'/')
+        token.replace(".",'/').replace(" ", "")
         print(token)
         decrypted_token = base64.b64decode(token).decode("ascii")
         print(decrypted_token)
