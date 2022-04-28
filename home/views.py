@@ -73,23 +73,23 @@ def logoutProcess(request):
 @api_view(['POST'])
 def register(request):
     if request.method == "POST":
-        # username = request.POST['username']
-        # email = request.POST['email']
-        # password = request.POST['password']
-        # name = request.POST['name']
-        # mobile = request.POST['mobile']
-        # gender = request.POST['gender']
-        # first_name = request.POST.get('firstname')
-        # last_name = request.POST.get('lastname')
-        import json
-        mydata = json.loads(request.body)
-        username  = mydata.get('username')
-        print(username)
-        password  = mydata.get('password')
-        email  = mydata.get('email')
-        name  = mydata.get('name')
-        mobile  = mydata.get('mobile')
-        gender  = mydata.get('gender')
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        name = request.POST['name']
+        mobile = request.POST['mobile']
+        gender = request.POST['gender']
+        first_name = request.POST.get('firstname')
+        last_name = request.POST.get('lastname')
+        # import json
+        # mydata = json.loads(request.body)
+        # username  = mydata.get('username')
+        # print(username)
+        # password  = mydata.get('password')
+        # email  = mydata.get('email')
+        # name  = mydata.get('name')
+        # mobile  = mydata.get('mobile')
+        # gender  = mydata.get('gender')
         # first_name  = mydata.get('first_name')
         # last_name  = mydata.get('last_name')
 
@@ -106,7 +106,7 @@ def register(request):
                                 mat = re.search(pat, password)
                                 if mat:
                                     user = custom_user.objects.create_user(
-                                        username=username, password=password, email=email)
+                                        username=username, password=password, email=email, first_name=first_name, last_name=last_name)
                                         # username=username, password=password.encode().decode("ISO-8859-1"), email=email, first_name=first_name, last_name=last_name) 
                                     user.save()
                                     data = Profile(
@@ -142,7 +142,7 @@ def register(request):
                             mat = re.search(pat, password)
                             if mat:
                                 user = custom_user.objects.create_user(
-                                    username=username, password=password, email=email)
+                                    username=username, password=password, email=email, first_name=first_name, last_name=last_name)
                                 user.save()
                                 data = Profile(
                                     username=user, name=name, mobile=mobile, gender=gender)
@@ -232,8 +232,8 @@ def send_link(request):
             user_with_email = custom_user.objects.get(email=email)
             recipient_list.append(user_with_email.email) 
 
-            # Link = 'http://127.0.0.1:8001/home/reset-password/'
-            Link = 'http://185.146.21.235:7800/home/reset-password/'
+            # Link = 'http://127.0.0.1:8001/home/reset-password'
+            Link = 'http://185.146.21.235:7800/home/reset-password'
             characters = string.ascii_letters + string.digits + punctuation
             token = ''.join(random.choice(characters) for i in range(50))
             encrypted_token = base64.b64encode(
@@ -252,7 +252,7 @@ def send_link(request):
 
             subject = 'Forgot Password'
             html_message = render_to_string(
-                'mail_template.html', {'token': f'{Link}?token={encrypted_token}&amp;email={email}'})
+                'mail_template.html', {'token': f'{Link}?token={encrypted_token}?email={email}'})
             plain_message = strip_tags(html_message)
             from_email = 'From <demo.logixbuiltinfo@gmail.com>'
             to = recipient_list[0]  
@@ -263,16 +263,16 @@ def send_link(request):
         else:
             return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
 
-@api_view(['POST'])
+@api_view(['GET'])
 def reset_password(request):
     token = request.GET.get('token')
-    if request.method == "POST":
+    if request.method == "GET":
         token = token.replace(".",'/')
         token = "".join(token.split())
-        decrypted_token = base64.b64decode(token).decode("ascii")
-        email = request.POST['email']
-        new_pass = request.POST['new_pass']
-        confirm_pass = request.POST['confirm_pass']
+        decrypted_token = base64.b64decode(token).decode('ascii')
+        email = request.GET['email']
+        new_pass = request.GET['new_pass']
+        confirm_pass = request.GET['confirm_pass']
 
         token_obj = custom_user.objects.all()
         for row in token_obj:
