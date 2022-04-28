@@ -293,43 +293,51 @@
                                                         <ul class="pagination justify-content-center">
                                                         {% if locals.has_previous %}
                                                             <li class="page-item">
-                                                            <a class="page-link" href="?page={{ locals.previous_page_number }}">Previous</a>
-                                                        </li>
+                                                                <a class="page-link" href="?page={{ locals.previous_page_number }}">Previous</a>
+                                                            </li>
                                                         {% else %}
                                                             <li class="page-item disabled">
-                                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
-                                                        </li>
+                                                                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+                                                            </li>
                                                         {% endif %}
 
-                                                        {% if locals.number|add:'-4' > 1 %}
-                                                            <li class="page-item"><a class="page-link" href="?page={{ locals.number|add:'-5' }}">&hellip;</a></li>
+                                                        {% if locals.number|add:'-2' > 1 %}
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="?page={{ locals.number|add:'-3' }}">&hellip;</a>
+                                                            </li>
                                                         {% endif %}
 
                                                         {% for i in locals.paginator.page_range %}
                                                             {% if locals.number == i %}
                                                                 <li class="page-item active" aria-current="page">
-                                                            <span class="page-link">
-                                                                {{ i }}
-                                                                <span class="sr-only">(current)</span>
-                                                            </span>
-                                                            </li>
-                                                            {% elif i > locals.number|add:'-5' and i < locals.number|add:'5' %}
-                                                                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                                                    <span class="page-link">
+                                                                        {{ i }}
+                                                                        <span class="sr-only">
+                                                                            (current)
+                                                                        </span>
+                                                                    </span>
+                                                                </li>
+                                                            {% elif i > locals.number|add:'-3' and i < locals.number|add:'3' %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                                                </li>
                                                             {% endif %}
                                                         {% endfor %}
 
-                                                        {% if locals.paginator.num_pages > locals.number|add:'4' %}
-                                                        <li class="page-item"><a class="page-link" href="?page={{ locals.number|add:'5' }}">&hellip;</a></li>
+                                                        {% if locals.paginator.num_pages > locals.number|add:'3' %}
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="?page={{ locals.number|add:'3' }}">&hellip;</a>
+                                                            </li>
                                                         {% endif %}
 
                                                         {% if locals.has_next %}
                                                             <li class="page-item">
-                                                            <a class="page-link" href="?page={{ locals.next_page_number }}">Next</a>
-                                                        </li>
+                                                                <a class="page-link" href="?page={{ locals.next_page_number }}">Next</a>
+                                                            </li>
                                                         {% else %}
                                                             <li class="page-item disabled">
-                                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
-                                                        </li>
+                                                                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+                                                            </li>
                                                         {% endif %}
                                                     </ul>
                                                     </nav>

@@ -127,17 +127,10 @@ def admin_user(request):
 def app_user(request):
     if request.user.is_authenticated:
         locals = custom_user.objects.filter(is_superuser=False).order_by('-date_joined')
-        if 'show' in request.GET:
-            showval = request.GET['show']
-            p = Paginator(locals, showval)
-        else:
-            p = Paginator(locals, 10)
-        page_number = request.GET.get('page')
-        page_obj = p.get_page(page_number)
 
         if 'search' in request.GET:
             searchvalue = request.GET['search']
-            page_obj = custom_user.objects.filter(
+            locals = custom_user.objects.filter(
                                 Q(username__icontains=searchvalue) |
                                 Q(first_name__icontains=searchvalue) |
                                 Q(last_name__icontains=searchvalue) |
@@ -147,23 +140,31 @@ def app_user(request):
         if 'datefilter' in request.GET:
             val = request.GET['datefilter']
             if val == 'today':
-                page_obj = locals.filter(date_joined__date=date.today())
+                locals = locals.filter(date_joined__date=date.today())
             if val == 'seven':
-                page_obj = locals.filter(date_joined__gte=datetime.now(
+                locals = locals.filter(date_joined__gte=datetime.now(
                 ) - timedelta(days=7), date_joined__lte=datetime.now())
             if val == 'thirty':
-                page_obj = locals.filter(date_joined__gte=datetime.now(
+                locals = locals.filter(date_joined__gte=datetime.now(
                 ) - timedelta(days=30), date_joined__lte=datetime.now())
             if val == 'ninety':
-                page_obj = locals.filter(date_joined__gte=datetime.now(
+                locals = locals.filter(date_joined__gte=datetime.now(
                 ) - timedelta(days=90), date_joined__lte=datetime.now())
 
             if val == 'five':
                 Temp = copy.copy(locals)
-                page_obj = Temp[:5]
+                locals = Temp[:5]
             if val == 'ten':
                 Temp = copy.copy(locals)
-                page_obj = Temp[:10]
+                locals = Temp[:10]
+
+        if 'show' in request.GET:
+            showval = request.GET['show']
+            p = Paginator(locals, showval)
+        else:
+            p = Paginator(locals, 10)
+        page_number = request.GET.get('page')
+        page_obj = p.get_page(page_number)
 
         return render(request, "admin_site/user_model.html", {'locals': page_obj})
     else:
@@ -186,17 +187,10 @@ def profile_model(request):
 
     if request.user.is_authenticated:
         total_profiles = Profile.objects.all().order_by('-created_at')
-        if 'show' in request.GET:
-            showval = request.GET['show']
-            p = Paginator(total_profiles, showval)
-        else:
-            p = Paginator(total_profiles, 10)
-        page_number = request.GET.get('page')
-        page_obj = p.get_page(page_number)
 
         if 'searchval' in request.GET:
             searchvalue = request.GET['searchval']
-            page_obj = Profile.objects.filter(
+            total_profiles = Profile.objects.filter(
                                 Q(name__icontains=searchvalue) |
                                 Q(mobile__icontains=searchvalue) |
                                 Q(gender__icontains=searchvalue) |
@@ -208,38 +202,46 @@ def profile_model(request):
             val = request.GET['filter']
 
             if val == 'today':
-              page_obj = total_profiles.filter(
+              total_profiles = total_profiles.filter(
                     pass_update__exact=datetime.now())
             if val == 'seven':
-                page_obj = total_profiles.filter(pass_update__gte=datetime.now(
+                total_profiles = total_profiles.filter(pass_update__gte=datetime.now(
                 ) - timedelta(days=7), pass_update__lte=datetime.now())
             if val == 'month':
-                page_obj = total_profiles.filter(pass_update__gte=datetime.now(
+                total_profiles = total_profiles.filter(pass_update__gte=datetime.now(
                 ) - timedelta(days=30), pass_update__lte=datetime.now())
             if val == 'year':
-                page_obj = total_profiles.filter(pass_update__gte=datetime.now(
+                total_profiles = total_profiles.filter(pass_update__gte=datetime.now(
                 ) - timedelta(days=365), pass_update__lte=datetime.now())
 
             if val == 'twenty':
-                page_obj = total_profiles.filter(dob__gte=datetime.now(
+                total_profiles = total_profiles.filter(dob__gte=datetime.now(
                 ) - timedelta(days=(365*30)), dob__lt=datetime.now() - timedelta(days=(365*20)))
             if val == 'thirty':
-                page_obj = total_profiles.filter(dob__gte=datetime.now(
+                total_profiles = total_profiles.filter(dob__gte=datetime.now(
                 ) - timedelta(days=(365*40)), dob__lt=datetime.now() - timedelta(days=(365*30)))
             if val == 'greater':
-                page_obj = total_profiles.filter(
+                total_profiles = total_profiles.filter(
                     dob__lte=datetime.now() - timedelta(days=(365*40)))
 
             if val == 'Male':
-                page_obj = total_profiles.filter(gender__iexact="Male")
+                total_profiles = total_profiles.filter(gender__iexact="Male")
             if val == 'Female':
-                page_obj = total_profiles.filter(gender__iexact="Female")
+                total_profiles = total_profiles.filter(gender__iexact="Female")
             if val == 'Other':
-                page_obj = total_profiles.filter(gender__iexact="Other")
+                total_profiles = total_profiles.filter(gender__iexact="Other")
 
             for i in country_list:
                 if i == val:
-                    page_obj = total_profiles.filter(country__iexact=val)
+                    total_profiles = total_profiles.filter(country__iexact=val)
+
+        if 'show' in request.GET:
+            showval = request.GET['show']
+            p = Paginator(total_profiles, showval)
+        else:
+            p = Paginator(total_profiles, 10)
+        page_number = request.GET.get('page')
+        page_obj = p.get_page(page_number)
 
         return render(request, "admin_site/profile_model.html", {'total_profiles': page_obj, 'country_list':country_list})
     else:
@@ -249,17 +251,10 @@ def profile_model(request):
 def user_preference_model(request):
     if request.user.is_authenticated:
         total_details = user_preference.objects.all().order_by('-created_at')
-        if 'show' in request.GET:
-            showval = request.GET['show']
-            p = Paginator(total_details, showval)
-        else:
-            p = Paginator(total_details, 10)
-        page_number = request.GET.get('page')
-        page_obj = p.get_page(page_number)
 
         if 'search' in request.GET:
             searchvalue = request.GET['search']
-            page_obj = user_preference.objects.filter(
+            total_details = user_preference.objects.filter(
                                 Q(export_quality__icontains=searchvalue) |
                                 Q(Language__icontains=searchvalue) |
                                 Q(user_stared_templates__icontains=searchvalue) |
@@ -275,6 +270,15 @@ def user_preference_model(request):
                                 Q(app_theme__icontains=searchvalue)                                
 
             )
+
+        if 'show' in request.GET:
+            showval = request.GET['show']
+            p = Paginator(total_details, showval)
+        else:
+            p = Paginator(total_details, 10)
+        page_number = request.GET.get('page')
+        page_obj = p.get_page(page_number)
+
         return render(request, "admin_site/user_preferences_model.html", {'total_details': page_obj})
     else:
         return redirect("login")
@@ -283,17 +287,10 @@ def user_preference_model(request):
 def app_data_model(request):
     if request.user.is_authenticated:
         total_app_datas = application_data.objects.all().order_by('-created_at')
-        if 'show' in request.GET:
-            showval = request.GET['show']
-            p = Paginator(total_app_datas, showval)
-        else:
-            p = Paginator(total_app_datas, 10)
-        page_number = request.GET.get('page')
-        page_obj = p.get_page(page_number)
 
         if 'search' in request.GET:
             searchvalue = request.GET['search']
-            page_obj = application_data.objects.filter(
+            total_app_datas = application_data.objects.filter(
                                 Q(inApp_Products__icontains=searchvalue) |
                                 Q(Purchased_product__icontains=searchvalue) |
                                 Q(Device_Model__icontains=searchvalue) |
@@ -304,6 +301,15 @@ def app_data_model(request):
                                 Q(Total_time_spent__icontains=searchvalue) |
                                 Q(Push_Notification_token__icontains=searchvalue)
             )
+
+        if 'show' in request.GET:
+            showval = request.GET['show']
+            p = Paginator(total_app_datas, showval)
+        else:
+            p = Paginator(total_app_datas, 10)
+        page_number = request.GET.get('page')
+        page_obj = p.get_page(page_number)
+
         return render(request, "admin_site/app_data_model.html", {'total_app_datas': page_obj})
     else:
         return redirect("login")
@@ -312,6 +318,14 @@ def app_data_model(request):
 def purchase_model(request):
     if request.user.is_authenticated:
         total_purchases = Purchase.objects.all().order_by('-created_at')
+
+        if 'search' in request.GET:
+            searchvalue = request.GET['search']
+            total_purchases = Purchase.objects.filter(
+                                Q(pstatus__icontains=searchvalue) |
+                                Q(subscription_type__icontains=searchvalue)
+            )
+
         if 'show' in request.GET:
             showval = request.GET['show']
             p = Paginator(total_purchases, showval)
@@ -320,12 +334,6 @@ def purchase_model(request):
         page_number = request.GET.get('page')
         page_obj = p.get_page(page_number)
 
-        if 'search' in request.GET:
-            searchvalue = request.GET['search']
-            page_obj = Purchase.objects.filter(
-                                Q(pstatus__icontains=searchvalue) |
-                                Q(subscription_type__icontains=searchvalue)
-            )
         return render(request, "admin_site/purchase_model.html", {'total_purchases': page_obj})
     else:
         return redirect("login")
@@ -334,6 +342,13 @@ def purchase_model(request):
 def tag_model(request):
     if request.user.is_authenticated:
         total_tags = Tag.objects.all().order_by('-created_at')
+
+        if 'search' in request.GET:
+            searchvalue = request.GET['search']
+            total_tags = Tag.objects.filter(
+                                Q(tag__icontains=searchvalue)
+            )
+
         if 'show' in request.GET:
             showval = request.GET['show']
             p = Paginator(total_tags, showval)
@@ -342,11 +357,6 @@ def tag_model(request):
         page_number = request.GET.get('page')
         page_obj = p.get_page(page_number)
 
-        if 'search' in request.GET:
-            searchvalue = request.GET['search']
-            page_obj = Tag.objects.filter(
-                                Q(tag__icontains=searchvalue)
-            )
         return render(request, "admin_site/tag_model.html", {'total_tags': page_obj})
     else:
         return redirect("login")
@@ -355,17 +365,10 @@ def tag_model(request):
 def product_model(request):
     if request.user.is_authenticated:
         total_products = Product.objects.all().order_by('-created_at')
-        if 'show' in request.GET:
-            showval = request.GET['show']
-            p = Paginator(total_products, showval)
-        else:
-            p = Paginator(total_products, 10)
-        page_number = request.GET.get('page')
-        page_obj = p.get_page(page_number)
 
         if 'search' in request.GET:
             searchvalue = request.GET['search']
-            page_obj = Product.objects.filter(
+            total_products = Product.objects.filter(
                                 Q(productID__icontains=searchvalue) |
                                 Q(product__icontains=searchvalue) |
                                 Q(productPromo__icontains=searchvalue) |
@@ -376,6 +379,15 @@ def product_model(request):
                                 Q(monthlySub__icontains=searchvalue) |
                                 Q(localeId__icontains=searchvalue)
             )
+
+        if 'show' in request.GET:
+            showval = request.GET['show']
+            p = Paginator(total_products, showval)
+        else:
+            p = Paginator(total_products, 10)
+        page_number = request.GET.get('page')
+        page_obj = p.get_page(page_number)
+
         return render(request, "admin_site/product_model.html", {'total_products': page_obj})
     else:
         return redirect("login")

@@ -64,3 +64,8 @@ i.fa.fa-caret-up, i.fa.fa-caret-down {
 .pagination_div {
     margin-top: 30px;
 }
+
+ul.pagination.justify-content-center {
+    margin-left: auto !important;
+    margin-right: 93px !important;
+}

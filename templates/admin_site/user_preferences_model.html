@@ -380,8 +380,8 @@
                                                         </li>
                                                         {% endif %}
 
-                                                        {% if total_details.number|add:'-4' > 1 %}
-                                                            <li class="page-item"><a class="page-link" href="?page={{ total_details.number|add:'-5' }}">&hellip;</a></li>
+                                                        {% if total_details.number|add:'-2' > 1 %}
+                                                            <li class="page-item"><a class="page-link" href="?page={{ total_details.number|add:'-3' }}">&hellip;</a></li>
                                                         {% endif %}
 
                                                         {% for i in total_details.paginator.page_range %}
@@ -392,13 +392,13 @@
                                                                 <span class="sr-only">(current)</span>
                                                             </span>
                                                             </li>
-                                                            {% elif i > total_details.number|add:'-5' and i < total_details.number|add:'5' %}
+                                                            {% elif i > total_details.number|add:'-3' and i < total_details.number|add:'3' %}
                                                                 <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
                                                             {% endif %}
                                                         {% endfor %}
 
-                                                        {% if total_details.paginator.num_pages > total_details.number|add:'4' %}
-                                                        <li class="page-item"><a class="page-link" href="?page={{ total_details.number|add:'5' }}">&hellip;</a></li>
+                                                        {% if total_details.paginator.num_pages > total_details.number|add:'2' %}
+                                                        <li class="page-item"><a class="page-link" href="?page={{ total_details.number|add:'3' }}">&hellip;</a></li>
                                                         {% endif %}
 
                                                         {% if total_details.has_next %}

@@ -205,3 +205,8 @@ button.btn.btn-light {
     color: #1500ff;
     font-size: 14px;
 }
+
+ul.pagination.justify-content-center {
+    margin-left: auto !important;
+    margin-right: 93px !important;
+}

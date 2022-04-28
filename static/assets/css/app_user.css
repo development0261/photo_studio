@@ -266,3 +266,8 @@ th.bg-transparent.border-bottom-0.sort_it {
 i.fa.fa-eye.product_eye {
     color: #05c3fb;
 }
+
+ul.pagination.justify-content-center {
+    margin-left: auto !important;
+    margin-right: 93px !important;
+}
