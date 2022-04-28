@@ -237,7 +237,7 @@ def send_link(request):
             characters = string.ascii_letters + string.digits + punctuation
             token = ''.join(random.choice(characters) for i in range(50))
             encrypted_token = base64.b64encode(
-                token.encode("ascii") + b'==').decode("ascii")
+                token.encode("ascii")).decode("ascii")
             encrypted_token = encrypted_token.replace("/",".")
             user = custom_user.objects.get(email=email)
             user.confirm_token = token
@@ -268,7 +268,7 @@ def reset_password(request):
     token = request.GET.get('token')
     if request.method == "POST":
         token.replace(".",'/')
-        decrypted_token = base64.b64decode(token).decode("ascii")
+        decrypted_token = base64.b64decode(token + b'==').decode("ascii")
         email = request.POST['email']
         new_pass = request.POST['new_pass']
         confirm_pass = request.POST['confirm_pass']
