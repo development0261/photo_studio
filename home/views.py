@@ -268,7 +268,9 @@ def reset_password(request):
     token = request.GET.get('token')
     if request.method == "POST":
         token.replace(".",'/')
-        decrypted_token = base64.b64decode(token + b'==').decode("ascii")
+        print(token)
+        decrypted_token = base64.b64decode(token).decode("ascii")
+        print(decrypted_token)
         email = request.POST['email']
         new_pass = request.POST['new_pass']
         confirm_pass = request.POST['confirm_pass']
