@@ -237,7 +237,7 @@ def send_link(request):
             characters = string.ascii_letters + string.digits + punctuation
             token = ''.join(random.choice(characters) for i in range(50))
             encrypted_token = base64.b64encode(
-                token.encode("ascii")).decode("ascii")
+                token.encode("ascii") + b'==').decode("ascii")
             encrypted_token = encrypted_token.replace("/",".")
             user = custom_user.objects.get(email=email)
             user.confirm_token = token
