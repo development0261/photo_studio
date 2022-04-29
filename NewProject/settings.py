@@ -133,7 +133,7 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 #         'HOST': 'localhost',
 #         'PORT': '5432',
 #     }
-}
+# }
 
 DATABASES = {
    'default': {
