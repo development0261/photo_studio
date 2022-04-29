@@ -289,7 +289,6 @@
     <script>
         $('.puchase_view').on('click', function () {
             id = $(this).attr('id');
-            alert(id)
             $.ajax({
                 type: "GET",
                 url: `/admin_site/specific_purchase/${id}`,
