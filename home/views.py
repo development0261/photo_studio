@@ -252,7 +252,7 @@ def send_link(request):
 
             subject = 'Forgot Password'
             html_message = render_to_string(
-                'mail_template.html', {'token': f'{Link}?token={encrypted_token}?email={email}'})
+                'mail_template.html', {'token': f'{Link}?token={encrypted_token}&email={email}'})
             plain_message = strip_tags(html_message)
             from_email = 'From <demo.logixbuiltinfo@gmail.com>'
             to = recipient_list[0]  
