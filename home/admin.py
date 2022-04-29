@@ -139,7 +139,7 @@ class CustomApps(admin.ModelAdmin):
 
 
 class CustomPurchase(admin.ModelAdmin):
-    search_fields = ["status", ]
+    search_fields = ["pstatus", ]
 
 
 class CustomTag(admin.ModelAdmin):

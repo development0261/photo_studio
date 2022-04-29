@@ -408,7 +408,7 @@ def view_purchase(request, info):
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split('-')
         user_obj = custom_user.objects.get(username=infolist[0])
-        obj = Purchase.objects.filter(username=user_obj.id,status=infolist[1])
+        obj = Purchase.objects.filter(username=user_obj.id, pstatus=infolist[1])
         data = serializers.serialize("json", obj)
         data = json.loads(data[1:-1])
         return JsonResponse({"res": data})
@@ -953,7 +953,7 @@ def purchase_edit(request, para):
     if request.user.is_authenticated:
         if request.method == "POST":
             pk = request.POST['username']
-            status = request.POST['status']
+            pstatus = request.POST['pstatus']
             auto_renew_status = request.POST.get('auto_renew_status')
             is_in_billing_retry_period = request.POST.get(
                 'is_in_billing_retry_period')
@@ -965,7 +965,7 @@ def purchase_edit(request, para):
             subscription_type = request.POST['subscription_type']
 
             obj = Purchase.objects.get(pid=pk)
-            obj.status = status
+            obj.pstatus = pstatus
             if auto_renew_status == "on":
                 obj.auto_renew_status = True
             else:
@@ -986,8 +986,10 @@ def purchase_edit(request, para):
             else:
                 obj.is_trial_period = False
 
-            obj.start_date = start_date
-            obj.end_date = end_date
+            if start_date != str(None):
+                obj.start_date = start_date
+            if end_date != str(None):
+                obj.end_date = end_date
             obj.subscription_type = subscription_type
             obj.save()
 
