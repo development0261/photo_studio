@@ -61,7 +61,10 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = ['*']
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8001',
+    'http://185.146.21.235:7800',
+]
 
 ROOT_URLCONF = 'NewProject.urls'
 
