@@ -234,11 +234,11 @@ def send_link(request):
 
             # Link = 'http://127.0.0.1:8001/home/reset-password'
             Link = 'http://185.146.21.235:7800/home/reset-password'
-            characters = string.ascii_letters + string.digits + punctuation
+            characters = string.ascii_letters + string.digits
             token = ''.join(random.choice(characters) for i in range(50))
-            encrypted_token = base64.b64encode(
-                token.encode("ascii")).decode("ascii")
-            encrypted_token = encrypted_token.replace("/",".")
+            # encrypted_token = base64.b64encode(
+            #     token.encode("ascii")).decode("ascii")
+            # encrypted_token = encrypted_token.replace("/",".")
             user = custom_user.objects.get(email=email)
             user.confirm_token = token
             user.save()
@@ -252,7 +252,7 @@ def send_link(request):
 
             subject = 'Forgot Password'
             html_message = render_to_string(
-                'mail_template.html', {'token': f'{Link}?token={encrypted_token}&email={email}'})
+                'mail_template.html', {'token': f'{Link}?token={token}&email={email}'})
             plain_message = strip_tags(html_message)
             from_email = 'From <demo.logixbuiltinfo@gmail.com>'
             to = recipient_list[0]  
@@ -267,9 +267,9 @@ def send_link(request):
 def reset_password(request):
     token = request.GET.get('token')
     if request.method == "GET":
-        token = token.replace(".",'/')
-        token = "".join(token.split())
-        decrypted_token = base64.b64decode(token).decode('ascii')
+        # token = token.replace(".",'/')
+        # token = "".join(token.split())
+        # decrypted_token = base64.b64decode(token).decode('ascii')
         email = request.GET['email']
         new_pass = request.GET['new_pass']
         confirm_pass = request.GET['confirm_pass']
@@ -281,14 +281,14 @@ def reset_password(request):
                     profile_obj = custom_user.objects.get(email=email).profile
                     if (profile_obj.expiration_date + timedelta(days=1))>pytz.utc.localize(datetime.now()):
                         if custom_user.objects.filter(email=email).exists():
-                            if custom_user.objects.filter(confirm_token=decrypted_token).exists():
+                            if custom_user.objects.filter(confirm_token=token).exists():
                                 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
                                 pat = re.compile(reg)
                                 mat = re.search(pat, new_pass)
                                 if mat:
                                     if new_pass == confirm_pass:
                                         obj1 = custom_user.objects.get(
-                                            confirm_token=decrypted_token)
+                                            confirm_token=token)
                                         obj1.set_password(new_pass)
                                         obj1.save()
                                         try:
