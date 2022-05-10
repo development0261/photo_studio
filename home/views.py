@@ -232,7 +232,7 @@ def send_link(request):
         recipient_list = []
         u_obj = custom_user.objects.get(email=email).profile
 
-        if u_obj.count_for_forgot_pass <= 5:
+        if u_obj.count_for_forgot_pass < 5:
             if custom_user.objects.filter(email=email).exists():
                 user_with_email = custom_user.objects.get(email=email)
                 recipient_list.append(user_with_email.email)
@@ -273,7 +273,7 @@ def send_link(request):
                 return Response({"Success": "Check Your email for Forgot Password", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_200_OK)
             else:
                 return Response({"Error": "User Not Exist with this email address", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_401_UNAUTHORIZED)
-        elif u_obj.count_for_forgot_pass > 5:
+        elif u_obj.count_for_forgot_pass >= 5:
             if (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
                 if custom_user.objects.filter(email=email).exists():
                     user_with_email = custom_user.objects.get(email=email)
