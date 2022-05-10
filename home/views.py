@@ -13,6 +13,7 @@ from .serializers import UserSerializer, UserSerializerWithToken, RegistrationSe
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
+from rest_framework.decorators import throttle_classes
 from django.core.mail import send_mail
 import random
 import string
@@ -22,6 +23,7 @@ import pytz
 from rest_framework import status
 import base64
 from django.contrib.auth.hashers import check_password
+from rest_framework.throttling import UserRateThrottle
 
 custom_user = get_user_model()
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
@@ -228,40 +230,93 @@ def send_link(request):
     if request.method == "POST":
         email = request.POST['email']
         recipient_list = []
-        if custom_user.objects.filter(email=email).exists():
-            user_with_email = custom_user.objects.get(email=email)
-            recipient_list.append(user_with_email.email) 
+        u_obj = custom_user.objects.get(email=email).profile
 
-            # Link = 'http://127.0.0.1:8001/home/reset-password'
-            Link = 'http://185.146.21.235:7800/home/reset-password'
-            characters = string.ascii_letters + string.digits
-            token = ''.join(random.choice(characters) for i in range(50))
-            # encrypted_token = base64.b64encode(
-            #     token.encode("ascii")).decode("ascii")
-            # encrypted_token = encrypted_token.replace("/",".")
-            user = custom_user.objects.get(email=email)
-            user.confirm_token = token
-            user.save()
-            profile_obj = custom_user.objects.get(email=email).profile
-            profile_obj.expiration_date = datetime.today()
-            profile_obj.save()
+        if u_obj.count_for_forgot_pass <= 5:
+            if custom_user.objects.filter(email=email).exists():
+                user_with_email = custom_user.objects.get(email=email)
+                recipient_list.append(user_with_email.email)
 
-            from django.core import mail
-            from django.template.loader import render_to_string
-            from django.utils.html import strip_tags
+                # Link = 'http://127.0.0.1:8001/home/reset-password'
+                Link = 'http://185.146.21.235:7800/home/reset-password'
+                characters = string.ascii_letters + string.digits
+                token = ''.join(random.choice(characters) for i in range(50))
+                # encrypted_token = base64.b64encode(
+                #     token.encode("ascii")).decode("ascii")
+                # encrypted_token = encrypted_token.replace("/",".")
+                user = custom_user.objects.get(email=email)
+                user.confirm_token = token
+                user.save()
+                profile_obj = custom_user.objects.get(email=email).profile
+                profile_obj.expiration_date = datetime.today()
+                profile_obj.save()
 
-            subject = 'Forgot Password'
-            html_message = render_to_string(
-                'mail_template.html', {'token': f'{Link}?token={token}&email={email}'})
-            plain_message = strip_tags(html_message)
-            from_email = 'From <demo.logixbuiltinfo@gmail.com>'
-            to = recipient_list[0]  
+                from django.core import mail
+                from django.template.loader import render_to_string
+                from django.utils.html import strip_tags
 
-            mail.send_mail(subject, plain_message, from_email,
-                           [to], html_message=html_message)
-            return Response({"Success": "Check Your email for Forgot Password"}, status=status.HTTP_200_OK)
-        else:
-            return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
+                subject = 'Forgot Password'
+                html_message = render_to_string(
+                    'mail_template.html', {'token': f'{Link}?token={token}&email={email}'})
+                plain_message = strip_tags(html_message)
+                from_email = 'From <demo.logixbuiltinfo@gmail.com>'
+                to = recipient_list[0]  
+
+                mail.send_mail(subject, plain_message, from_email,
+                            [to], html_message=html_message)
+
+                u_obj.count_for_forgot_pass += 1
+                if u_obj.count_for_forgot_pass == 1:
+                    u_obj.time_for_forgot_pass = datetime.now()
+                u_obj.save()
+
+                return Response({"Success": "Check Your email for Forgot Password", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_200_OK)
+            else:
+                return Response({"Error": "User Not Exist with this email address", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_401_UNAUTHORIZED)
+        elif u_obj.count_for_forgot_pass > 5:
+            if (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
+                if custom_user.objects.filter(email=email).exists():
+                    user_with_email = custom_user.objects.get(email=email)
+                    recipient_list.append(user_with_email.email)
+
+                    # Link = 'http://127.0.0.1:8001/home/reset-password'
+                    Link = 'http://185.146.21.235:7800/home/reset-password'
+                    characters = string.ascii_letters + string.digits
+                    token = ''.join(random.choice(characters) for i in range(50))
+                    # encrypted_token = base64.b64encode(
+                    #     token.encode("ascii")).decode("ascii")
+                    # encrypted_token = encrypted_token.replace("/",".")
+                    user = custom_user.objects.get(email=email)
+                    user.confirm_token = token
+                    user.save()
+                    profile_obj = custom_user.objects.get(email=email).profile
+                    profile_obj.expiration_date = datetime.today()
+                    profile_obj.save()
+
+                    from django.core import mail
+                    from django.template.loader import render_to_string
+                    from django.utils.html import strip_tags
+
+                    subject = 'Forgot Password'
+                    html_message = render_to_string(
+                        'mail_template.html', {'token': f'{Link}?token={token}&email={email}'})
+                    plain_message = strip_tags(html_message)
+                    from_email = 'From <demo.logixbuiltinfo@gmail.com>'
+                    to = recipient_list[0]  
+
+                    mail.send_mail(subject, plain_message, from_email,
+                                [to], html_message=html_message)
+
+                    u_obj.count_for_forgot_pass = 1
+                    if u_obj.count_for_forgot_pass == 1:
+                        u_obj.time_for_forgot_pass = datetime.now()
+                    u_obj.save()
+
+                    return Response({"Success": "Check Your email for Forgot Password", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"Error": "User Not Exist with this email address", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_401_UNAUTHORIZED)
+            else:
+                return Response({"Error": f"You have too many attempts in an Hour!!!You can try after an Hour."}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET'])
 def reset_password(request):
