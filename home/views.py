@@ -226,6 +226,56 @@ def social_media_registration(request):
                 return Response({"Data":serializer_class.data}, status=status.HTTP_200_OK)
 
 
+# @api_view(['POST'])
+# @throttle_classes([UserRateThrottle])
+# def send_link(request):
+#     if request.method == "POST":
+#         email = request.POST['email']
+#         recipient_list = []
+
+#         if custom_user.objects.filter(email=email).exists():
+#             u_obj = custom_user.objects.get(email=email).profile
+#             # if (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
+#             #     pass
+#             user_with_email = custom_user.objects.get(email=email)
+#             recipient_list.append(user_with_email.email)
+
+#             # Link = 'http://127.0.0.1:8001/home/reset-password'
+#             Link = 'http://185.146.21.235:7800/home/reset-password'
+#             characters = string.ascii_letters + string.digits
+#             token = ''.join(random.choice(characters) for i in range(50))
+#             # encrypted_token = base64.b64encode(
+#             #     token.encode("ascii")).decode("ascii")
+#             # encrypted_token = encrypted_token.replace("/",".")
+#             user = custom_user.objects.get(email=email)
+#             user.confirm_token = token
+#             user.save()
+#             profile_obj = custom_user.objects.get(email=email).profile
+#             profile_obj.expiration_date = datetime.today()
+#             profile_obj.save()
+
+#             from django.core import mail
+#             from django.template.loader import render_to_string
+#             from django.utils.html import strip_tags
+
+#             subject = 'Forgot Password'
+#             html_message = render_to_string(
+#                 'mail_template.html', {'token': f'{Link}?token={token}&email={email}'})
+#             plain_message = strip_tags(html_message)
+#             from_email = 'From <demo.logixbuiltinfo@gmail.com>'
+#             to = recipient_list[0]  
+
+#             mail.send_mail(subject, plain_message, from_email,
+#                         [to], html_message=html_message)
+
+#             # from UserRateThrottle
+#             # if throttle_success():
+#             #     print("Yesssssss")
+
+#             return Response({"Success": "Check Your email for Forgot Password"}, status=status.HTTP_200_OK)
+#         else:
+#             return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
+
 @api_view(['POST'])
 def send_link(request):
     if request.method == "POST":
@@ -233,40 +283,93 @@ def send_link(request):
         recipient_list = []
 
         if custom_user.objects.filter(email=email).exists():
-            user_with_email = custom_user.objects.get(email=email)
-            recipient_list.append(user_with_email.email)
+            u_obj = custom_user.objects.get(email=email).profile
 
-            # Link = 'http://127.0.0.1:8001/home/reset-password'
-            Link = 'http://185.146.21.235:7800/home/reset-password'
-            characters = string.ascii_letters + string.digits
-            token = ''.join(random.choice(characters) for i in range(50))
-            # encrypted_token = base64.b64encode(
-            #     token.encode("ascii")).decode("ascii")
-            # encrypted_token = encrypted_token.replace("/",".")
-            user = custom_user.objects.get(email=email)
-            user.confirm_token = token
-            user.save()
-            profile_obj = custom_user.objects.get(email=email).profile
-            profile_obj.expiration_date = pytz.utc.localize(datetime.today())
-            profile_obj.save()
+            if u_obj.count_for_forgot_pass < 5:
+                if (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
+                    u_obj.count_for_forgot_pass = 0
+                    u_obj.save()
+                user_with_email = custom_user.objects.get(email=email)
+                recipient_list.append(user_with_email.email)
 
-            from django.core import mail
-            from django.template.loader import render_to_string
-            from django.utils.html import strip_tags
+                # Link = 'http://127.0.0.1:8001/home/reset-password'
+                Link = 'http://185.146.21.235:7800/home/reset-password'
+                characters = string.ascii_letters + string.digits
+                token = ''.join(random.choice(characters) for i in range(50))
+                # encrypted_token = base64.b64encode(
+                #     token.encode("ascii")).decode("ascii")
+                # encrypted_token = encrypted_token.replace("/",".")
+                user = custom_user.objects.get(email=email)
+                user.confirm_token = token
+                user.save()
+                profile_obj = custom_user.objects.get(email=email).profile
+                profile_obj.expiration_date = datetime.today()
+                profile_obj.save()
 
-            subject = 'Forgot Password'
-            html_message = render_to_string(
-                'mail_template.html', {'token': f'{Link}?token={token}&email={email}'})
-            plain_message = strip_tags(html_message)
-            from_email = 'From <demo.logixbuiltinfo@gmail.com>'
-            to = recipient_list[0]
+                from django.core import mail
+                from django.template.loader import render_to_string
+                from django.utils.html import strip_tags
 
-            mail.send_mail(subject, plain_message, from_email,
-                        [to], html_message=html_message)
+                subject = 'Forgot Password'
+                html_message = render_to_string(
+                    'mail_template.html', {'token': f'{Link}?token={token}&email={email}'})
+                plain_message = strip_tags(html_message)
+                from_email = 'From <demo.logixbuiltinfo@gmail.com>'
+                to = recipient_list[0]  
 
-            return Response({"Success": "Check Your email for Forgot Password"}, status=status.HTTP_200_OK)
+                mail.send_mail(subject, plain_message, from_email,
+                            [to], html_message=html_message)
+
+                u_obj.count_for_forgot_pass += 1
+                if u_obj.count_for_forgot_pass == 1:
+                    u_obj.time_for_forgot_pass = datetime.now()
+                u_obj.save()
+
+                return Response({"Success": "Check Your email for Forgot Password", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_200_OK)
+            elif u_obj.count_for_forgot_pass >= 5:
+                if (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
+                    user_with_email = custom_user.objects.get(email=email)
+                    recipient_list.append(user_with_email.email)
+
+                    # Link = 'http://127.0.0.1:8001/home/reset-password'
+                    Link = 'http://185.146.21.235:7800/home/reset-password'
+                    characters = string.ascii_letters + string.digits
+                    token = ''.join(random.choice(characters) for i in range(50))
+                    # encrypted_token = base64.b64encode(
+                    #     token.encode("ascii")).decode("ascii")
+                    # encrypted_token = encrypted_token.replace("/",".")
+                    user = custom_user.objects.get(email=email)
+                    user.confirm_token = token
+                    user.save()
+                    profile_obj = custom_user.objects.get(email=email).profile
+                    profile_obj.expiration_date = datetime.today()
+                    profile_obj.save()
+
+                    from django.core import mail
+                    from django.template.loader import render_to_string
+                    from django.utils.html import strip_tags
+
+                    subject = 'Forgot Password'
+                    html_message = render_to_string(
+                        'mail_template.html', {'token': f'{Link}?token={token}&email={email}'})
+                    plain_message = strip_tags(html_message)
+                    from_email = 'From <demo.logixbuiltinfo@gmail.com>'
+                    to = recipient_list[0]  
+
+                    mail.send_mail(subject, plain_message, from_email,
+                                [to], html_message=html_message)
+
+                    u_obj.count_for_forgot_pass = 1
+                    if u_obj.count_for_forgot_pass == 1:
+                        u_obj.time_for_forgot_pass = datetime.now()
+                    u_obj.save()
+
+                    return Response({"Success": "Check Your email for Forgot Password", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"Error": f"You have too many attempts in an Hour!!!You can try after an Hour."}, status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 @api_view(['GET'])
 def reset_password(request):
@@ -298,10 +401,10 @@ def reset_password(request):
                                         obj1.save()
                                         try:
                                             obj2 = Profile.objects.get(username=obj1.id)
-                                            obj2.pass_forgot = pytz.utc.localize(datetime.now())
+                                            obj2.pass_forgot = datetime.now()
                                             obj2.save()
                                         except:
-                                            profile_obj = Profile.objects.create(username=obj1, pass_forgot=pytz.utc.localize(datetime.now()))
+                                            profile_obj = Profile.objects.create(username=obj1, pass_forgot=datetime.now())
                                         return Response({"Success": "Password updated Successfully."}, status=status.HTTP_200_OK)
                                     else:
                                         return Response({"Error": "New password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
@@ -332,7 +435,7 @@ def update_password(request):
                         obj1.set_password(new_pass)
                         obj2 = custom_user.objects.get(
                             username=request.user).profile
-                        obj2.pass_update = pytz.utc.localize(datetime.now())
+                        obj2.pass_update = datetime.now()
                         obj1.save()
                         obj2.save()
                         return Response({"Success": "Password updated Successfully."}, status=status.HTTP_200_OK)
@@ -409,7 +512,7 @@ def profile(request, para=None):
                 profile_obj.website = website
                 profile_obj.avatar = avatar_image
                 profile_obj.bitmoji = bitmoji
-                profile_obj.updated_at = pytz.utc.localize(datetime.now())
+                profile_obj.updated_at = datetime.now()
                 profile_obj.save()
                 user_obj.save()
                 return Response({"Success": "Profile Updated"}, status=status.HTTP_200_OK)
@@ -700,7 +803,7 @@ def delete_account(request):
         try:
             user_obj = custom_user.objects.get(username=request.user)
             user_obj.is_active = False
-            user_obj.delete_date = pytz.utc.localize(datetime.now())
+            user_obj.delete_date = datetime.now()
             user_obj.save()
             return Response({"Success": "Your account is under deleting process and deleted in 30 days."}, status=status.HTTP_200_OK)
         except Exception as e:
