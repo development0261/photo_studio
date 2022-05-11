@@ -230,10 +230,13 @@ def send_link(request):
     if request.method == "POST":
         email = request.POST['email']
         recipient_list = []
-        u_obj = custom_user.objects.get(email=email).profile
 
-        if u_obj.count_for_forgot_pass < 5:
-            if custom_user.objects.filter(email=email).exists():
+        if custom_user.objects.filter(email=email).exists():
+            u_obj = custom_user.objects.get(email=email).profile
+
+            if u_obj.count_for_forgot_pass < 5:
+                # if (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
+                #     pass
                 user_with_email = custom_user.objects.get(email=email)
                 recipient_list.append(user_with_email.email)
 
@@ -271,11 +274,8 @@ def send_link(request):
                 u_obj.save()
 
                 return Response({"Success": "Check Your email for Forgot Password", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_200_OK)
-            else:
-                return Response({"Error": "User Not Exist with this email address", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_401_UNAUTHORIZED)
-        elif u_obj.count_for_forgot_pass >= 5:
-            if (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
-                if custom_user.objects.filter(email=email).exists():
+            elif u_obj.count_for_forgot_pass >= 5:
+                if (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
                     user_with_email = custom_user.objects.get(email=email)
                     recipient_list.append(user_with_email.email)
 
@@ -314,9 +314,10 @@ def send_link(request):
 
                     return Response({"Success": "Check Your email for Forgot Password", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_200_OK)
                 else:
-                    return Response({"Error": "User Not Exist with this email address", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_401_UNAUTHORIZED)
-            else:
-                return Response({"Error": f"You have too many attempts in an Hour!!!You can try after an Hour."}, status=status.HTTP_401_UNAUTHORIZED)
+                    return Response({"Error": f"You have too many attempts in an Hour!!!You can try after an Hour."}, status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 @api_view(['GET'])
 def reset_password(request):
