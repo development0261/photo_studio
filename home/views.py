@@ -247,7 +247,7 @@ def send_link(request):
             user.confirm_token = token
             user.save()
             profile_obj = custom_user.objects.get(email=email).profile
-            profile_obj.expiration_date = datetime.today()
+            profile_obj.expiration_date = pytz.utc.localize(datetime.today())
             profile_obj.save()
 
             from django.core import mail
@@ -298,10 +298,10 @@ def reset_password(request):
                                         obj1.save()
                                         try:
                                             obj2 = Profile.objects.get(username=obj1.id)
-                                            obj2.pass_forgot = datetime.now()
+                                            obj2.pass_forgot = pytz.utc.localize(datetime.now())
                                             obj2.save()
                                         except:
-                                            profile_obj = Profile.objects.create(username=obj1, pass_forgot=datetime.now())
+                                            profile_obj = Profile.objects.create(username=obj1, pass_forgot=pytz.utc.localize(datetime.now()))
                                         return Response({"Success": "Password updated Successfully."}, status=status.HTTP_200_OK)
                                     else:
                                         return Response({"Error": "New password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
@@ -332,7 +332,7 @@ def update_password(request):
                         obj1.set_password(new_pass)
                         obj2 = custom_user.objects.get(
                             username=request.user).profile
-                        obj2.pass_update = datetime.now()
+                        obj2.pass_update = pytz.utc.localize(datetime.now())
                         obj1.save()
                         obj2.save()
                         return Response({"Success": "Password updated Successfully."}, status=status.HTTP_200_OK)
@@ -409,7 +409,7 @@ def profile(request, para=None):
                 profile_obj.website = website
                 profile_obj.avatar = avatar_image
                 profile_obj.bitmoji = bitmoji
-                profile_obj.updated_at = datetime.now()
+                profile_obj.updated_at = pytz.utc.localize(datetime.now())
                 profile_obj.save()
                 user_obj.save()
                 return Response({"Success": "Profile Updated"}, status=status.HTTP_200_OK)
@@ -700,7 +700,7 @@ def delete_account(request):
         try:
             user_obj = custom_user.objects.get(username=request.user)
             user_obj.is_active = False
-            user_obj.delete_date = datetime.now()
+            user_obj.delete_date = pytz.utc.localize(datetime.now())
             user_obj.save()
             return Response({"Success": "Your account is under deleting process and deleted in 30 days."}, status=status.HTTP_200_OK)
         except Exception as e:

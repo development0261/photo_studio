@@ -46,8 +46,8 @@ class Profile(models.Model):
     bitmoji = models.ImageField(null=True, blank=True)
     delete_account = models.BooleanField(default=False)
     expiration_date = models.DateTimeField(null=True, blank=True)
-    count_for_forgot_pass = models.PositiveSmallIntegerField(default=0)
-    time_for_forgot_pass = models.DateTimeField(null=True, blank=True)
+    # count_for_forgot_pass = models.PositiveSmallIntegerField(default=0)
+    # time_for_forgot_pass = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.username} - {self.name}"
