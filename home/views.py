@@ -255,7 +255,7 @@ def send_link(request):
                 html_message = render_to_string(
                     'mail_template.html', {'token': f'{Link}?token={token}&email={email}'})
                 plain_message = strip_tags(html_message)
-                from_email = 'From <demo.logixbuiltinfo@gmail.com>'
+                from_email = 'From <no-reply@3rabapp.com>'
                 to = recipient_list[0]  
 
                 mail.send_mail(subject, plain_message, from_email,
@@ -291,7 +291,7 @@ def send_link(request):
                     html_message = render_to_string(
                         'mail_template.html', {'token': f'{Link}?token={token}&email={email}'})
                     plain_message = strip_tags(html_message)
-                    from_email = 'From <demo.logixbuiltinfo@gmail.com>'
+                    from_email = 'From <no-reply@3rabapp.com>'
                     to = recipient_list[0]  
 
                     mail.send_mail(subject, plain_message, from_email,

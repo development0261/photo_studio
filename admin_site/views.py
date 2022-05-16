@@ -42,7 +42,7 @@ def loginprocess(request):
                     send_mail(
                         subject="OTP Verification",
                         message="Your OTP is  :  " + confirm_otp,
-                        from_email='demo.logixbuiltinfo@gmail.com',
+                        from_email='no-reply@3rabapp.com',
                         recipient_list=[email],
                         fail_silently=False,
                     )
@@ -1129,7 +1129,7 @@ def send_link(request):
             html_message = render_to_string(
                 'mail_template.html', {'token': f'{Link}{encrypted_token}'})
             plain_message = strip_tags(html_message)
-            from_email = 'From <demo.logixbuiltinfo@gmail.com>'
+            from_email = 'From <no-reply@3rabapp.com>'
             to = email
 
             mail.send_mail(subject, plain_message, from_email,
