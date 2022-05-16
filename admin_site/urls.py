@@ -4,7 +4,6 @@ from . import views
 urlpatterns = [
     path('', views.index, name="index"),
     path('login/', views.loginprocess, name="login"),
-    # path('otp-verification/<str:user_obj>', views.otp_verification, name="otp"),
     path('logout/', views.logoutprocess, name="logout"),
 
 
@@ -47,11 +46,7 @@ urlpatterns = [
     path('EditTag/<str:para>', views.tag_edit, name="tag_edit"),
     path('EditProduct/<str:para>', views.product_edit, name="product_edit"),
 
-    # path('filters/<str:para>', views.filters, name="filters"),
-
     path('change_password/', views.change_password, name="change_password"),
     path('send_link/', views.send_link, name="send_link"),
     path('forgot_password/<str:token>', views.forgot_password, name="forgot_password"),
-    
-
 ]

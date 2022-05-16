@@ -2,7 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    
     path('login/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('profile/', views.profile, name='profile'),
     path('register/', views.register, name='register'),
@@ -22,7 +21,6 @@ urlpatterns = [
     path('logout/', views.logoutProcess, name='logout'),
     path('purchase_history/', views.purchase_history, name='purchase_history'),
     path('product/', views.product, name='product'),
-
-
+    path('load_script/', views.load_script, name='load_script'),
 ]
 

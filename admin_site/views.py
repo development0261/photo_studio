@@ -28,6 +28,7 @@ reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!
 
 # Create your views here.
 
+# login for admin
 def loginprocess(request):
     if 'otpSubmit' in request.POST:
         email = request.POST['email']
@@ -73,7 +74,7 @@ def loginprocess(request):
 
     return render(request, 'admin_site/login.html')
 
-
+# get models data for home page
 def models(request):
     app_models = apps.get_app_config('home').get_models()
     home_models = []
@@ -88,6 +89,7 @@ def models(request):
             home_models.append(i.__name__)
     return {'home_models': home_models}
 
+# get all models data
 def all_table_data():
     admins = custom_user.objects.filter(is_superuser=True)
     locals = custom_user.objects.filter(is_superuser=False)
@@ -100,6 +102,7 @@ def all_table_data():
     all_data = {'admins':admins, 'locals':locals, 'total_profiles':total_profiles, 'total_details':total_details, 'total_app_datas':total_app_datas, 'total_purchases':total_purchases, 'total_tags':total_tags, 'total_products':total_products}
     return all_data
 
+# for index page of admin panel
 def index(request):
     if request.user.is_authenticated:
         
@@ -115,7 +118,7 @@ def index(request):
     else:
         return redirect("login")
 
-
+# admin users
 def admin_user(request):
     if request.user.is_authenticated:
         admins = custom_user.objects.filter(is_superuser=True).order_by('-date_joined')
@@ -123,7 +126,7 @@ def admin_user(request):
     else:
         return redirect("login")
 
-
+# app users
 def app_user(request):
     if request.user.is_authenticated:
         locals = custom_user.objects.filter(is_superuser=False).order_by('-date_joined')
@@ -170,7 +173,7 @@ def app_user(request):
     else:
         return redirect("login")
 
-
+# profile model data
 def profile_model(request):
     countries = Profile.objects.values('country').distinct()
     country_list1 = []
@@ -247,7 +250,7 @@ def profile_model(request):
     else:
         return redirect("login")
 
-
+# preferences model data
 def user_preference_model(request):
     if request.user.is_authenticated:
         total_details = user_preference.objects.all().order_by('-created_at')
@@ -283,7 +286,7 @@ def user_preference_model(request):
     else:
         return redirect("login")
 
-
+# application model data
 def app_data_model(request):
     if request.user.is_authenticated:
         total_app_datas = application_data.objects.all().order_by('-created_at')
@@ -314,7 +317,7 @@ def app_data_model(request):
     else:
         return redirect("login")
 
-
+# puchase model data
 def purchase_model(request):
     if request.user.is_authenticated:
         total_purchases = Purchase.objects.all().order_by('-created_at')
@@ -338,7 +341,7 @@ def purchase_model(request):
     else:
         return redirect("login")
 
-
+# tag model data
 def tag_model(request):
     if request.user.is_authenticated:
         total_tags = Tag.objects.all().order_by('-created_at')
@@ -361,7 +364,7 @@ def tag_model(request):
     else:
         return redirect("login")
 
-
+# product model data
 def product_model(request):
     if request.user.is_authenticated:
         total_products = Product.objects.all().order_by('-created_at')
@@ -392,7 +395,7 @@ def product_model(request):
     else:
         return redirect("login")
 
-
+# View specific model data start---------\
 def view_profile(request, info):
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split('-')
@@ -487,7 +490,9 @@ def view_app_data(request, info):
     else:
         return redirect("login")
 
+# View specific model data end---------/
 
+# delete specific model data start---------\
 def delete_user(request, para=None):
     if request.user.is_authenticated:
         modal_id = para.split(" ")
@@ -558,7 +563,9 @@ def delete_product(request, para=None):
     else:
         return redirect("login")
 
+# delete specific model data end---------/
 
+# edit specific model data start---------\
 def user_edit(request, para):
     if request.user.is_authenticated:
         if request.method == "POST":
@@ -1100,7 +1107,9 @@ def change_password(request):
     else:
         return redirect("login")
 
+# edit specific model data end---------/
 
+# send mail for forgot password
 def send_link(request):
     if request.method == "POST":
         email = request.POST['email']
@@ -1131,6 +1140,7 @@ def send_link(request):
                 request, "Entered email is not matched with any user!!!")
     return render(request, 'admin_site/forgot_password.html')
 
+# for forgot password
 def forgot_password(request,token):
     if request.method == "POST":
         new_password = request.POST['new_password']
@@ -1155,7 +1165,7 @@ def forgot_password(request,token):
             messages.error(request, "Check your link!!!")
     return render(request,'admin_site/reset.html')
 
-
+# logout
 def logoutprocess(request):
     logout(request)
     return redirect("login")

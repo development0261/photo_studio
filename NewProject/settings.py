@@ -135,17 +135,6 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'Photo_editor',
-#         'USER': 'postgres',
-#         'PASSWORD': 'Logix@123',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
@@ -213,10 +202,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # abstract user
 AUTH_USER_MODEL = "home.custom_user"
 
-# email verification
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'mail.3rabapp.com'   
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'demo.logixbuiltinfo@gmail.com'
-EMAIL_HOST_PASSWORD = 'vpyjvjmpuwkbmaiz'
+EMAIL_HOST_USER = 'no-reply@3rabapp.com'
+EMAIL_HOST_PASSWORD = 'vSl-rB~,_cFb'

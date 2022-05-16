@@ -157,7 +157,6 @@ class application_data(models.Model):
 
 class Product(models.Model):
     PID = models.AutoField(primary_key=True, auto_created=True)
-    # username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
     productID = models.CharField(max_length=255, unique=True)
     product = models.CharField(max_length=255, unique=True)
     productPromo = models.CharField(max_length=255, null=True, blank=True)

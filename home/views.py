@@ -1,8 +1,5 @@
 
-import json
-from tracemalloc import start
 from django.contrib.auth import get_user_model, login, logout, authenticate
-from django.http import JsonResponse
 from NewProject.settings import TIME_ZONE
 from .models import custom_user
 from .models import Profile, user_preference, application_data, Purchase, Product
@@ -13,7 +10,6 @@ from .serializers import UserSerializer, UserSerializerWithToken, RegistrationSe
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
-from rest_framework.decorators import throttle_classes
 from django.core.mail import send_mail
 import random
 import string
@@ -21,9 +17,9 @@ import re
 from datetime import datetime, timezone, timedelta, date
 import pytz
 from rest_framework import status
-import base64
 from django.contrib.auth.hashers import check_password
-from rest_framework.throttling import UserRateThrottle
+import json
+
 
 custom_user = get_user_model()
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
@@ -38,12 +34,13 @@ def protected_serve(request, path, document_root=None, show_indexes=False):
     return serve(request, path, document_root, show_indexes)
 # end------------
 
-
+#check time after user request for delete account
 users_obj = custom_user.objects.filter(is_active=False)
 for row in users_obj:
     if row.delete_date + timedelta(days=30):
         users_obj.delete()
 
+# for login
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         if custom_user.objects.filter(username=attrs['username']).exists():
@@ -65,13 +62,14 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
+# for logout
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def logoutProcess(request):
     logout(request)
     return Response({"Message": "Successfully Logged Out"}, status=status.HTTP_200_OK)
 
-
+# user registration
 @api_view(['POST'])
 def register(request):
     if request.method == "POST":
@@ -83,17 +81,6 @@ def register(request):
         gender = request.POST['gender']
         first_name = request.POST.get('firstname')
         last_name = request.POST.get('lastname')
-        # import json
-        # mydata = json.loads(request.body)
-        # username  = mydata.get('username')
-        # print(username)
-        # password  = mydata.get('password')
-        # email  = mydata.get('email')
-        # name  = mydata.get('name')
-        # mobile  = mydata.get('mobile')
-        # gender  = mydata.get('gender')
-        # first_name  = mydata.get('first_name')
-        # last_name  = mydata.get('last_name')
 
         if 'profile_image' in request.FILES:
             profile_image = request.FILES['profile_image']
@@ -109,7 +96,6 @@ def register(request):
                                 if mat:
                                     user = custom_user.objects.create_user(
                                         username=username, password=password, email=email, first_name=first_name, last_name=last_name)
-                                        # username=username, password=password.encode().decode("ISO-8859-1"), email=email, first_name=first_name, last_name=last_name) 
                                     user.save()
                                     data = Profile(
                                         username=user, name=name, mobile=mobile, gender=gender)
@@ -182,7 +168,7 @@ def register(request):
             # return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
             return Response({"Error": "User Already Exists!!!"}, status=status.HTTP_400_BAD_REQUEST)
 
-
+# user registration using social media
 @api_view(['POST'])
 def social_media_registration(request):
     if request.method == "POST":
@@ -225,57 +211,7 @@ def social_media_registration(request):
                 serializer_class = SocialSerializer(profile_obj)
                 return Response({"Data":serializer_class.data}, status=status.HTTP_200_OK)
 
-
-# @api_view(['POST'])
-# @throttle_classes([UserRateThrottle])
-# def send_link(request):
-#     if request.method == "POST":
-#         email = request.POST['email']
-#         recipient_list = []
-
-#         if custom_user.objects.filter(email=email).exists():
-#             u_obj = custom_user.objects.get(email=email).profile
-#             # if (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
-#             #     pass
-#             user_with_email = custom_user.objects.get(email=email)
-#             recipient_list.append(user_with_email.email)
-
-#             # Link = 'http://127.0.0.1:8001/home/reset-password'
-#             Link = 'http://185.146.21.235:7800/home/reset-password'
-#             characters = string.ascii_letters + string.digits
-#             token = ''.join(random.choice(characters) for i in range(50))
-#             # encrypted_token = base64.b64encode(
-#             #     token.encode("ascii")).decode("ascii")
-#             # encrypted_token = encrypted_token.replace("/",".")
-#             user = custom_user.objects.get(email=email)
-#             user.confirm_token = token
-#             user.save()
-#             profile_obj = custom_user.objects.get(email=email).profile
-#             profile_obj.expiration_date = datetime.today()
-#             profile_obj.save()
-
-#             from django.core import mail
-#             from django.template.loader import render_to_string
-#             from django.utils.html import strip_tags
-
-#             subject = 'Forgot Password'
-#             html_message = render_to_string(
-#                 'mail_template.html', {'token': f'{Link}?token={token}&email={email}'})
-#             plain_message = strip_tags(html_message)
-#             from_email = 'From <demo.logixbuiltinfo@gmail.com>'
-#             to = recipient_list[0]  
-
-#             mail.send_mail(subject, plain_message, from_email,
-#                         [to], html_message=html_message)
-
-#             # from UserRateThrottle
-#             # if throttle_success():
-#             #     print("Yesssssss")
-
-#             return Response({"Success": "Check Your email for Forgot Password"}, status=status.HTTP_200_OK)
-#         else:
-#             return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
-
+# send email for forgot password
 @api_view(['POST'])
 def send_link(request):
     if request.method == "POST":
@@ -283,10 +219,18 @@ def send_link(request):
         recipient_list = []
 
         if custom_user.objects.filter(email=email).exists():
-            u_obj = custom_user.objects.get(email=email).profile
+            try:
+                u_obj = custom_user.objects.get(email=email).profile
+            except:
+                user_obj = custom_user.objects.get(email=email)
+                p_obj = Profile.objects.create(username = user_obj)
+                p_obj.save()
+                u_obj = custom_user.objects.get(email=email).profile
 
             if u_obj.count_for_forgot_pass < 5:
-                if (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
+                if u_obj.time_for_forgot_pass is None:
+                    pass
+                elif (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
                     u_obj.count_for_forgot_pass = 0
                     u_obj.save()
                 user_with_email = custom_user.objects.get(email=email)
@@ -296,9 +240,6 @@ def send_link(request):
                 Link = 'http://185.146.21.235:7800/home/reset-password'
                 characters = string.ascii_letters + string.digits
                 token = ''.join(random.choice(characters) for i in range(50))
-                # encrypted_token = base64.b64encode(
-                #     token.encode("ascii")).decode("ascii")
-                # encrypted_token = encrypted_token.replace("/",".")
                 user = custom_user.objects.get(email=email)
                 user.confirm_token = token
                 user.save()
@@ -335,9 +276,6 @@ def send_link(request):
                     Link = 'http://185.146.21.235:7800/home/reset-password'
                     characters = string.ascii_letters + string.digits
                     token = ''.join(random.choice(characters) for i in range(50))
-                    # encrypted_token = base64.b64encode(
-                    #     token.encode("ascii")).decode("ascii")
-                    # encrypted_token = encrypted_token.replace("/",".")
                     user = custom_user.objects.get(email=email)
                     user.confirm_token = token
                     user.save()
@@ -370,14 +308,11 @@ def send_link(request):
         else:
             return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
 
-
+# reset-password 
 @api_view(['GET'])
 def reset_password(request):
     token = request.GET.get('token')
     if request.method == "GET":
-        # token = token.replace(".",'/')
-        # token = "".join(token.split())
-        # decrypted_token = base64.b64decode(token).decode('ascii')
         email = request.GET['email']
         new_pass = request.GET['new_pass']
         confirm_pass = request.GET['confirm_pass']
@@ -417,6 +352,7 @@ def reset_password(request):
                     else:
                         return Response({"Error": "Oops! Your Token is Expired!!!"}, status=status.HTTP_400_BAD_REQUEST)
 
+# update-password
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_password(request):
@@ -448,7 +384,7 @@ def update_password(request):
         else:
             return Response({"Error": "User Not Exist with this username"}, status=status.HTTP_401_UNAUTHORIZED)
 
-
+# edit profile
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def profile(request, para=None):
@@ -457,7 +393,6 @@ def profile(request, para=None):
         name = request.POST['name']
         mobile = request.POST['mobile']
         gender = request.POST['gender']
-        # profile_image = request.FILES['profile_image']
         date_of_Birth = request.POST['dob']
         city = request.POST['city']
         country = request.POST['country']
@@ -467,8 +402,6 @@ def profile(request, para=None):
         facebook = request.POST['fb']
         instagram = request.POST['insta']
         website = request.POST['website']
-        # avatar_image = request.FILES['avatar']
-        # bitmoji = request.FILES['bitmoji']
 
         if 'profile_image' in request.FILES:
             profile_image = request.FILES['profile_image']
@@ -493,7 +426,6 @@ def profile(request, para=None):
                 user_obj = custom_user.objects.get(username=request.user)
                 profile_obj = Profile.objects.get(username=user_obj.id)
                 profile_obj.name = name
-                # profile_obj.email = email
                 user_obj.email = email
                 profile_obj.mobile = mobile
                 profile_obj.gender = gender
@@ -519,6 +451,7 @@ def profile(request, para=None):
             except:
                 return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
+# get specific user
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def specific_user(request):
@@ -527,7 +460,7 @@ def specific_user(request):
         serializer_class = ProfileSerializer(queryset, many=True)
         return Response({'data': serializer_class.data}, status=status.HTTP_200_OK)
 
-
+# get total user
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def user_count(request):
@@ -535,7 +468,7 @@ def user_count(request):
     serializer_class = ProfileSerializer(queryset, many=True)
     return Response({'Total users': len(serializer_class.data)}, status=status.HTTP_200_OK)
 
-
+# total user with specific gender
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def genderwise(request):
@@ -544,7 +477,7 @@ def genderwise(request):
     serializer_class = ProfileSerializer(obj1, many=True)
     return Response({f'Total users with {gen} gender': len(serializer_class.data)}, status=status.HTTP_200_OK)
 
-
+# total user with specific country
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def countrywise(request):
@@ -553,7 +486,7 @@ def countrywise(request):
     serializer_class = ProfileSerializer(obj1, many=True)
     return Response({f'Users with {con} country': serializer_class.data}, status=status.HTTP_200_OK)
 
-
+# add and edit user preferences
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def preferences(request):
@@ -652,7 +585,7 @@ def preferences(request):
         except:
             return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
-
+# add and edit application data
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def app_data(request):
@@ -737,7 +670,7 @@ def app_data(request):
         except:
             return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
             
-
+# check whether email is available or not
 @api_view(['GET'])
 def email_verification(request):
     if request.method == "GET":
@@ -748,7 +681,7 @@ def email_verification(request):
         except:
             return Response({"Success": "Email is available."}, status=status.HTTP_200_OK)
 
-
+# check whether username is available or not
 @api_view(['GET'])
 def username_verification(request):
     if request.method == "GET":
@@ -759,7 +692,7 @@ def username_verification(request):
         except:
             return Response({"Success": "Username is available."}, status=status.HTTP_200_OK)
 
-
+# add and update purchase history
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def purchase_history(request):
@@ -795,7 +728,7 @@ def purchase_history(request):
         except:
             return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
-
+# delete account
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def delete_account(request):
@@ -809,7 +742,7 @@ def delete_account(request):
         except Exception as e:
             return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)
 
-
+# add and update products
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def product(request):
@@ -853,3 +786,41 @@ def product(request):
                 return Response({"Success": "Product Details Added."}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"Error": "User not found"}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+# load script
+@api_view(['POST'])
+def load_script(request):
+    if request.method == "POST":
+        mydata = json.loads(request.body)
+        username  = mydata.get('username')
+        password  = mydata.get('password')
+        email  = mydata.get('email')
+
+        if not custom_user.objects.filter(username=username).exists():
+            if len(username) > 5:
+                if not custom_user.objects.filter(email=email).exists():
+                    if(re.fullmatch(for_email, email)):
+                        pat = re.compile(reg)
+                        mat = re.search(pat, password)
+                        if mat:
+                            user = custom_user.objects.create_user(
+                                username=username, password=password, email=email)
+                            user.save()
+                            data = Profile(username=user)
+                            data.save()
+                            temp_obj = custom_user.objects.get(username=username)                                                           
+                            pro_obj = Profile.objects.get(username=temp_obj)
+                            serializer_class = RegistrationSerializer(pro_obj)
+                            return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
+                        else:
+                            return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        return Response({"Error": "Enter valid email address"}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response({"Error": "User Already Exist with this email address"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({"Error": "Username length must be greater than 6"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"Error": "User Already Exists!!!"}, status=status.HTTP_400_BAD_REQUEST)
+
