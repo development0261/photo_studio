@@ -1,0 +1,21 @@
+.col-lg-12.col-md-12.col-sm-12.col-xl-12 {
+    margin-top: 27px;
+}
+
+.table_link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.box-size:hover, .table_link:hover {
+    background-color: #e5f9ff;
+    text-decoration: none;
+    color: black;
+}
+button.closebutton {
+    margin-left: 757px;
+    border: 1px green;
+}
+.box-size{
+    height: 166px;
+}

@@ -1,0 +1,448 @@
+{% extends 'admin_site/base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'assets/css/purchase_model.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">Purchases</h3>
+                    <div class="main-header-center ms-3 d-none d-lg-block">
+                        <input id='searchbar' class="form-control" placeholder="Search for results..." type="search"  {% if request.GET.search %} value="{{request.GET.search}}" {% endif %} onkeydown="search(this)"/>
+                    </div>
+                </div>
+                <div class="card-body pt-4">
+                    <div class="grid-margin">
+                        <div class="">
+                            <div class="panel panel-primary">
+                                <div class="panel-body tabs-menu-body border-0 pt-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tab5">
+                                            <div class="table-responsive">
+                                                <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                                                    <thead class="border-top">
+                                                        <tr>
+                                                            <th class="bg-transparent border-bottom-0 sortit">
+                                                                <span style="display:flex">username
+                                                                    <div class="sort-order ml-2">
+                                                                      <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                      <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                    </div>
+                                                                </span>
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0 sortit">
+                                                                <span style="display:flex">product
+                                                                    <div class="sort-order ml-2">
+                                                                      <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                      <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                    </div>
+                                                                </span>
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0 sortit">
+                                                                <span style="display:flex">status
+                                                                    <div class="sort-order ml-2">
+                                                                      <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                      <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                    </div>
+                                                                </span>
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">auto renew status</th>
+                                                            <th class="bg-transparent border-bottom-0">is in billing retry period</th>
+                                                            <th class="bg-transparent border-bottom-0">is in intro offer period</th>
+                                                            <th class="bg-transparent border-bottom-0">is trial period</th>
+                                                            <th class="bg-transparent border-bottom-0 sortit">
+                                                                <span style="display:flex">start date
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0 sortit">
+                                                                <span style="display:flex">end date
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                            </th>
+                                                            <th class="bg-transparent border-bottom-0">subscription type</th>
+                                                            <th class="bg-transparent border-bottom-0">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="table_body">
+                                                        {% for row in total_purchases %}
+                                                            <tr class="border-bottom">
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="ms-3 mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                {{ row.username }}</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">{{ row.product }}</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold puchase_view" id="{{row.username}} - {{ row.pstatus }}">{{ row.pstatus }}</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mt-sm-1 d-block">
+                                                                        <span class="badge rounded-pill {% if row.auto_renew_status %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{ row.auto_renew_status }}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mt-sm-1 d-block">
+                                                                        <span class="badge rounded-pill {% if row.is_in_billing_retry_period %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{ row.is_in_billing_retry_period }}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mt-sm-1 d-block">
+                                                                        <span class="badge rounded-pill {% if row.is_in_intro_offer_period %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{ row.is_in_intro_offer_period }}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="mt-sm-1 d-block">
+                                                                        <span class="badge rounded-pill {% if row.is_trial_period %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{ row.is_trial_period }}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                <span style="display:none">{{row.start_date|date:"U"}}</span>{{row.start_date}}
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                <span style="display:none">{{row.end_date|date:"U"}}</span>{{row.end_date}}
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="mt-0 mt-sm-2 d-block">
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">{{ row.subscription_type }}</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="g-2">
+                                                                        <a href="/admin_site/EditPurchase/Purchase {{ row.pid }}" class="btn text-primary btn-sm"                                                                           data-bs-toggle="tooltip"
+                                                                           data-bs-original-title="Edit"><span class="fe fe-edit fs-14"></span></a>
+                                                                        <a class="btn text-danger btn-sm"
+                                                                           data-bs-toggle="tooltip"
+                                                                           data-bs-original-title="Delete"><span id="Purchase {{ row.pid }}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="pagination_div">
+                                                <div class="row align-items-center">
+                                                    <!--show entries-->
+                                                <div class="col-lg-6">
+                                                    <div class="show_entries">
+                                                        <label class="m-0 d-flex align-items-center">Show 
+                                                            <div class="table_length_outer mx-2">
+                                                                <select id="table_length" onchange="location = this.value;">
+                                                                    <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=10  {% else %} {{ request.path }}?show=10 {% endif %}" {% if request.GET.show == '10' %} selected {% endif %}>10</option>
+                                                                    <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=25  {% else %} {{ request.path }}?show=25 {% endif %}" {% if request.GET.show == '25' %} selected {% endif %}>25</option>
+                                                                    <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=50  {% else %} {{ request.path }}?show=50 {% endif %}" {% if request.GET.show == '50' %} selected {% endif %}>50</option>
+                                                                    <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=100  {% else %} {{ request.path }}?show=100 {% endif %}" {% if request.GET.show == '100' %} selected {% endif %}>100</option>
+                                                                </select>
+                                                            </div>
+                                                        entries</label>
+                                                    </div>
+                                                </div>
+                                                <!--end show entries-->
+                                                <!--Pagination-->
+                                                <div class="col-lg-6">
+                                                    <nav aria-label="Page navigation example">
+                                                        <ul class="pagination justify-content-center">
+                                                            {% if total_purchases.has_previous %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="
+                                                                    {% if 'show' in request.GET %}?page={{ total_purchases.previous_page_number }}&show={{request.GET.show}}  {% else %} ?page={{ total_purchases.previous_page_number }} {% endif %}
+                                                                    ">Previous</a>
+                                                                </li>
+                                                            {% else %}
+                                                                <li class="page-item disabled">
+                                                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+                                                                </li>
+                                                            {% endif %}
+
+                                                            {% if total_purchases.number|add:'-2' > 1 %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="
+                                                                    {% if 'show' in request.GET %} ?page={{ total_purchases.number|add:'-3' }}&show={{request.GET.show}}  {% else %}  ?page={{ total_purchases.number|add:'-3' }} {% endif %}
+                                                                    ">&hellip;</a>
+                                                                </li>
+                                                            {% endif %}
+
+                                                            {% for i in total_purchases.paginator.page_range %}
+                                                                {% if total_purchases.number == i %}
+                                                                    <li class="page-item active" aria-current="page">
+                                                                        <span class="page-link">
+                                                                            {{ i }}
+                                                                            <span class="sr-only">
+                                                                                (current)
+                                                                            </span>
+                                                                        </span>
+                                                                    </li>
+                                                                {% elif i > total_purchases.number|add:'-3' and i < total_purchases.number|add:'3' %}
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="
+                                                                        {% if 'show' in request.GET %}?page={{ i }}&show={{request.GET.show}}  {% else %} ?page={{ i }} {% endif %}
+                                                                        ">{{ i }}</a>
+                                                                    </li>
+                                                                {% endif %}
+                                                            {% endfor %}
+
+                                                            {% if total_purchases.paginator.num_pages > total_purchases.number|add:'3' %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="
+                                                                    {% if 'show' in request.GET %} ?page={{ total_purchases.number|add:'3' }}&show={{request.GET.show}}  {% else %}  ?page={{ total_purchases.number|add:'3' }} {% endif %}
+                                                                    
+                                                                ">&hellip;</a>
+                                                                </li>
+                                                            {% endif %}
+
+                                                            {% if total_purchases.has_next %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="
+                                                                    {% if 'show' in request.GET %}?page={{ total_purchases.next_page_number }}&show={{request.GET.show}}  {% else %} ?page={{ total_purchases.next_page_number }} {% endif %}
+                                                                    ">Next</a>
+                                                                </li>
+                                                            {% else %}
+                                                                <li class="page-item disabled">
+                                                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+                                                                </li>
+                                                            {% endif %}
+                                                        </ul>
+                                                    </nav>
+                                                </div>
+                                                <!--end of Pagination-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg" id="Modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="largeModalLabel">
+                    </h5>
+                </div>
+                <div class="modalbody main-profile-modal-wrp">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    import swal from 'sweetalert2';
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
+    
+    {% comment %} delete data {% endcomment %}
+    <script>
+        $(".delete_class").click(function () {
+            delete_id = $(this).attr('id')
+
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this Account!",
+                icon: "warning",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Delete',
+                denyButtonText: `Don't save`,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    window.location.href = "/admin_site/DeletePurchase/" + delete_id
+                }
+            }).catch(swal.noop);
+        });
+
+    </script>
+
+    {% comment %} view modal {% endcomment %}
+    <script>
+        $('.puchase_view').on('click', function () {
+            id = $(this).attr('id');
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/specific_purchase/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`Purchase`)
+                    $(".modalbody").append(`
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>Status</strong>
+                                    <label>
+                                        ${data.pstatus}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>Auto renew status</strong>
+                                    <label>
+                                        ${data.auto_renew_status}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>Is in billing retry period</strong>
+                                    <label>
+                                        ${data.is_in_billing_retry_period}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>Is in intro offer period</strong>
+                                    <label>
+                                        ${data.is_in_intro_offer_period}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>Is trial period</strong>
+                                    <label>
+                                        ${data.is_trial_period}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>start date</strong>
+                                    <label>
+                                        ${data.start_date}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>End date</strong>
+                                    <label>
+                                        ${data.end_date}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>Subscription Type</strong>
+                                    <label>
+                                        ${data.subscription_type}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                    $(".modal-footer").append(`
+                        <button type="button" id="editbtn" class="btn btn-success">
+                            <a class="editbtn" href="/admin_site/EditPurchase/Purchase ${profileresult.res.pk}">Edit</a>
+                        </button>
+                    `);
+                    $("#Modal").modal('show');
+                }
+            })
+        })
+    </script>
+
+    {% comment %} refresh and close view modal {% endcomment %}
+    <script>
+        $(document).on('click', '#closebtn', function () {
+            $('#Modal').modal('hide');
+        })
+        $("#Modal").on("hidden.bs.modal", function () {
+            $("#largeModalLabel").html("");
+            $(".modalbody").html("");
+            $(".modal-footer").html(`<button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                    </button>`);
+        });
+    </script>
+
+    {% comment %} sorting {% endcomment %}
+    <script>
+        $('#data-table th.sortit').click(function () {
+            var table = $(this).parents('table').eq(0)
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        
+            this.asc = !this.asc
+            if (this.asc == true) {
+              $(this).children('span').children('.sort-order').addClass('upOrder')
+              $(this).children('span').children('.sort-order').removeClass('downOrder')
+        
+            } else {
+              $(this).children('span').children('.sort-order').addClass('downOrder')
+              $(this).children('span').children('.sort-order').removeClass('upOrder')
+        
+            }
+            if (!this.asc) { rows = rows.reverse() }
+            for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+          })
+          function comparer(index) {
+            return function (a, b) {
+              var valA = getCellValue(a, index), valB = getCellValue(b, index)
+              return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+            }
+          }
+          function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
+    </script>
+
+    {% comment %} searchbar backend {% endcomment %}
+    <script>
+        function search(ele) {
+            if(event.key === 'Enter') {
+                event.preventDefault()
+                window.location.href = "{% url 'Purchase' %}?search="+ele.value;  
+            }
+        }
+    </script>
+
+{% endblock scripts %}

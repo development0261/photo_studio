@@ -1,0 +1,80 @@
+.row {
+    margin-top: 27px !important;
+}
+.product_view{
+    cursor: pointer;
+}
+label{
+    padding-left: 8px;
+}
+a.editbtn {
+    color: white;
+}
+
+ /* sorting  */
+.sort-order {}
+
+i.fa.fa-caret-up, i.fa.fa-caret-down {
+    padding-left: 5px;
+    color: #6c5ffc !important;
+    opacity: 0.5;
+}
+.downOrder i.fa.fa-caret-down {
+    opacity: 1;
+}
+
+.upOrder i.fa.fa-caret-up {
+    opacity: 1;
+}
+
+.main-profile-modal-wrp{
+    padding: 10px 17px;
+}
+
+/* searchbar  */
+.main-header-center{
+    margin-left: auto !important;
+    margin-right: 4px;
+}
+
+ /* pagination  */
+.table_length_outer select {
+    height: 2.375rem !important;
+    background-color: #f6f7fc;
+    border: 1px solid #e9edf4 !important;
+    border-radius: 7px;
+    padding: 0 0.75rem;
+    appearance: none;
+    min-width: 61px;
+}
+.table_length_outer {
+    position: relative;
+}
+.table_length_outer:before {
+    content: "";
+    border-color: #76839a transparent transparent transparent;
+    border-style: solid;
+    border-width: 5px 4px 0 4px;
+    height: 0;
+    right: 14px;
+    margin-left: -4px;
+    margin-top: -2px;
+    position: absolute;
+    top: 50%;
+    width: 0;
+    pointer-events: none;
+}
+.table_length_outer select:focus {
+    outline: none;
+}
+.pagination {
+    justify-content: flex-end;
+}
+.pagination_div {
+    margin-top: 30px;
+}
+
+ul.pagination.justify-content-center {
+    margin-left: auto !important;
+    margin-right: 93px !important;
+}

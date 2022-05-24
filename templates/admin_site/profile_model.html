@@ -1,0 +1,664 @@
+{% extends 'admin_site/base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'assets/css/profile_model.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="main-section">
+            <div class="main-table">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="profiles" >
+                            <h3 class="card-title mb-0">Profiles</h3>
+                        </div>
+                        <div class="main-header-center ms-3 d-none d-lg-block">
+                            <input id='searchbar' class="form-control" placeholder="Search for results..." type="search" onkeydown="search(this)"/>
+                        </div>
+                        <div class="togal-button">
+                            <span class="toggletooltip">Filters</span>
+                            <p><a href="#" class="bar-button">
+                                <i class="fa fa-bars"></i>
+                            </a></p>
+                        </div>
+                    </div>
+                    <div class="card-body pt-4">
+                        <div class="grid-margin">
+                            <div class="">
+                                <div class="panel panel-primary">
+                                    <div class="panel-body tabs-menu-body border-0 pt-0">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="tab5">
+                                                <div class="table-responsive">
+                                                    <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                                                        <thead class="border-top">
+                                                            <tr>
+                                                                <th class="bg-transparent border-bottom-0">profile image</th>
+                                                                <th class="bg-transparent border-bottom-0 sortit">
+                                                                    <span style="display:flex">name
+                                                                    <div class="sort-order ml-2">
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                    </div>
+                                                                </span>
+                                                                </th>
+                                                                {% comment %} <th class="bg-transparent border-bottom-0 sortit">
+                                                                    <span style="display:flex">Email
+                                                                        <div class="sort-order ml-2">
+                                                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                        </div>
+                                                                    </span>
+                                                                </th> {% endcomment %}
+                                                                <th class="bg-transparent border-bottom-0 sortit">
+                                                                    <span style="display:flex">Registration date
+                                                                    <div class="sort-order ml-2 downOrder">
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                    </div>
+                                                                </span>
+                                                                </th>
+                                                                <th class="bg-transparent border-bottom-0 sortit">
+                                                                    <span style="display:flex">city
+                                                                    <div class="sort-order ml-2">
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                    </div>
+                                                                </span>
+                                                                </th>
+                                                                <th class="bg-transparent border-bottom-0 sortit">
+                                                                    <span style="display:flex">country
+                                                                    <div class="sort-order ml-2">
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                    </div>
+                                                                </span>
+                                                                </th>
+                                                                <th class="bg-transparent border-bottom-0">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="table_body">
+                                                            {% for row in total_profiles %}
+                                                                <tr class="border-bottom"> 
+                                                                    <td class="text-center">
+                                                                        <div class="d-flex">
+                                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                    {% if row.profile_image %}
+                                                                                        <img src="/media/{{ row.profile_image }}" style="width: 45px;">
+                                                                                    {% else %}
+                                                                                        None
+                                                                                    {% endif %}
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <div class="d-flex profile_name" id="Profile - {{row.username}} - {{ row.name }}">
+                                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                    {{ row.name }}
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    {% comment %} <td class="text-center">
+                                                                        <div class="d-flex">
+                                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                    {{ row.email }}
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td> {% endcomment %}
+                                                                    <td class="text-center">
+                                                                        <div class="d-flex">
+                                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                    <span style="display:none">{{row.created_at|date:"U"}}</span>{{row.created_at}}
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <div class="d-flex">
+                                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                    {{ row.city }}
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <div class="d-flex">
+                                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                    {{ row.country }}
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <div class="g-2">
+                                                                            <a href="/admin_site/ProfileEdit/Profile {{ row.uid }}"
+                                                                                class="btn text-primary btn-sm"
+                                                                                data-bs-toggle="tooltip"
+                                                                                data-bs-original-title="Edit">
+                                                                                <span class="fe fe-edit fs-14">
+                                                                                </span>
+                                                                            </a>
+                                                                            <a class="btn text-danger btn-sm"
+                                                                            data-bs-toggle="tooltip"
+                                                                            data-bs-original-title="Delete"><span id="Profile {{ row.uid }}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="pagination_div">
+                                                    <div class="row align-items-center">
+                                                        <!--show entries-->
+                                                        <div class="col-lg-6">
+                                                            <div class="show_entries">
+                                                                <label class="m-0 d-flex align-items-center">Show 
+                                                                    <div class="table_length_outer mx-2">
+                                                                        <select id="table_length" onchange="location = this.value;">
+                                                                            <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=10  {% else %} {{ request.path }}?show=10 {% endif %}" {% if request.GET.show == '10' %} selected {% endif %}>10</option>
+                                                                            <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=25  {% else %} {{ request.path }}?show=25 {% endif %}" {% if request.GET.show == '25' %} selected {% endif %}>25</option>
+                                                                            <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=50  {% else %} {{ request.path }}?show=50 {% endif %}" {% if request.GET.show == '50' %} selected {% endif %}>50</option>
+                                                                            <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=100  {% else %} {{ request.path }}?show=100 {% endif %}" {% if request.GET.show == '100' %} selected {% endif %}>100</option>
+                                                                        </select>
+                                                                    </div>
+                                                                entries</label>
+                                                            </div>
+                                                        </div>
+                                                        <!--end show entries-->
+                                                        <!--Pagination-->
+                                                        <div class="col-lg-6">
+                                                            <nav aria-label="Page navigation example">
+                                                                <ul class="pagination justify-content-center">
+                                                                    {% if total_profiles.has_previous %}
+                                                                        <li class="page-item">
+                                                                            <a class="page-link" href="
+                                                                            {% if 'show' in request.GET %}?page={{ total_profiles.previous_page_number }}&show={{request.GET.show}}  {% else %} ?page={{ total_profiles.previous_page_number }} {% endif %}
+                                                                            ">Previous</a>
+                                                                        </li>
+                                                                    {% else %}
+                                                                        <li class="page-item disabled">
+                                                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+                                                                        </li>
+                                                                    {% endif %}
+        
+                                                                    {% if total_profiles.number|add:'-2' > 1 %}
+                                                                        <li class="page-item">
+                                                                            <a class="page-link" href="
+                                                                            {% if 'show' in request.GET %} ?page={{ total_profiles.number|add:'-3' }}&show={{request.GET.show}}  {% else %}  ?page={{ total_profiles.number|add:'-3' }} {% endif %}
+                                                                            ">&hellip;</a>
+                                                                        </li>
+                                                                    {% endif %}
+        
+                                                                    {% for i in total_profiles.paginator.page_range %}
+                                                                        {% if total_profiles.number == i %}
+                                                                            <li class="page-item active" aria-current="page">
+                                                                                <span class="page-link">
+                                                                                    {{ i }}
+                                                                                    <span class="sr-only">
+                                                                                        (current)
+                                                                                    </span>
+                                                                                </span>
+                                                                            </li>
+                                                                        {% elif i > total_profiles.number|add:'-3' and i < total_profiles.number|add:'3' %}
+                                                                            <li class="page-item">
+                                                                                <a class="page-link" href="
+                                                                                {% if 'show' in request.GET %}?page={{ i }}&show={{request.GET.show}}  {% else %} ?page={{ i }} {% endif %}
+                                                                                ">{{ i }}</a>
+                                                                            </li>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+        
+                                                                    {% if total_profiles.paginator.num_pages > total_profiles.number|add:'3' %}
+                                                                        <li class="page-item">
+                                                                            <a class="page-link" href="
+                                                                            {% if 'show' in request.GET %} ?page={{ total_profiles.number|add:'3' }}&show={{request.GET.show}}  {% else %}  ?page={{ total_profiles.number|add:'3' }} {% endif %}
+                                                                            
+                                                                        ">&hellip;</a>
+                                                                        </li>
+                                                                    {% endif %}
+        
+                                                                    {% if total_profiles.has_next %}
+                                                                        <li class="page-item">
+                                                                            <a class="page-link" href="
+                                                                            {% if 'show' in request.GET %}?page={{ total_profiles.next_page_number }}&show={{request.GET.show}}  {% else %} ?page={{ total_profiles.next_page_number }} {% endif %}
+                                                                            ">Next</a>
+                                                                        </li>
+                                                                    {% else %}
+                                                                        <li class="page-item disabled">
+                                                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+                                                                        </li>
+                                                                    {% endif %}
+                                                                </ul>
+                                                            </nav>
+                                                        </div>
+                                                        <!--end of Pagination-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="saidbar-toggle">
+                <div class="filter_box">
+                    <div class="filter_title">
+                        <h3>
+                            Filter
+                        </h3>
+                    </div>
+                    <div class="filter_body">
+                        <h6>
+                            <a href="{% url 'Profile' %}" id="Clear all filters" class="active"><i class="fa fa-close"></i> Clear all
+                                filters</a>
+                        </h6>
+                        <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By gender
+                            </h5>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=Male" {% if request.GET.filter == 'Male' %} class="active" {% endif %}>Male</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=Female" {% if request.GET.filter == 'Female' %} class="active" {% endif %}>Female</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=Other" {% if request.GET.filter == 'Other' %} class="active" {% endif %}>Other</a>
+                                </li>
+                            </ul>
+                        </div>
+                    
+                        <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By country
+                            </h5>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
+                                </li>
+                                {% for row in country_list %}
+                                    <li>
+                                        <a href="{% url 'Profile' %}?filter={{row}}" {% if request.GET.filter == row %} class="active" {% endif %}>{{row}}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    
+                        <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By age
+                            </h5>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=twenty" {% if request.GET.filter == 'twenty' %} class="active" {% endif %}>20 - 30</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=thirty" {% if request.GET.filter == 'thirty' %} class="active" {% endif %}>30 - 40</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=greater" {% if request.GET.filter == 'greater' %} class="active" {% endif %}>Greater than 40</a>
+                                </li>
+                            </ul>
+                        </div>
+                    
+                        <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By last password updated
+                            </h5>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=today" {% if request.GET.filter == 'today' %} class="active" {% endif %}>Today</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=seven" {% if request.GET.filter == 'seven' %} class="active" {% endif %}>Past 7 days</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=month" {% if request.GET.filter == 'month' %} class="active" {% endif %}>This month</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=year" {% if request.GET.filter == 'year' %} class="active" {% endif %}>This year</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg" id="Modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="largeModalLabel">
+                    </h5>
+                </div>
+                <div class="modalbody main-profile-modal-wrp">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    import swal from 'sweetalert2';
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
+    
+    {% comment %} delete data {% endcomment %}
+    <script>
+        $(".delete_class").click(function () {
+            delete_id = $(this).attr('id')
+
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this Account!",
+                icon: "warning",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Delete',
+                denyButtonText: `Don't save`,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    window.location.href = "/admin_site/DeleteProfile/" + delete_id
+                }
+            }).catch(swal.noop);
+        });
+
+    </script>
+
+    {% comment %} filters {% endcomment %}
+    <script>
+        $('.filter_body a').on('click', function () {
+            $('.filter_body a.active').removeClass('active');
+            $(this).addClass('active');
+        });
+    </script>
+
+    {% comment %} view modal {% endcomment %}
+    <script>
+        $('.profile_name').on('click', function () {
+            id = $(this).attr('id')
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/Profile/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`Profile`)
+                    $(".modalbody").append(`
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Profile Image</strong>
+                                        <div class="avtar-profile">
+                                        ${
+                                            data.profile_image != "" ? `<img src="/media/${data.profile_image}" style="width: 40%;">`:`No Image`
+                                        }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Avatar</strong>
+                                        <div class="avtar-profile">
+                                        ${
+                                            data.avatar != "" ? `<img src="/media/${data.avatar}" style="width: 40%;">`:`No Image`
+                                        }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Name</strong>
+                                        <label>
+                                            ${data.name}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>City</strong>
+                                        <label>
+                                            ${data.city}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Country</strong>
+                                        <label>
+                                            ${data.country}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Created_at</strong>
+                                        <label>
+                                            ${data.created_at}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Date of Birth</strong>
+                                        <label>
+                                            ${data.dob}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Facebook</strong>
+                                        <label>
+                                            ${data.fb}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Gender</strong>
+                                        <label>
+                                            ${data.gender}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Insta</strong>
+                                        <label>
+                                            ${data.insta}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Latitude</strong>
+                                        <label>
+                                            ${data.lat}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Longitude</strong>
+                                        <label>
+                                            ${data.long}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Mobile</strong>
+                                        <label>
+                                            ${data.mobile}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Password forgot</strong>
+                                        <label>
+                                            ${data.pass_forgot}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Pass update</strong>
+                                        <label>
+                                            ${data.pass_update}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Snap</strong>
+                                        <label>
+                                            ${data.snap}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Updated at</strong>
+                                        <label>
+                                            ${data.updated_at}
+                                        </label>
+                                    </div>
+                                </div>
+                                {% comment %} <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Username</strong>
+                                        <label>
+                                            ${data.username}
+                                        </label>
+                                    </div>
+                                </div> {% endcomment %}
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Website</strong>
+                                        <label>
+                                            ${data.website}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            `)
+                    $(".modal-footer").append(`
+                        <button type="button" id="editbtn" class="btn btn-success">
+                            <a class="editbtn" href="/admin_site/ProfileEdit/Profile ${profileresult.res.pk}">Edit</a>
+                        </button>
+                    `);
+                    $("#Modal").modal('show');
+                }
+            })
+        });
+    </script>
+
+    {% comment %} refresh and close view modal {% endcomment %}
+    <script>
+        $(document).on('click', '#closebtn', function () {
+            $('#Modal').modal('hide');
+        })
+        $("#Modal").on("hidden.bs.modal", function () {
+            $("#largeModalLabel").html("");
+            $(".modalbody").html("");
+            $(".modal-footer").html(`<button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                    </button>`);
+        });
+    </script>
+
+    {% comment %} sorting {% endcomment %}
+    <script>
+        $('#data-table th.sortit').click(function () {
+            var table = $(this).parents('table').eq(0)
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        
+            this.asc = !this.asc
+            if (this.asc == true) {
+            $(this).children('span').children('.sort-order').addClass('upOrder')
+            $(this).children('span').children('.sort-order').removeClass('downOrder')
+        
+            } else {
+            $(this).children('span').children('.sort-order').addClass('downOrder')
+            $(this).children('span').children('.sort-order').removeClass('upOrder')
+        
+            }
+            if (!this.asc) { rows = rows.reverse() }
+            for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+        })
+        function comparer(index) {
+            return function (a, b) {
+            var valA = getCellValue(a, index), valB = getCellValue(b, index)
+            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+            }
+        }
+        function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
+    </script>
+
+    {% comment %} filter toggle {% endcomment %}
+    <script>
+        $(document).ready(function(){
+            $(".togal-button").click(function(){
+                $(".filter_box").toggle();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+          $(".togal-button").click(function(){
+            if ( $(".main-table").hasClass("main-profile-table") ) {
+                $(".main-table").removeClass("main-profile-table");
+            }
+            else{
+                $(".main-table").addClass("main-profile-table");
+            }
+          });
+        });
+    </script>
+
+    {% comment %} searchbar backend {% endcomment %}
+    <script>
+        function search(ele) {
+            if(event.key === 'Enter') {
+                window.location.href = "{% url 'Profile' %}?searchval="+ele.value;  
+            }
+        }
+    </script>
+
+{% endblock scripts %}

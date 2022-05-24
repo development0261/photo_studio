@@ -1,0 +1,41 @@
+{% extends 'admin_site/base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'assets/css/tag_edit.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="edit_form">
+        <div class="edit_form_title">
+            <h3>Edit Form</h3>
+        </div>
+        <div class="form_body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        {% for row in result %}
+                            <input type="hidden" id="username" name="username" value="{{ row.username }}">
+                            <div class="col-lg-6">
+                                <div class="profile_field">
+                                    <strong>Tags</strong>
+                                    <div class="name">
+                                        <input type="text" name="tag" value="{{ row.tag }}">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="btns">
+                    <input type="submit" class="btn-primary" value="Submit">
+                    <button type="button"
+                            id="closebtn"
+                            class="btn btn-secondary"
+                            data-dismiss="modal">
+                        <a href="{% url 'Tag' %}">Cancel</a>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

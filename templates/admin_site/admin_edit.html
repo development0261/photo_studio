@@ -1,0 +1,68 @@
+{% extends 'admin_site/base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'assets/css/admin_edit.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="edit_form">
+        <div class="edit_form_title">
+            <h3>Edit Form</h3>
+        </div>
+        <div class="form_body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        {% for row in result %}
+                            <div class="col-lg-5">
+                                <div class="profile_field">
+                                    <strong>Username</strong>
+                                    <div class="name">
+                                        <input type="text" id="readonly" name="username" value="{{ row.username }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="profile_field">
+                                    <strong>First name</strong>
+                                    <div class="name">
+                                        <input type="text" name="firstname" value="{{ row.first_name }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="profile_field">
+                                    <strong>Last name</strong>
+                                    <div class="name">
+                                        <label>
+                                            <input type="text" name="lastname" value="{{ row.last_name }}">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="profile_field">
+                                    <strong>Email</strong>
+                                    <div class="name">
+                                        <label>
+                                            <input type="text" name="email" value="{{ row.email }}">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="btns">
+                    <input type="submit" class="btn-primary" value="Submit">
+                    <button type="button"
+                            id="closebtn"
+                            class="btn btn-secondary"
+                            data-dismiss="modal">
+                        <a href="{% url 'adminusers' %}">Cancel</a>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

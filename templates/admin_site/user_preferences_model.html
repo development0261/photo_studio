@@ -1,0 +1,776 @@
+{% extends 'admin_site/base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'assets/css/user_preference.css' %}">
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">User Preferences</h3>
+                <div class="main-header-center ms-3 d-none d-lg-block">
+                    <input id='searchbar' class="form-control" placeholder="Search for results..." type="search" {% if request.GET.search %} value="{{request.GET.search}}" {% endif %} onkeydown="search(this)"/>
+                </div>
+            </div>
+            <div class="card-body pt-4">
+                <div class="grid-margin">
+                    <div class="">
+                        <div class="panel panel-primary">
+                            <div class="panel-body tabs-menu-body border-0 pt-0">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab5">
+                                        <div class="table-responsive">
+                                            <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                                                <thead class="border-top">
+                                                    <tr>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">Username
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            signature</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            export quality</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            Language</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user stared templates</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user stared backgrounds</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user stared stickers</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user stared Textart</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user stared colors</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user stared fonts</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            most used fonts</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user custom colors</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            instagram follower</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            grid snapping</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            user recent text</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            appearance mode</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            enable iCloud backup</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            save projects automatically</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            save projects on export</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            notifications permission</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            inApp notifications permission</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            photo library permission</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            digital riyals rewards</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            enable touch</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            app theme</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            always crop</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="table_body">
+                                                    {% for row in total_details %}
+                                                    <tr class="border-bottom">
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="ms-3 mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold preference_view" id="user_preferences - {{row.username}} - {{row.udid}}">
+                                                                        {{row.username}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {% if row.signature %}
+                                                                        <img src="/media/{{row.signature}}" style="width: 40%;">
+                                                                        {% else %}
+                                                                        None
+                                                                        {% endif %}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.export_quality}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.Language}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_stared_templates}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_stared_backgrounds}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_stared_stickers}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_stared_Textart}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_stared_colors}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_stared_fonts}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.most_used_fonts}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_custom_colors}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        <span
+                                                                            class="badge rounded-pill {% if row.instagram_follower %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.instagram_follower}}
+                                                                        </span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        <span
+                                                                            class="badge rounded-pill {% if row.grid_snapping %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.grid_snapping}}
+                                                                        </span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.user_recent_text}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.appearance_mode}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        <span
+                                                                            class="badge rounded-pill {% if row.enable_iCloud_backup %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.enable_iCloud_backup}}
+                                                                        </span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        <span
+                                                                            class="badge rounded-pill {% if row.save_projects_automatically %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.save_projects_automatically}}
+                                                                        </span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        <span
+                                                                            class="badge rounded-pill {% if row.save_projects_on_export %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.save_projects_on_export}}
+                                                                        </span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        <span
+                                                                            class="badge rounded-pill {% if row.notifications_permission %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.notifications_permission}}
+                                                                        </span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        <span
+                                                                            class="badge rounded-pill {% if row.always_crop %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.always_crop}}
+                                                                        </span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        <span
+                                                                            class="badge rounded-pill {% if row.photo_library_permission %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.photo_library_permission}}
+                                                                        </span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.digital_riyals_rewards}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        <span
+                                                                            class="badge rounded-pill {% if row.enable_touch %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.enable_touch}}
+                                                                        </span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.app_theme}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        <span
+                                                                            class="badge rounded-pill {% if row.always_crop %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{row.always_crop}}
+                                                                        </span>
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="g-2">
+                                                                <a href='/admin_site/PreferencesEdit/user_preferences {{row.udid}}' class="btn text-primary btn-sm"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-original-title="Edit"><span
+                                                                        class="fe fe-edit fs-14"></span></a>
+                                                                <a class="btn text-danger btn-sm"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-original-title="Delete"><span
+                                                                       id="user_preferences {{row.udid}}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination_div">
+                                            <div class="row align-items-center">
+                                                <!--show entries-->
+                                                <div class="col-lg-6">
+                                                    <div class="show_entries">
+                                                        <label class="m-0 d-flex align-items-center">Show 
+                                                            <div class="table_length_outer mx-2">
+                                                                <select id="table_length" onchange="location = this.value;">
+                                                                    <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=10  {% else %} {{ request.path }}?show=10 {% endif %}" {% if request.GET.show == '10' %} selected {% endif %}>10</option>
+                                                                    <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=25  {% else %} {{ request.path }}?show=25 {% endif %}" {% if request.GET.show == '25' %} selected {% endif %}>25</option>
+                                                                    <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=50  {% else %} {{ request.path }}?show=50 {% endif %}" {% if request.GET.show == '50' %} selected {% endif %}>50</option>
+                                                                    <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=100  {% else %} {{ request.path }}?show=100 {% endif %}" {% if request.GET.show == '100' %} selected {% endif %}>100</option>
+                                                                </select>
+                                                            </div>
+                                                        entries</label>
+                                                    </div>
+                                                </div>
+                                                <!--end show entries-->
+                                                <!--Pagination-->
+                                                <div class="col-lg-6">
+                                                    <nav aria-label="Page navigation example">
+                                                        <ul class="pagination justify-content-center">
+                                                            {% if total_details.has_previous %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="
+                                                                    {% if 'show' in request.GET %}?page={{ total_details.previous_page_number }}&show={{request.GET.show}}  {% else %} ?page={{ total_details.previous_page_number }} {% endif %}
+                                                                    ">Previous</a>
+                                                                </li>
+                                                            {% else %}
+                                                                <li class="page-item disabled">
+                                                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+                                                                </li>
+                                                            {% endif %}
+
+                                                            {% if total_details.number|add:'-2' > 1 %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="
+                                                                    {% if 'show' in request.GET %} ?page={{ total_details.number|add:'-3' }}&show={{request.GET.show}}  {% else %}  ?page={{ total_details.number|add:'-3' }} {% endif %}
+                                                                    ">&hellip;</a>
+                                                                </li>
+                                                            {% endif %}
+
+                                                            {% for i in total_details.paginator.page_range %}
+                                                                {% if total_details.number == i %}
+                                                                    <li class="page-item active" aria-current="page">
+                                                                        <span class="page-link">
+                                                                            {{ i }}
+                                                                            <span class="sr-only">
+                                                                                (current)
+                                                                            </span>
+                                                                        </span>
+                                                                    </li>
+                                                                {% elif i > total_details.number|add:'-3' and i < total_details.number|add:'3' %}
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="
+                                                                        {% if 'show' in request.GET %}?page={{ i }}&show={{request.GET.show}}  {% else %} ?page={{ i }} {% endif %}
+                                                                        ">{{ i }}</a>
+                                                                    </li>
+                                                                {% endif %}
+                                                            {% endfor %}
+
+                                                            {% if total_details.paginator.num_pages > total_details.number|add:'3' %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="
+                                                                    {% if 'show' in request.GET %} ?page={{ total_details.number|add:'3' }}&show={{request.GET.show}}  {% else %}  ?page={{ total_details.number|add:'3' }} {% endif %}
+                                                                    
+                                                                ">&hellip;</a>
+                                                                </li>
+                                                            {% endif %}
+
+                                                            {% if total_details.has_next %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="
+                                                                    {% if 'show' in request.GET %}?page={{ total_details.next_page_number }}&show={{request.GET.show}}  {% else %} ?page={{ total_details.next_page_number }} {% endif %}
+                                                                    ">Next</a>
+                                                                </li>
+                                                            {% else %}
+                                                                <li class="page-item disabled">
+                                                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+                                                                </li>
+                                                            {% endif %}
+                                                        </ul>
+                                                    </nav>
+                                                </div>
+                                                <!--end of Pagination-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="Modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="largeModalLabel">
+                </h5>
+            </div>
+            <div class="modalbody main-profile-modal-wrp">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+    import swal from 'sweetalert2';
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
+
+    {% comment %} delete data {% endcomment %}
+    <script>
+        $(".delete_class").click(function () {
+            delete_id = $(this).attr('id')
+
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this Account!",
+                icon: "warning",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Delete',
+                denyButtonText: `Don't save`,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    window.location.href = "/admin_site/DeleteDetails/" + delete_id
+                }
+            }).catch(swal.noop);
+        });
+    </script>
+
+    {% comment %} view modal {% endcomment %}
+    <script>
+        $('.preference_view').on('click', function () {
+            id = $(this).attr('id');
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/user_preference/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`User Deatils`)
+                    $(".modalbody").append(`
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Export quality</strong>
+                                        <label>
+                                            ${data.export_quality}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Language</strong>
+                                        <label>
+                                            ${data.Language}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>User stared templates</strong>
+                                        <label>
+                                            ${data.user_stared_templates}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>User stared backgrounds</strong>
+                                        <label>
+                                            ${data.user_stared_backgrounds}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>User stared stickers</strong>
+                                        <label>
+                                            ${data.user_stared_stickers}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>User stared Textart</strong>
+                                        <label>
+                                            ${data.user_stared_Textart}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>User stared colors</strong>
+                                        <label>
+                                            ${data.user_stared_colors}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>User stared fonts</strong>
+                                        <label>
+                                            ${data.user_stared_fonts}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Most used fonts</strong>
+                                        <label>
+                                            ${data.most_used_fonts}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>User custom colors</strong>
+                                        <label>
+                                            ${data.user_custom_colors}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Instagram follower</strong>
+                                        <label>
+                                            ${data.instagram_follower}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Grid snapping</strong>
+                                        <label>
+                                            ${data.grid_snapping}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>User recent text</strong>
+                                        <label>
+                                            ${data.user_recent_text}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Appearance mode</strong>
+                                        <label>
+                                            ${data.appearance_mode}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Enable iCloud backup</strong>
+                                        <label>
+                                            ${data.enable_iCloud_backup}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Save projects automatically</strong>
+                                        <label>
+                                            ${data.save_projects_automatically}
+                                        </label>
+                                    </div>
+                                </div>
+                                {% comment %} <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Save projects on export</strong>
+                                        <label>
+                                            ${data.save_projects_on_export}
+                                        </label>
+                                    </div>
+                                </div> {% endcomment %}
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Notifications permission</strong>
+                                        <label>
+                                            ${data.notifications_permission}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>InApp notifications permission</strong>
+                                        <label>
+                                            ${data.inApp_notifications_permission}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Photo library permission</strong>
+                                        <label>
+                                            ${data.photo_library_permission}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Digital riyals rewards</strong>
+                                        <label>
+                                            ${data.digital_riyals_rewards}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Enable touch</strong>
+                                        <label>
+                                            ${data.enable_touch}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>App theme</strong>
+                                        <label>
+                                            ${data.app_theme}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Always crop</strong>
+                                        <label>
+                                            ${data.always_crop}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Signature</strong>
+                                        <div class="avtar-profile">
+                                            <img src="/media/${data.signature}" style="width: 40%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            `)
+                    $(".modal-footer").append(`
+                        <button type="button" id="editbtn" class="btn btn-success">
+                            <a class="editbtn" href="/admin_site/PreferencesEdit/user_preferences ${profileresult.res.pk}">Edit</a>
+                        </button>
+                    `);
+                    $("#Modal").modal('show');
+                }
+            })
+        })
+    </script>
+
+    {% comment %} refresh and close view modal {% endcomment %}
+    <script>
+        $(document).on('click', '#closebtn', function () {
+            $('#Modal').modal('hide');
+        })
+        $("#Modal").on("hidden.bs.modal", function () {
+            $("#largeModalLabel").html("");
+            $(".modalbody").html("");
+            $(".modal-footer").html(`<button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                    </button>`);
+        });
+    </script>
+
+    {% comment %} sorting {% endcomment %}
+    <script>
+        $('#data-table th.sortit').click(function () {
+            var table = $(this).parents('table').eq(0)
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        
+            this.asc = !this.asc
+            if (this.asc == true) {
+              $(this).children('span').children('.sort-order').addClass('upOrder')
+              $(this).children('span').children('.sort-order').removeClass('downOrder')
+        
+            } else {
+              $(this).children('span').children('.sort-order').addClass('downOrder')
+              $(this).children('span').children('.sort-order').removeClass('upOrder')
+        
+            }
+            if (!this.asc) { rows = rows.reverse() }
+            for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+          })
+          function comparer(index) {
+            return function (a, b) {
+              var valA = getCellValue(a, index), valB = getCellValue(b, index)
+              return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+            }
+          }
+          function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
+    </script>
+
+    {% comment %} searchbar backend {% endcomment %}
+    <script>
+        function search(ele) {
+            if(event.key === 'Enter') {
+                event.preventDefault()
+                window.location.href = "{% url 'user_preference' %}?search="+ele.value;  
+            }
+        }
+    </script>
+
+
+{% endblock scripts %}

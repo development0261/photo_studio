@@ -1,0 +1,219 @@
+{% extends 'admin_site/base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'assets/css/profile_edit.css' %}">
+{% endblock %}
+{% block content %}
+<div class="edit_form">
+    <div class="edit_form_title">
+        <h3>Edit Form</h3>
+    </div>
+    <div class="form_body">
+        <form method="post" name="form" onsubmit="return validateForm()" enctype='multipart/form-data'>
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    {% for row in result %}
+                    <input type="hidden" id="username" name="username" value="{{ row.username }}">
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Name</strong>
+                            <div class="name">
+                                <input type="text" name="name" value="{{ row.name }}">
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %} <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Email</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="email" value="{{ row.email }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div> {% endcomment %}
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Mobile</strong>
+                            <div class="name">
+                                <input type="text" name="mobile" value="{{ row.mobile }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Gender</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="gender" value="{{ row.gender }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Profile Image</strong>
+                            <div class="name">
+                                <label id="edit_img">
+                                    {% if row.profile_image %}
+                                        Currently : <a href="/media/{{ row.profile_image }}">{{ row.profile_image }}</a>
+                                        <input type="checkbox" id="profile_image_check" name="profile_image_check">
+                                        <label class='profile_image_check' for="profile_image_check">Clear</label>
+                                        <br>
+                                    {% endif %}
+                                    Change: <input type="file" name="profile_img">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Date Of Birth</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" id="dob" name="dob" value="{{ row.dob }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>City</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="city" value="{{ row.city }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Country</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="country" value="{{ row.country }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Latitude</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="lat" value="{{ row.lat }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Longitude</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="long" value="{{ row.long }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Snap Id</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="snap" value="{{ row.snap }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Facebook Id</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="fb" value="{{ row.fb }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Instagram Id</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="insta" value="{{ row.insta }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Website</strong>
+                            <div class="name">
+                                <label>
+                                    <input type="text" name="website" value="{{ row.website }}">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Avatar</strong>
+                            <div class="name">
+                                <label id="edit_img">
+                                    {% if row.avatar %}
+                                        Currently : <a href="/media/{{ row.avatar }}">{{ row.avatar }}</a>
+                                        <input type="checkbox" id="avatar_check" name="avatar_check">
+                                        <label class='avatar_check' for="avatar_check">Clear</label>
+                                        <br>
+                                    {% endif %}
+                                    Change: <input type="file" name="avatar">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="profile_field">
+                            <strong>Bitmoji</strong>
+                            <div class="name">
+                                <label id="edit_img">
+                                    {% if row.bitmoji %}
+                                        Currently : <a href="/media/{{ row.bitmoji }}">{{ row.bitmoji }}</a>
+                                        <input type="checkbox" id="bitmoji_check" name="bitmoji_check">
+                                        <label class='bitmoji_check' for="bitmoji_check">Clear</label>
+                                        <br>
+                                    {% endif %}
+                                    Change: <input type="file" name="bitmoji">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="btns">
+                <input type="submit" class="btn-primary" value="Submit">
+                <button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                    <a href="{% url 'Profile' %}">Cancel</a>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    function validateForm() {
+        let dob = document.getElementById('dob').value;
+        var datePattern = /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
+        if (!dob.match(datePattern)) {
+            alert("Please enter Date of birth in yyyy-mm-dd format");
+            $('#dob').css({'border' : '1px solid red'});
+            $('#dob').focus();
+            return false;
+        }
+    }
+</script>
+{% endblock scripts %}

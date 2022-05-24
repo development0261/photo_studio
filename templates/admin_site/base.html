@@ -1,0 +1,75 @@
+{% load static %}
+<!doctype html>
+<html lang="en" dir="ltr">
+
+<head>
+
+    <!-- META DATA -->
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- <meta name="description" content="Sash – Django Bootstrap 5 Admin & Dashboard Template">
+    <meta name="author" content="Spruko Technologies Private Limited">
+    <meta name="keywords" content="admin dashboard bootstrap 5, best admin panel template, bootstrap 5 admin panel, bootstrap 5 admin, cool admin template, django admin panel, django admin template, django admin, django dashboard template, django dashboard, django framework, django, modern admin template, simple dashboard bootstrap, themeforest admin template"> -->
+
+    <!-- title -->
+    <title>Admin Site</title>
+
+    {% include 'admin_site/layouts/styles.html' %}
+    {% block styles %} {% endblock %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+</head>
+
+<body class="app sidebar-mini ltr">
+
+    <!-- Switcher-->
+    {% include 'admin_site/layouts/switcher.html' %}
+    <!-- Switcher-->
+
+    <!-- global-loader -->
+    <div id="global-loader">
+        <img src="{% static 'assets/images/loader.svg' %}" class="loader-img" alt="Loader">
+    </div>
+    <!-- global-loader closed -->
+
+    <!-- page -->
+    <div class="page">
+        <div class="page-main">
+
+            {% include 'admin_site/layouts/app-header.html' %}
+
+            {% include 'admin_site/layouts/app-sidebar.html' %}
+
+            <!--app-content open-->
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+
+                    <!-- container -->
+                    <div class="main-container container-fluid">
+
+                        {% block content %} {% endblock %}
+
+                    </div>
+                    <!-- container-closed -->
+                </div>
+            </div>
+            <!--app-content closed-->
+        </div>
+        <!-- page-main closed -->
+
+        {% include 'admin_site/layouts/sidebar-right.html' %}
+
+        {% include 'admin_site/layouts/modal.html' %}
+        {% block modal %} {% endblock %}
+
+        {% include 'admin_site/layouts/footer.html' %}
+
+    </div>
+
+    {% include 'admin_site/layouts/scripts.html' %}
+    {% block scripts %} {% endblock %}
+
+</body>
+
+</html>

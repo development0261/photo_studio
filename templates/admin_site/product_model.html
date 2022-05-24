@@ -1,0 +1,443 @@
+{% extends 'admin_site/base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'assets/css/product_model.css' %}">
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">Products</h3>
+                <div class="main-header-center ms-3 d-none d-lg-block">
+                    <input id='searchbar' class="form-control" placeholder="Search for results..." type="search" {% if request.GET.search %} value="{{request.GET.search}}" {% endif %} onkeydown="search(this)"/>
+                </div>
+            </div>
+            <div class="card-body pt-4">
+                <div class="grid-margin">
+                    <div class="">
+                        <div class="panel panel-primary">
+                            <div class="panel-body tabs-menu-body border-0 pt-0">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab5">
+                                        <div class="table-responsive">
+                                            <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                                                <thead class="border-top">
+                                                    <tr>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            product id</th>
+                                                        <th class="bg-transparent border-bottom-0 sortit">
+                                                            <span style="display:flex">product
+                                                                <div class="sort-order ml-2">
+                                                                  <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            product Promo</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            promo Price</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            annaul Sub Product</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            annaul Sub</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            monthly Sub Product</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            monthly Sub</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            locale Id</th>
+                                                        <th class="bg-transparent border-bottom-0">
+                                                            Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="table_body">
+                                                    {% for row in total_products %}
+                                                    <tr class="border-bottom">
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.productID}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold product_view" id="Product - {{row.PID}}">
+                                                                      {{row.product}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                     {{row.productPromo}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                      {{row.promoPrice}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.annaulSubProd}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.annaulSub}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.monthlySubProd}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.monthlySub}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex">
+                                                                <div class="mt-0 mt-sm-2 d-block">
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">
+                                                                        {{row.localeId}}</h6>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="g-2">
+                                                                <a href="/admin_site/EditProduct/product {{row.PID}}" class="btn text-primary btn-sm"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-original-title="Edit"><span
+                                                                        class="fe fe-edit fs-14"></span></a>
+                                                                <a class="btn text-danger btn-sm"
+                                                                    data-bs-toggle="tooltip"
+                                                                    data-bs-original-title="Delete"><span
+                                                                    id="product {{row.PID}}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination_div">
+                                            <div class="row align-items-center">
+                                                <!--show entries-->
+                                                <div class="col-lg-6">
+                                                    <div class="show_entries">
+                                                        <label class="m-0 d-flex align-items-center">Show 
+                                                            <div class="table_length_outer mx-2">
+                                                                <select id="table_length" onchange="location = this.value;">
+                                                                    <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=10  {% else %} {{ request.path }}?show=10 {% endif %}" {% if request.GET.show == '10' %} selected {% endif %}>10</option>
+                                                                    <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=25  {% else %} {{ request.path }}?show=25 {% endif %}" {% if request.GET.show == '25' %} selected {% endif %}>25</option>
+                                                                    <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=50  {% else %} {{ request.path }}?show=50 {% endif %}" {% if request.GET.show == '50' %} selected {% endif %}>50</option>
+                                                                    <option value="{% if 'page' in request.GET %} {{ request.path }}?page={{request.GET.page}}&show=100  {% else %} {{ request.path }}?show=100 {% endif %}" {% if request.GET.show == '100' %} selected {% endif %}>100</option>
+                                                                </select>
+                                                            </div>
+                                                        entries</label>
+                                                    </div>
+                                                </div>
+                                                <!--end show entries-->
+                                                <!--Pagination-->
+                                                <div class="col-lg-6">
+                                                    <nav aria-label="Page navigation example">
+                                                        <ul class="pagination justify-content-center">
+                                                            {% if total_products.has_previous %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="
+                                                                    {% if 'show' in request.GET %}?page={{ total_products.previous_page_number }}&show={{request.GET.show}}  {% else %} ?page={{ total_products.previous_page_number }} {% endif %}
+                                                                    ">Previous</a>
+                                                                </li>
+                                                            {% else %}
+                                                                <li class="page-item disabled">
+                                                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Previous</a>
+                                                                </li>
+                                                            {% endif %}
+
+                                                            {% if total_products.number|add:'-2' > 1 %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="
+                                                                    {% if 'show' in request.GET %} ?page={{ total_products.number|add:'-3' }}&show={{request.GET.show}}  {% else %}  ?page={{ total_products.number|add:'-3' }} {% endif %}
+                                                                    ">&hellip;</a>
+                                                                </li>
+                                                            {% endif %}
+
+                                                            {% for i in total_products.paginator.page_range %}
+                                                                {% if total_products.number == i %}
+                                                                    <li class="page-item active" aria-current="page">
+                                                                        <span class="page-link">
+                                                                            {{ i }}
+                                                                            <span class="sr-only">
+                                                                                (current)
+                                                                            </span>
+                                                                        </span>
+                                                                    </li>
+                                                                {% elif i > total_products.number|add:'-3' and i < total_products.number|add:'3' %}
+                                                                    <li class="page-item">
+                                                                        <a class="page-link" href="
+                                                                        {% if 'show' in request.GET %}?page={{ i }}&show={{request.GET.show}}  {% else %} ?page={{ i }} {% endif %}
+                                                                        ">{{ i }}</a>
+                                                                    </li>
+                                                                {% endif %}
+                                                            {% endfor %}
+
+                                                            {% if total_products.paginator.num_pages > total_products.number|add:'3' %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="
+                                                                    {% if 'show' in request.GET %} ?page={{ total_products.number|add:'3' }}&show={{request.GET.show}}  {% else %}  ?page={{ total_products.number|add:'3' }} {% endif %}
+                                                                    
+                                                                ">&hellip;</a>
+                                                                </li>
+                                                            {% endif %}
+
+                                                            {% if total_products.has_next %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="
+                                                                    {% if 'show' in request.GET %}?page={{ total_products.next_page_number }}&show={{request.GET.show}}  {% else %} ?page={{ total_products.next_page_number }} {% endif %}
+                                                                    ">Next</a>
+                                                                </li>
+                                                            {% else %}
+                                                                <li class="page-item disabled">
+                                                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Next</a>
+                                                                </li>
+                                                            {% endif %}
+                                                        </ul>
+                                                    </nav>
+                                                </div>
+                                                <!--end of Pagination-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="Modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="largeModalLabel">
+                </h5>
+            </div>
+            <div class="modalbody main-profile-modal-wrp">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+    import swal from 'sweetalert2';
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
+    
+    {% comment %} delete data {% endcomment %}
+    <script>
+        $(".delete_class").click(function () {
+            delete_id = $(this).attr('id')
+
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this Account!",
+                icon: "warning",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Delete',
+                denyButtonText: `Don't save`,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    window.location.href = "/admin_site/DeleteProduct/" + delete_id
+                }
+            }).catch(swal.noop);
+        });
+
+    </script>
+
+    {% comment %} view modal {% endcomment %}
+    <script>
+        $('.product_view').on('click', function () {
+            id = $(this).attr('id');
+            $.ajax({
+                type: "GET",
+                url: `/admin_site/Product/${id}`,
+                success: function (profileresult) {
+                    var data = profileresult.res.fields;
+                    $("#largeModalLabel").append(`Product`)
+                    $(".modalbody").append(`
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>ProductID</strong>
+                                    <label>
+                                        ${data.productID}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>Product</strong>
+                                    <label>
+                                        ${data.product}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>ProductPromo</strong>
+                                    <label>
+                                        ${data.productPromo}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>PromoPrice</strong>
+                                    <label>
+                                        ${data.promoPrice}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>AnnaulSubProd</strong>
+                                    <label>
+                                        ${data.annaulSubProd}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>AnnaulSub</strong>
+                                    <label>
+                                        ${data.annaulSub}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>MonthlySubProd</strong>
+                                    <label>
+                                        ${data.monthlySubProd}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>MonthlySub</strong>
+                                    <label>
+                                        ${data.monthlySub}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile-field">
+                                    <strong>LocaleId</strong>
+                                    <label>
+                                        ${data.localeId}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                    $(".modal-footer").append(`
+                        <button type="button" id="editbtn" class="btn btn-success">
+                            <a class="editbtn" href="/admin_site/EditProduct/product ${profileresult.res.pk}">Edit</a>
+                        </button>
+                    `);
+                    $("#Modal").modal('show');
+                }
+            })
+        })
+    </script>
+
+    {% comment %} refresh and close view modal {% endcomment %}
+    <script>
+        $(document).on('click', '#closebtn', function () {
+            $('#Modal').modal('hide');
+        })
+        $("#Modal").on("hidden.bs.modal", function () {
+            $("#largeModalLabel").html("");
+            $(".modalbody").html("");
+            $(".modal-footer").html(`<button type="button" id="closebtn" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                    </button>`);
+        });
+    </script>
+    
+    {% comment %} sorting {% endcomment %}
+    <script>
+        $('#data-table th.sortit').click(function () {
+            var table = $(this).parents('table').eq(0)
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        
+            this.asc = !this.asc
+            if (this.asc == true) {
+              $(this).children('span').children('.sort-order').addClass('upOrder')
+              $(this).children('span').children('.sort-order').removeClass('downOrder')
+        
+            } else {
+              $(this).children('span').children('.sort-order').addClass('downOrder')
+              $(this).children('span').children('.sort-order').removeClass('upOrder')
+        
+            }
+            if (!this.asc) { rows = rows.reverse() }
+            for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+          })
+          function comparer(index) {
+            return function (a, b) {
+              var valA = getCellValue(a, index), valB = getCellValue(b, index)
+              return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+            }
+          }
+          function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
+    </script>
+
+    {% comment %} searchbar backend {% endcomment %}
+    <script>
+        function search(ele) {
+            if(event.key === 'Enter') {
+                event.preventDefault()
+                window.location.href = "{% url 'Product' %}?search="+ele.value;  
+            }
+        }
+    </script>
+
+{% endblock scripts %}

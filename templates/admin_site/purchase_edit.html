@@ -1,0 +1,127 @@
+{% extends 'admin_site/base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'assets/css/purchase_edit.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="edit_form">
+        <div class="edit_form_title">
+            <h3>Edit Form</h3>
+        </div>
+        <div class="form_body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        {% for row in result %}
+                            <input type="hidden" id="username" name="username" value="{{ row.pk }}">
+                            <div class="col-lg-6">
+                                <div class="profile_field">
+                                    <strong>status</strong>
+                                    <div class="name">
+                                        <input type="text" name="pstatus" value="{{ row.fields.pstatus }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile_field">
+                                    <strong>Auto renew status</strong>
+                                    <div class="name">
+                                        <label>
+                                            <input type="checkbox" id="checkbox" name="auto_renew_status" {% if row.fields.auto_renew_status %}checked{% endif %}>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile_field">
+                                    <strong>Is in billing retry period</strong>
+                                    <div class="name">
+                                        <label>
+                                            <input type="checkbox" id="checkbox" name="is_in_billing_retry_period" {% if row.fields.is_in_billing_retry_period %}checked{% endif %}>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile_field">
+                                    <strong>Is in intro offer period</strong>
+                                    <div class="name">
+                                        <label>
+                                            <input type="checkbox" id="checkbox" name="is_in_intro_offer_period" {% if row.fields.is_in_intro_offer_period %}checked{% endif %}>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile_field">
+                                    <strong>Is trial period</strong>
+                                    <div class="name">
+                                        <label>
+                                            <input type="checkbox" id="checkbox" name="is_trial_period" {% if row.fields.is_trial_period %}checked{% endif %}>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile_field">
+                                    <strong>Start date</strong>
+                                    <div class="name">
+                                        <input type="text" id="start_date" name="start_date" value="{{ row.fields.start_date }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile_field">
+                                    <strong>End date</strong>
+                                    <div class="name">
+                                        <input type="text" id="end_date" name="end_date" value="{{ row.fields.end_date }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="profile_field">
+                                    <strong>Subscription type</strong>
+                                    <div class="name">
+                                        <input type="text" name="subscription_type" value="{{ row.fields.subscription_type }}">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="btns">
+                    <input type="submit" class="btn-primary" value="Submit">
+                    <button type="button"
+                            id="closebtn"
+                            class="btn btn-secondary"
+                            data-dismiss="modal">
+                        <a href="{% url 'Purchase' %}">Cancel</a>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+<script>
+    function validateForm() {
+        let start_date = document.getElementById('start_date').value;
+        let end_date = document.getElementById('end_date').value;
+        var datePattern = /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
+        if (!start_date.match(datePattern)) {
+            alert("Please enter Start date in yyyy-mm-dd format");
+            $('#start_date').css({'border' : '1px solid red'});
+            $('#start_date').focus();
+            return false;
+        }
+
+        if (!end_date.match(datePattern)) {
+            alert("Please enter End date in yyyy-mm-dd format");
+            $('#end_date').css({'border' : '1px solid red'});
+            $('#end_date').focus();
+            return false;
+        }
+    }
+</script>
+{% endblock scripts %}
