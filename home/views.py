@@ -79,8 +79,8 @@ def register(request):
         name = request.POST['name']
         mobile = request.POST['mobile']
         gender = request.POST['gender']
-        first_name = request.POST.get('firstname')
-        last_name = request.POST.get('lastname')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
 
         if 'profile_image' in request.FILES:
             profile_image = request.FILES['profile_image']
