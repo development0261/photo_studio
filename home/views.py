@@ -1,5 +1,6 @@
 
 from django.contrib.auth import get_user_model, login, logout, authenticate
+from django.shortcuts import render
 from NewProject.settings import TIME_ZONE
 from .models import Tag, custom_user
 from .models import Profile, user_preference, application_data, Purchase, Product
@@ -39,6 +40,9 @@ users_obj = custom_user.objects.filter(is_active=False)
 for row in users_obj:
     if row.delete_date + timedelta(days=30):
         users_obj.delete()
+        
+def main_index(request):
+    return render(request,"main_index.html")
 
 # for login
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
