@@ -1,6 +1,8 @@
 from datetime import date, datetime, timedelta
 import copy
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
+import admin_site
 from home.models import Product, Profile, Purchase, Tag, application_data, custom_user, user_preference
 from home.models import custom_user
 from django.apps import apps
@@ -577,7 +579,10 @@ def user_edit(request, para):
             active = request.POST.get('active_user')
             staff = request.POST.get('staff_user')
             
-
+            if custom_user.objects.filter(email=email):
+                messages.error(request, 'Email already Exists!!!')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            
             obj = custom_user.objects.get(username=username)
             obj.first_name = firstname
             obj.last_name = lastname
@@ -615,6 +620,10 @@ def admin_edit(request, para):
             firstname = request.POST['firstname']
             lastname = request.POST['lastname']
             email = request.POST['email']
+            
+            if custom_user.objects.filter(email=email):
+                messages.error(request, 'Email already Exists!!!')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             obj = custom_user.objects.get(username=username)
             obj.first_name = firstname
@@ -968,9 +977,21 @@ def purchase_edit(request, para):
             is_in_intro_offer_period = request.POST.get(
                 'is_in_intro_offer_period')
             is_trial_period = request.POST.get('is_trial_period')
-            start_date = request.POST['start_date']
-            end_date = request.POST['end_date']
-            subscription_type = request.POST['subscription_type']
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            subscription_type = request.POST.get('subscription_type')
+            
+            try:
+                datetime.strptime(start_date, '%Y-%m-%d')
+            except ValueError:
+                messages.error(request, 'Start date in incorrect date format. It should be YYYY-MM-DD.')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            
+            try:
+                datetime.strptime(end_date, '%Y-%m-%d')
+            except ValueError:
+                messages.error(request, 'End date in incorrect date format. It should be YYYY-MM-DD.')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             obj = Purchase.objects.get(pid=pk)
             obj.pstatus = pstatus
@@ -998,6 +1019,9 @@ def purchase_edit(request, para):
                 obj.start_date = start_date
             if end_date != str(None):
                 obj.end_date = end_date
+            obj.subscription_type = subscription_type
+            obj.start_date = start_date
+            obj.end_date = end_date
             obj.subscription_type = subscription_type
             obj.save()
 
@@ -1117,7 +1141,7 @@ def send_link(request):
         try:
             obj = custom_user.objects.get(email=email)
             # Link = 'http://127.0.0.1:8001/admin_site/forgot_password/'
-            Link = 'http://185.146.21.235:7800/admin_site/forgot_password/'
+            Link = 'https://kitaba.me/admin_site/forgot_password/'
             characters = string.ascii_letters + string.digits + punctuation
             token = ''.join(random.choice(characters) for i in range(50))
             encrypted_token = base64.b64encode(

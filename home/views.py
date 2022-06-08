@@ -185,6 +185,9 @@ def social_media_registration(request):
             email = request.POST['email']
         else:
             email = social_account
+            
+        # try:
+        #     custom_user.objects.get(email=)
 
         if social_token:
             if not custom_user.objects.filter(social_token=social_token).exists():
@@ -234,7 +237,7 @@ def send_link(request):
                 recipient_list.append(user_with_email.email)
 
                 # Link = 'http://127.0.0.1:8001/home/reset-password'
-                Link = 'http://185.146.21.235:7800/home/reset-password'
+                Link = 'https://kitaba.me/home/reset-password'
                 characters = string.ascii_letters + string.digits
                 token = ''.join(random.choice(characters) for i in range(50))
                 user = custom_user.objects.get(email=email)
@@ -269,7 +272,7 @@ def send_link(request):
                     recipient_list.append(user_with_email.email)
 
                     # Link = 'http://127.0.0.1:8001/home/reset-password'
-                    Link = 'http://185.146.21.235:7800/home/reset-password'
+                    Link = 'https://kitaba.me/home/reset-password'
                     characters = string.ascii_letters + string.digits
                     token = ''.join(random.choice(characters) for i in range(50))
                     user = custom_user.objects.get(email=email)
@@ -397,6 +400,11 @@ def profile(request, para=None):
         facebook = request.POST.get('fb')
         instagram = request.POST.get('insta')
         website = request.POST.get('website')
+        
+        try:
+            datetime.strptime(date_of_Birth, '%Y-%m-%d')
+        except ValueError:
+            return Response({"Error": "date_of_Birth in incorrect date format. It should be YYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
 
         if 'profile_image' in request.FILES:
             profile_image = request.FILES['profile_image']
@@ -590,7 +598,7 @@ def preferences(request):
             return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 # add and edit application data
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def app_data(request):
     if request.method == "POST":
@@ -616,12 +624,20 @@ def app_data(request):
         total_ads_served = request.POST['total_ads_served']
         Registered_user = request.POST['Registered_user']
         Push_Notification_token = request.POST['Push_Notification_token']
+        
+        try:
+            datetime.strptime(Purchase_date, '%Y-%m-%d')
+        except ValueError:
+            return Response({"Error": "Purchase_date in incorrect date format. It should be YYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            print(request.user)
+            datetime.strptime(App_Last_Opened, '%Y-%m-%d')
+        except ValueError:
+            return Response({"Error": "App_Last_Opened in incorrect date format. It should be YYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
             user = custom_user.objects.get(username=request.user)
             try:
-                app_data_obj = application_data.objects.get(username=user.id)
+                app_data_obj = application_data.objects.get(username=user.id) 
                 app_data_obj.UID = UID
                 app_data_obj.inApp_Products = inApp_Products
                 app_data_obj.Purchase_date = Purchase_date
@@ -647,6 +663,8 @@ def app_data(request):
                 app_data_obj.save()
                 return Response({"Success": "Details Updated."}, status=status.HTTP_200_OK)
             except Exception as e:
+                if application_data.objects.get(UID = UID):
+                    return Response({"Error": "UID already Exists!!!"}, status=status.HTTP_400_BAD_REQUEST)
                 data = application_data(username=user,
                                         UID=UID,
                                         inApp_Products=inApp_Products,
@@ -672,7 +690,7 @@ def app_data(request):
                                         Push_Notification_token=Push_Notification_token)
                 data.save()
                 return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
-        except:
+        except Exception as e:
             return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
             
 # check whether email is available or not
@@ -707,7 +725,20 @@ def purchase_history(request):
         is_in_billing_retry_period = request.POST['is_in_billing_retry_period']
         is_in_intro_offer_period = request.POST['is_in_intro_offer_period']
         is_trial_period = request.POST['is_trial_period']
-
+        start_date = request.POST['start_date']
+        end_date = request.POST['end_date']
+        subscription_type = request.POST['subscription_type']
+        
+        try:
+            datetime.strptime(start_date, '%Y-%m-%d')
+        except ValueError:
+            return Response({"Error": "start_date in incorrect date format. It should be YYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            datetime.strptime(end_date, '%Y-%m-%d')
+        except ValueError:
+            return Response({"Error": "end_date in incorrect date format. It should be YYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
+        
         try:
             user = custom_user.objects.get(username=request.user)
             try:
@@ -717,6 +748,9 @@ def purchase_history(request):
                 purchase_obj.is_in_billing_retry_period = is_in_billing_retry_period
                 purchase_obj.is_in_intro_offer_period = is_in_intro_offer_period
                 purchase_obj.is_trial_period = is_trial_period
+                purchase_obj.start_date = start_date
+                purchase_obj.end_date = end_date
+                purchase_obj.subscription_type = subscription_type
                 purchase_obj.save()
                 return Response({"Success": "Data Updated"}, status=status.HTTP_200_OK)
             except Exception as e:
@@ -726,11 +760,14 @@ def purchase_history(request):
                     auto_renew_status=auto_renew_status,
                     is_in_billing_retry_period=is_in_billing_retry_period,
                     is_in_intro_offer_period=is_in_intro_offer_period,
-                    is_trial_period=is_trial_period
+                    is_trial_period=is_trial_period,
+                    start_date=start_date,
+                    end_date=end_date,
+                    subscription_type=subscription_type
                 )
                 obj.save()
                 return Response({"Success": "Data Added"}, status=status.HTTP_200_OK)
-        except:
+        except Exception as e:
             return Response({"Error": "User Not Exist!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 # delete account

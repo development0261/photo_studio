@@ -9,7 +9,7 @@
         <h3>Edit Form</h3>
     </div>
     <div class="form_body">
-        <form method="post">
+        <form method="post" onsubmit="return validateForm()">
             {% csrf_token %}
             <div class="row">
                 <div class="col-lg-12 col-sm-12">
@@ -37,7 +37,7 @@
                         <div class="profile_field">
                             <strong>Purchase_date</strong>
                             <div class="datetime">
-                                <input type="text" name="Purchase_date" value="{{ row.Purchase_date }}">
+                                <input type="text" id="Purchase_date" name="Purchase_date" value="{{ row.Purchase_date }}">
                                 {% comment %} currently : <input type="text" name="Purchase_date" value="{{ row.Purchase_date }}"><br>
                                 change : <input type="datetime-local" name="Purchase_date_change"> {% endcomment %}
                             </div>
@@ -148,7 +148,7 @@
                             <strong>App_Last_Opened</strong>
                             <div class="name">
                                 <label>
-                                    <input type="text" name="inApp_Products" value="{{ row.App_Last_Opened }}">
+                                    <input type="text" id="App_Last_Opened" name="inApp_Products" value="{{ row.App_Last_Opened }}">
 
                                     {% comment %} currently : <input type="text" name="App_Last_Opened" value="{{ row.App_Last_Opened }}"><br>
                                     change : <input type="datetime-local" name="App_Last_Opened_change"> {% endcomment %}
@@ -251,3 +251,26 @@
     </div>
 </div>
 {% endblock %}
+{% block scripts %}
+<script>
+    function validateForm() {
+        let Purchase_date = document.getElementById('Purchase_date').value;
+        var datePattern = /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
+        if (!Purchase_date.match(datePattern)) {
+            alert("Please enter Purchase_date in yyyy-mm-dd format");
+            $('#Purchase_date').css({'border' : '1px solid red'});
+            $('#Purchase_date').focus();
+            return false;
+        };
+
+        let App_Last_Opened = document.getElementById('App_Last_Opened').value;
+        var datePattern = /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
+        if (!App_Last_Opened.match(datePattern)) {
+            alert("Please enter App_Last_Opened in yyyy-mm-dd format");
+            $('#App_Last_Opened').css({'border' : '1px solid red'});
+            $('#App_Last_Opened').focus();
+            return false;
+        };
+    }
+</script>
+{% endblock scripts %}

@@ -64,7 +64,7 @@ class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'email', 'first_name',
                     'last_name', "password", 'is_staff', 'delete_date', 'confirm_token')
     list_filter = (RegisterFilter, RecentlyRegisterFilter)
-    search_list = ('username', 'email', 'first_name', 'last_name')
+    search_list = ('username', 'email', 'first_name', 'last_name') 
 
 
 class AgeFilter(SimpleListFilter):
