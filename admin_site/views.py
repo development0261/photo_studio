@@ -1156,7 +1156,7 @@ def send_link(request):
             plain_message = strip_tags(html_message)
             from_email = 'From <no-reply@3rabapp.com>'
             to = email
-
+            
             mail.send_mail(subject, plain_message, from_email,
                            [to], html_message=html_message)
             messages.success(request, "Please check your email box")
@@ -1171,7 +1171,7 @@ def forgot_password(request,token):
         new_password = request.POST['new_password']
         confirm_password = request.POST['confirm_password']
         decrypted_token = base64.b64decode(token).decode("ascii")
-
+        
         try:
             obj = custom_user.objects.get(confirm_token = decrypted_token)
             pat = re.compile(reg)

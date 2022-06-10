@@ -241,7 +241,8 @@ def send_link(request):
                 recipient_list.append(user_with_email.email)
 
                 # Link = 'http://127.0.0.1:8001/home/reset-password'
-                Link = 'https://kitaba.me/home/reset-password'
+                # Link = 'https://kitaba.me/home/reset-password'
+                Link = "https://kitapa.app/reset/#/reset-password"                
                 characters = string.ascii_letters + string.digits
                 token = ''.join(random.choice(characters) for i in range(50))
                 user = custom_user.objects.get(email=email)
@@ -276,7 +277,8 @@ def send_link(request):
                     recipient_list.append(user_with_email.email)
 
                     # Link = 'http://127.0.0.1:8001/home/reset-password'
-                    Link = 'https://kitaba.me/home/reset-password'
+                    # Link = 'https://kitaba.me/home/reset-password'
+                    Link = "https://kitapa.app/reset/#/reset-password"
                     characters = string.ascii_letters + string.digits
                     token = ''.join(random.choice(characters) for i in range(50))
                     user = custom_user.objects.get(email=email)
