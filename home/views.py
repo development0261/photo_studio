@@ -361,7 +361,7 @@ def reset_password(request):
                     else:
                         return Response({"Error": "Please check your Token!!!"}, status=status.HTTP_401_UNAUTHORIZED)
                 else:
-                    return Response({"Error": "You have changed your password once through your last token!"}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"Error": "You have changed your password once through your this token!"}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response({"Error": "Please check your Token!!!"}, status=status.HTTP_401_UNAUTHORIZED)
         except:
