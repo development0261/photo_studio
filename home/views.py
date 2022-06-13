@@ -240,7 +240,7 @@ def send_link(request):
                 user_with_email = custom_user.objects.get(email=email)
                 recipient_list.append(user_with_email.email)
 
-                # Link = 'http://127.0.0.1:8001/home/reset-password'
+                # Link = 'http://127.0.0.1:8000/home/reset-password'
                 # Link = 'https://kitaba.me/home/reset-password'
                 Link = "https://kitapa.app/reset/#/reset-password"                
                 characters = string.ascii_letters + string.digits
@@ -276,7 +276,7 @@ def send_link(request):
                     user_with_email = custom_user.objects.get(email=email)
                     recipient_list.append(user_with_email.email)
 
-                    # Link = 'http://127.0.0.1:8001/home/reset-password'
+                    # Link = 'http://127.0.0.1:8000/home/reset-password'
                     # Link = 'https://kitaba.me/home/reset-password'
                     Link = "https://kitapa.app/reset/#/reset-password"
                     characters = string.ascii_letters + string.digits
@@ -321,41 +321,54 @@ def reset_password(request):
         new_pass = request.GET['new_pass']
         confirm_pass = request.GET['confirm_pass']
 
-        token_obj = custom_user.objects.all()
-        for row in token_obj:
-            if row.confirm_token != None:
-                if len(row.confirm_token) > 7:
-                    profile_obj = custom_user.objects.get(email=email).profile
-                    if (profile_obj.expiration_date + timedelta(days=1))>pytz.utc.localize(datetime.now()):
-                        if custom_user.objects.filter(email=email).exists():
-                            if custom_user.objects.filter(confirm_token=token).exists():
-                                reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
-                                pat = re.compile(reg)
-                                mat = re.search(pat, new_pass)
-                                if mat:
-                                    if new_pass == confirm_pass:
-                                        obj1 = custom_user.objects.get(
-                                            confirm_token=token)
-                                        obj1.set_password(new_pass)
-                                        obj1.save()
-                                        try:
-                                            obj2 = Profile.objects.get(username=obj1.id)
-                                            obj2.pass_forgot = datetime.now()
-                                            obj2.save()
-                                        except:
-                                            profile_obj = Profile.objects.create(username=obj1, pass_forgot=datetime.now())
-                                        return Response({"Success": "Password updated Successfully."}, status=status.HTTP_200_OK)
+        try:
+            token_obj = custom_user.objects.get(email=email)
+            if token_obj.confirm_token != None :
+                if token_obj.confirm_token!="token_expired":
+                    if len(token_obj.confirm_token) > 7:
+                        profile_obj = custom_user.objects.get(email=email).profile
+                        if (profile_obj.expiration_date + timedelta(days=1))>pytz.utc.localize(datetime.now()):
+                            if custom_user.objects.filter(email=email).exists():
+                                if custom_user.objects.filter(confirm_token=token).exists():
+                                    reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
+                                    pat = re.compile(reg)
+                                    mat = re.search(pat, new_pass)
+                                    if mat:
+                                        if new_pass == confirm_pass:
+                                            obj1 = custom_user.objects.get(
+                                                confirm_token=token)
+                                            obj1.set_password(new_pass)
+                                            obj1.save()
+                                            try:
+                                                obj2 = Profile.objects.get(username=obj1.id)
+                                                obj2.pass_forgot = datetime.now()
+                                                obj2.save()
+                                            except:
+                                                profile_obj = Profile.objects.create(username=obj1, pass_forgot=datetime.now())
+                                            obj1.confirm_token="token_expired"
+                                            obj1.save()
+                                            return Response({"Success": "Password updated Successfully."}, status=status.HTTP_200_OK)
+                                        else:
+                                            return Response({"Error": "New password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
                                     else:
-                                        return Response({"Error": "New password and confirm password doesnot matched."}, status=status.HTTP_400_BAD_REQUEST)
+                                        return Response({"Error": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                                 else:
-                                    return Response({"Error": "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
+                                    return Response({"Error": "Oops!! Please check your Token"}, status=status.HTTP_401_UNAUTHORIZED)
                             else:
-                                return Response({"Error": "Oops!! Please check your Token"}, status=status.HTTP_401_UNAUTHORIZED)
+                                return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
                         else:
-                            return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
+                            return Response({"Error": "Oops! Your Token is Expired!!!"}, status=status.HTTP_400_BAD_REQUEST)
                     else:
-                        return Response({"Error": "Oops! Your Token is Expired!!!"}, status=status.HTTP_400_BAD_REQUEST)
-
+                        return Response({"Error": "Please check your Token!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+                else:
+                    return Response({"Error": "You have changed your password once through your last token!"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({"Error": "Please check your Token!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+        except:
+            return Response({"Error": "User Not Exist with this email address"}, status=status.HTTP_401_UNAUTHORIZED)
+    else:
+        return Response({"Error": "Method Not Allowed!!!"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+                
 # update-password
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
