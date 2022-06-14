@@ -579,11 +579,13 @@ def user_edit(request, para):
             active = request.POST.get('active_user')
             staff = request.POST.get('staff_user')
             
-            if custom_user.objects.filter(email=email):
-                messages.error(request, 'Email already Exists!!!')
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-            
             obj = custom_user.objects.get(username=username)
+            
+            if obj.email != email:
+                if custom_user.objects.filter(email=email):
+                    messages.error(request, 'Email already Exists!!!')
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                        
             obj.first_name = firstname
             obj.last_name = lastname
             obj.email = email
