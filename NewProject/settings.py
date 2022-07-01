@@ -135,26 +135,26 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 #     }
 # }
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'rabappco_photoedit',
-#        'USER': 'rabappco_backend',
-#        'PASSWORD': 'photoedit@123',
-#        'HOST': '185.146.21.235',
-#        'PORT': '5432',
-#    }
-# }
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'photo_studiodb',
-       'USER': 'admin',
-       'PASSWORD': 'admin123',
-       'HOST': 'localhost',
-       'PORT': 5432,
+       'NAME': 'rabappco_photoedit',
+       'USER': 'rabappco_backend',
+       'PASSWORD': 'photoedit@123',
+       'HOST': '185.146.21.235',
+       'PORT': '5432',
    }
 }
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'photo_studiodb',
+#        'USER': 'admin',
+#        'PASSWORD': 'admin123',
+#        'HOST': 'localhost',
+#        'PORT': 5432,
+#    }
+# }
 
 # DATABASES = {
 #     'default': {
@@ -222,9 +222,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # abstract user
 AUTH_USER_MODEL = "home.custom_user"
 
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'mail.3rabapp.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'no-reply@3rabapp.com'
+# EMAIL_HOST_PASSWORD = 'vSl-rB~,_cFb'
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.3rabapp.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'no-reply@3rabapp.com'
-EMAIL_HOST_PASSWORD = 'vSl-rB~,_cFb'
+EMAIL_HOST_PASSWORD = 'Dqho?7Fa.+Ik'

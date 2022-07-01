@@ -58,6 +58,15 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
                 from django.contrib.auth.models import update_last_login
                 user_obj = authenticate(username=attrs['username'], password=attrs['password'])
                 update_last_login(None, user_obj)
+                try:
+                    profile = Profile.objects.create(username = user_obj)  
+                    profile = Profile.objects.filter(username = user_obj)
+                except:
+                    profile = Profile.objects.filter(username = user_obj)
+                
+                serializer_class = ProfileSerializer(profile, many=True)
+                for i,j in serializer_class.data[0].items():
+                    data[i]=j
                 return data
         else:
             return {"Error": "Account with this username is not exists"}
@@ -81,7 +90,7 @@ def register(request):
         email = request.POST['email']
         password = request.POST['password']
         name = request.POST['name']
-        mobile = request.POST['mobile']
+        mobile = request.POST.get('mobile')
         gender = request.POST['gender']
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
@@ -92,7 +101,7 @@ def register(request):
         if not custom_user.objects.filter(username=username).exists():
             if len(username) > 5:
                 if not custom_user.objects.filter(email=email).exists():
-                    if mobile is not None:
+                    if mobile != "" and mobile is not None:
                         if not Profile.objects.filter(mobile=mobile).exists() and len(mobile) > 0:
                             if(re.fullmatch(for_email, email)):
                                 pat = re.compile(reg)
@@ -189,9 +198,6 @@ def social_media_registration(request):
             email = request.POST['email']
         else:
             email = social_account
-            
-        # try:
-        #     custom_user.objects.get(email=)
 
         if social_token:
             if not custom_user.objects.filter(social_token=social_token).exists():
@@ -242,7 +248,7 @@ def send_link(request):
 
                 # Link = 'http://127.0.0.1:8000/home/reset-password'
                 # Link = 'https://kitaba.me/home/reset-password'
-                Link = "https://kitapa.app/reset/#/reset-password"                
+                Link = "https://kitapa.app/reset/#/reset-password"             
                 characters = string.ascii_letters + string.digits
                 token = ''.join(random.choice(characters) for i in range(50))
                 user = custom_user.objects.get(email=email)
@@ -259,8 +265,10 @@ def send_link(request):
                 html_message = render_to_string(
                     'mail_template.html', {'token': f'{Link}?token={token}&email={email}'})
                 plain_message = strip_tags(html_message)
-                from_email = 'From <no-reply@3rabapp.com>'
+                # from_email = 'From <no-reply@3rabapp.com>'
+                from_email = 'development0261@gmail.com'
                 to = recipient_list[0]  
+                print(to)
 
                 mail.send_mail(subject, plain_message, from_email,
                             [to], html_message=html_message)
@@ -682,7 +690,7 @@ def app_data(request):
                 app_data_obj.save()
                 return Response({"Success": "Details Updated."}, status=status.HTTP_200_OK)
             except Exception as e:
-                if application_data.objects.get(UID = UID):
+                if application_data.objects.filter(UID = UID).exists():
                     return Response({"Error": "UID already Exists!!!"}, status=status.HTTP_400_BAD_REQUEST)
                 data = application_data(username=user,
                                         UID=UID,

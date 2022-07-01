@@ -70,6 +70,7 @@ class SocialSerializer(serializers.ModelSerializer):
             "social_token":register.username.social_token,
             "social_account":register.username.social_account,
             "social_registration":register.username.social_registration,
+            "email":register.username.email,
         }
     class Meta:
         model = Profile
