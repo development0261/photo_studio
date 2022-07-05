@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@w-#n4j7!rj_u2-i55)q31#zcz8s6h4*xco@w&x*(z3z&szc@='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -135,26 +135,26 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'rabappco_photoedit',
-       'USER': 'rabappco_backend',
-       'PASSWORD': 'photoedit@123',
-       'HOST': '185.146.21.235',
-       'PORT': '5432',
-   }
-}
 # DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'photo_studiodb',
-#        'USER': 'admin',
-#        'PASSWORD': 'admin123',
-#        'HOST': 'localhost',
-#        'PORT': 5432,
+#        'NAME': 'rabappco_photoedit',
+#        'USER': 'rabappco_backend',
+#        'PASSWORD': 'photoedit@123',
+#        'HOST': '185.146.21.235',
+#        'PORT': '5432',
 #    }
 # }
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'photo_studiodb',
+       'USER': 'admin',
+       'PASSWORD': 'admin123',
+       'HOST': 'localhost',
+       'PORT': 5432,
+   }
+}
 
 # DATABASES = {
 #     'default': {
