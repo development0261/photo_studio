@@ -130,7 +130,10 @@ def register(request):
                                     else:
                                         img2 = ""
                                     serializer_class = RegistrationSerializer(pro_obj)
-                                    return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
+                                    headers = {
+                                        'Content-Type': 'application/json'
+                                    }
+                                    return Response({"Data": serializer_class.data}, headers=headers, status=status.HTTP_200_OK)
                                 else:
                                     return Response({"Error": "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."}, status=status.HTTP_400_BAD_REQUEST)
                             else:
