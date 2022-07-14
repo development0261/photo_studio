@@ -2,7 +2,7 @@
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.shortcuts import render
 from NewProject.settings import TIME_ZONE
-from .models import User
+from .models import custom_user
 # from .models import Profile, user_preference, application_data, Purchase, Product, Tag
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
