@@ -27,13 +27,13 @@ reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!
 for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 punctuation = "!#$%&()*+, -.:;<=>?@[\]^_`{|}~"
 
-# Restrict media image
-from django.views.static import serve
-from django.contrib.auth.decorators import login_required
-@login_required
-def protected_serve(request, path, document_root=None, show_indexes=False):
-    return serve(request, path, document_root, show_indexes)
-# end------------
+# # Restrict media image
+# from django.views.static import serve
+# from django.contrib.auth.decorators import login_required
+# @login_required
+# def protected_serve(request, path, document_root=None, show_indexes=False):
+#     return serve(request, path, document_root, show_indexes)
+# # end------------
 
 #check time after user request for delete account
 users_obj = custom_user.objects.filter(is_active=False)
