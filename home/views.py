@@ -2,7 +2,7 @@
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.shortcuts import render
 from NewProject.settings import TIME_ZONE
-from .models import custom_user
+from .models import User
 # from .models import Profile, user_preference, application_data, Purchase, Product, Tag
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -22,7 +22,7 @@ from django.contrib.auth.hashers import check_password
 import json
 
 
-custom_user = get_user_model()
+User = get_user_model()
 reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
 for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 punctuation = "!#$%&()*+, -.:;<=>?@[\]^_`{|}~"
@@ -35,11 +35,11 @@ punctuation = "!#$%&()*+, -.:;<=>?@[\]^_`{|}~"
 #     return serve(request, path, document_root, show_indexes)
 # # end------------
 
-#check time after user request for delete account
-users_obj = custom_user.objects.filter(is_active=False)
-for row in users_obj:
-    if row.delete_date + timedelta(days=30):
-        users_obj.delete()
+# #check time after user request for delete account
+# users_obj = User.objects.filter(is_active=False)
+# for row in users_obj:
+#     if row.delete_date + timedelta(days=30):
+#         users_obj.delete()
         
 def main_index(request):
     return render(request,"main_index.html")
@@ -47,8 +47,8 @@ def main_index(request):
 # for login
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
-        if custom_user.objects.filter(username=attrs['username']).exists():
-            if not check_password(attrs['password'], custom_user.objects.get(username=attrs['username']).password):
+        if User.objects.filter(username=attrs['username']).exists():
+            if not check_password(attrs['password'], User.objects.get(username=attrs['username']).password):
                 return {"Error": "Invalid Password"}
             else:
                 data = super().validate(attrs)
@@ -98,16 +98,16 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #         if 'profile_image' in request.FILES:
 #             profile_image = request.FILES['profile_image']
 
-#         if not custom_user.objects.filter(username=username).exists():
+#         if not User.objects.filter(username=username).exists():
 #             if len(username) > 5:
-#                 if not custom_user.objects.filter(email=email).exists():
+#                 if not User.objects.filter(email=email).exists():
 #                     if mobile != "" and mobile is not None:
 #                         if not Profile.objects.filter(mobile=mobile).exists() and len(mobile) > 0:
 #                             if(re.fullmatch(for_email, email)):
 #                                 pat = re.compile(reg)
 #                                 mat = re.search(pat, password)
 #                                 if mat:
-#                                     user = custom_user.objects.create_user(
+#                                     user = User.objects.create_user(
 #                                         username=username, password=password, email=email, first_name=first_name, last_name=last_name)
 #                                     user.save()
 #                                     data = Profile(
@@ -115,7 +115,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #                                     if 'profile_image' in request.FILES:
 #                                         data.profile_image = profile_image
 #                                     data.save()
-#                                     temp_obj = custom_user.objects.get(username=username)                                                           
+#                                     temp_obj = User.objects.get(username=username)                                                           
 #                                     pro_obj = Profile.objects.get(username=temp_obj)
 #                                     if pro_obj.profile_image:
 #                                         img = pro_obj.profile_image
@@ -145,7 +145,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #                             pat = re.compile(reg)
 #                             mat = re.search(pat, password)
 #                             if mat:
-#                                 user = custom_user.objects.create_user(
+#                                 user = User.objects.create_user(
 #                                     username=username, password=password, email=email, first_name=first_name, last_name=last_name)
 #                                 user.save()
 #                                 data = Profile(
@@ -153,7 +153,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #                                 if 'profile_image' in request.FILES:
 #                                     data.profile_image = profile_image
 #                                 data.save()
-#                                 temp_obj = custom_user.objects.get(username=username)
+#                                 temp_obj = User.objects.get(username=username)
 #                                 pro_obj = Profile.objects.get(username=temp_obj)
 #                                 if pro_obj.profile_image:
 #                                     img = pro_obj.profile_image
@@ -167,7 +167,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #                                     img2 = pro_obj.bitmoji
 #                                 else:
 #                                     img2 = ""
-#                                 temp_obj = custom_user.objects.get(username=username)
+#                                 temp_obj = User.objects.get(username=username)
 #                                 serializer_class = RegistrationSerializer(pro_obj)
 #                                 return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
 #                             else:
@@ -203,8 +203,8 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #             email = social_account
 
 #         if social_token:
-#             if not custom_user.objects.filter(social_token=social_token).exists():
-#                 user = custom_user.objects.create_user(
+#             if not User.objects.filter(social_token=social_token).exists():
+#                 user = User.objects.create_user(
 #                     username=username[0:10], password=social_token, email=email,
 #                     social_token=social_token, social_registration=social_registration, social_account=social_account)
 #                 user.save()
@@ -214,12 +214,12 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #                     data.profile_image = profile_image
 #                 data.save()
 
-#                 user_obj = custom_user.objects.get(social_token=social_token)
+#                 user_obj = User.objects.get(social_token=social_token)
 #                 profile_obj = Profile.objects.get(username=user_obj.id)
 #                 serializer_class = SocialSerializer(profile_obj)
 #                 return Response({"Data":serializer_class.data}, status=status.HTTP_200_OK)
 #             else:
-#                 user_obj = custom_user.objects.get(social_token=social_token)
+#                 user_obj = User.objects.get(social_token=social_token)
 #                 profile_obj = Profile.objects.get(username=user_obj.id)
 #                 serializer_class = SocialSerializer(profile_obj)
 #                 return Response({"Data":serializer_class.data}, status=status.HTTP_200_OK)
@@ -231,14 +231,14 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #         email = request.POST['email']
 #         recipient_list = []
 
-#         if custom_user.objects.filter(email=email).exists():
+#         if User.objects.filter(email=email).exists():
 #             try:
-#                 u_obj = custom_user.objects.get(email=email).profile
+#                 u_obj = User.objects.get(email=email).profile
 #             except:
-#                 user_obj = custom_user.objects.get(email=email)
+#                 user_obj = User.objects.get(email=email)
 #                 p_obj = Profile.objects.create(username = user_obj)
 #                 p_obj.save()
-#                 u_obj = custom_user.objects.get(email=email).profile
+#                 u_obj = User.objects.get(email=email).profile
 
 #             if u_obj.count_for_forgot_pass < 5:
 #                 if u_obj.time_for_forgot_pass is None:
@@ -246,7 +246,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #                 elif (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
 #                     u_obj.count_for_forgot_pass = 0
 #                     u_obj.save()
-#                 user_with_email = custom_user.objects.get(email=email)
+#                 user_with_email = User.objects.get(email=email)
 #                 recipient_list.append(user_with_email.email)
 
 #                 # Link = 'http://127.0.0.1:8000/home/reset-password'
@@ -254,7 +254,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #                 Link = "https://kitapa.app/reset/#/reset-password"             
 #                 characters = string.ascii_letters + string.digits
 #                 token = ''.join(random.choice(characters) for i in range(50))
-#                 user = custom_user.objects.get(email=email)
+#                 user = User.objects.get(email=email)
 #                 user.confirm_token = token
 #                 user.save()
 #                 u_obj.expiration_date = pytz.utc.localize(datetime.now())
@@ -284,7 +284,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #                 return Response({"Success": "Check Your email for Forgot Password", "count": u_obj.count_for_forgot_pass}, status=status.HTTP_200_OK)
 #             elif u_obj.count_for_forgot_pass >= 5:
 #                 if (u_obj.time_for_forgot_pass + timedelta(hours=1)) < pytz.utc.localize(datetime.now()):
-#                     user_with_email = custom_user.objects.get(email=email)
+#                     user_with_email = User.objects.get(email=email)
 #                     recipient_list.append(user_with_email.email)
 
 #                     # Link = 'http://127.0.0.1:8000/home/reset-password'
@@ -292,7 +292,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #                     Link = "https://kitapa.app/reset/#/reset-password"
 #                     characters = string.ascii_letters + string.digits
 #                     token = ''.join(random.choice(characters) for i in range(50))
-#                     user = custom_user.objects.get(email=email)
+#                     user = User.objects.get(email=email)
 #                     user.confirm_token = token
 #                     user.save()
 #                     u_obj.expiration_date = pytz.utc.localize(datetime.now())
@@ -333,20 +333,20 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #         confirm_pass = request.GET['confirm_pass']
 
 #         try:
-#             token_obj = custom_user.objects.get(email=email)
+#             token_obj = User.objects.get(email=email)
 #             if token_obj.confirm_token != None :
 #                 if token_obj.confirm_token!="token_expired":
 #                     if len(token_obj.confirm_token) > 7:
-#                         profile_obj = custom_user.objects.get(email=email).profile
+#                         profile_obj = User.objects.get(email=email).profile
 #                         if (profile_obj.expiration_date + timedelta(days=1))>pytz.utc.localize(datetime.now()):
-#                             if custom_user.objects.filter(email=email).exists():
-#                                 if custom_user.objects.filter(confirm_token=token).exists():
+#                             if User.objects.filter(email=email).exists():
+#                                 if User.objects.filter(confirm_token=token).exists():
 #                                     reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
 #                                     pat = re.compile(reg)
 #                                     mat = re.search(pat, new_pass)
 #                                     if mat:
 #                                         if new_pass == confirm_pass:
-#                                             obj1 = custom_user.objects.get(
+#                                             obj1 = User.objects.get(
 #                                                 confirm_token=token)
 #                                             obj1.set_password(new_pass)
 #                                             obj1.save()
@@ -388,16 +388,16 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #         password = request.POST['password']
 #         new_pass = request.POST['new_pass']
 #         confirm_pass = request.POST['confirm_pass']
-#         if custom_user.objects.filter(username=request.user).exists():
+#         if User.objects.filter(username=request.user).exists():
 #             user = authenticate(username=request.user, password=password)
 #             if user:
 #                 pat = re.compile(reg)
 #                 mat = re.search(pat, new_pass)
 #                 if mat:
 #                     if new_pass == confirm_pass:
-#                         obj1 = custom_user.objects.get(username=request.user)
+#                         obj1 = User.objects.get(username=request.user)
 #                         obj1.set_password(new_pass)
-#                         obj2 = custom_user.objects.get(
+#                         obj2 = User.objects.get(
 #                             username=request.user).profile
 #                         obj2.pass_update = datetime.now()
 #                         obj1.save()
@@ -451,11 +451,11 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #         else:
 #             bitmoji = None
 
-#         if custom_user.objects.filter(email=email).exists():
+#         if User.objects.filter(email=email).exists():
 #             return Response({"Error": "Email already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
 #         else:
 #             try:
-#                 user_obj = custom_user.objects.get(username=request.user)
+#                 user_obj = User.objects.get(username=request.user)
 #                 profile_obj = Profile.objects.get(username=user_obj.id)
 #                 profile_obj.name = name
 #                 if email:
@@ -564,7 +564,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #             signature = None
 
 #         try:
-#             user = custom_user.objects.get(username=request.user)
+#             user = User.objects.get(username=request.user)
 #             try:
 #                 if user:
 #                     data = user_preference(username=user,
@@ -665,7 +665,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #         except ValueError:
 #             return Response({"Error": "App_Last_Opened in incorrect date format. It should be YYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
 #         try:
-#             user = custom_user.objects.get(username=request.user)
+#             user = User.objects.get(username=request.user)
 #             try:
 #                 app_data_obj = application_data.objects.get(username=user.id) 
 #                 app_data_obj.UID = UID
@@ -729,7 +729,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #     if request.method == "GET":
 #         email = request.GET['email']
 #         try:
-#             user = custom_user.objects.get(email=email)
+#             user = User.objects.get(email=email)
 #             return Response({"Error": "Email already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
 #         except:
 #             return Response({"Success": "Email is available."}, status=status.HTTP_200_OK)
@@ -740,7 +740,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #     if request.method == "GET":
 #         username = request.GET['username']
 #         try:
-#             user = custom_user.objects.get(username=username)
+#             user = User.objects.get(username=username)
 #             return Response({"Error": "Username already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
 #         except:
 #             return Response({"Success": "Username is available."}, status=status.HTTP_200_OK)
@@ -770,7 +770,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #             return Response({"Error": "end_date in incorrect date format. It should be YYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
         
 #         try:
-#             user = custom_user.objects.get(username=request.user)
+#             user = User.objects.get(username=request.user)
 #             try:
 #                 purchase_obj = Purchase.objects.get(username=user.id)
 #                 purchase_obj.pstatus = pstatus
@@ -806,7 +806,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 # def delete_account(request):
 #     if request.method == "POST":
 #         try:
-#             user_obj = custom_user.objects.get(username=request.user)
+#             user_obj = User.objects.get(username=request.user)
 #             user_obj.is_active = False
 #             user_obj.delete_date = datetime.now()
 #             user_obj.save()
@@ -830,7 +830,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #         localeId = request.POST['localeId']
 
 #         try:
-#             user_obj = custom_user.objects.get(username=request.user)
+#             user_obj = User.objects.get(username=request.user)
 #             try:
 #                 product1 = Product.objects.get(product=product)
 #                 product1.productPromo = productPromo
@@ -869,19 +869,19 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #         password  = mydata.get('password')
 #         email  = mydata.get('email')
 
-#         if not custom_user.objects.filter(username=username).exists():
+#         if not User.objects.filter(username=username).exists():
 #             if len(username) > 5:
-#                 if not custom_user.objects.filter(email=email).exists():
+#                 if not User.objects.filter(email=email).exists():
 #                     if(re.fullmatch(for_email, email)):
 #                         pat = re.compile(reg)
 #                         mat = re.search(pat, password)
 #                         if mat:
-#                             user = custom_user.objects.create_user(
+#                             user = User.objects.create_user(
 #                                 username=username, password=password, email=email)
 #                             user.save()
 #                             data = Profile(username=user)
 #                             data.save()
-#                             temp_obj = custom_user.objects.get(username=username)                                                           
+#                             temp_obj = User.objects.get(username=username)                                                           
 #                             pro_obj = Profile.objects.get(username=temp_obj)
 #                             serializer_class = RegistrationSerializer(pro_obj)
 #                             return Response({"Data": serializer_class.data}, status=status.HTTP_200_OK)
@@ -903,7 +903,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #     if request.method == "POST":
 #         tag = request.POST['tag']
 #         try:
-#             user_obj = custom_user.objects.get(username=request.user)
+#             user_obj = User.objects.get(username=request.user)
 #             try:
 #                 tag_obj = Tag.objects.get(username=user_obj)
 #                 tag_obj.tag = tag
