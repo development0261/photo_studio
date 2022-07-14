@@ -153,7 +153,7 @@ DATABASES = {
        'PASSWORD': 'admin123',
        'HOST': 'localhost',
        'PORT': 5432,
-   }
+   } 
 }
 
 # DATABASES = {
