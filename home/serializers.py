@@ -1,16 +1,16 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import custom_user
 from .models import Profile
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(read_only=True)
     _id = serializers.SerializerMethodField(read_only=True)
     isAdmin = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = custom_user
+        model = User
         fields = ['id', '_id', 'username', 'email', 'name', 'isAdmin']
 
     def get__id(self, obj):
@@ -29,8 +29,8 @@ class UserSerializerWithToken(UserSerializer):
     token = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = custom_user
-        fields = ['id', '_id', 'username', 'email', 'name', 'isAdmin', 'token']
+        model = User
+        fields = ['token']
 
     def get_token(self, obj):
         token = RefreshToken.for_user(obj)
@@ -40,15 +40,13 @@ class RegistrationSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True,source="username")
     def get_user(self, register):
         return {
-            "firstname":register.username.first_name,
-            "lastname":register.username.last_name,
             "email":register.username.email,
             "username":register.username.username,
             "password":register.username.password,
         }
     class Meta:
         model = Profile
-        fields = "__all__"
+        exclude = ['username']
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True,source="username")
@@ -60,7 +58,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         }
     class Meta:
         model = Profile
-        fields = "__all__"
+        exclude = ['username']
 
 class SocialSerializer(serializers.ModelSerializer):
     token = serializers.SerializerMethodField(read_only=True)
@@ -74,7 +72,7 @@ class SocialSerializer(serializers.ModelSerializer):
         }
     class Meta:
         model = Profile
-        fields = "__all__"
+        exclude = ['username']
 
     def get_token(self, obj):
         token = RefreshToken.for_user(obj.username)

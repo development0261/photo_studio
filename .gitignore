@@ -2,3 +2,4 @@ node_modules
 **/migrations/*
 __pycache__/
 *.pyc
+media

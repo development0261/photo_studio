@@ -216,8 +216,8 @@ MESSAGE_TAGS = {
 }
 
 # media
-MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # abstract user
 AUTH_USER_MODEL = "home.custom_user"

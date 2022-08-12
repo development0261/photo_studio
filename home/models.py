@@ -9,7 +9,7 @@ User._meta.get_field('email')._unique = True
 class custom_user(AbstractUser):
     delete_date = models.DateTimeField(null=True, blank=True)
     confirm_token = models.CharField(null=True, blank=True, max_length=50)
-    social_token = models.CharField(max_length=255, null=True, blank=True)
+    social_token = models.TextField(max_length=255, null=True, blank=True)
     social_registration = models.CharField(max_length=255, null=True, blank=True)
     social_account = models.CharField(max_length=255, null=True, blank=True)
 
@@ -51,6 +51,8 @@ class Profile(models.Model):
     expiration_date = models.DateTimeField(null=True, blank=True)
     count_for_forgot_pass = models.PositiveSmallIntegerField(default=0)
     time_for_forgot_pass = models.DateTimeField(null=True, blank=True)
+    isSocial = models.BooleanField(default=False)
+    country_code = models.CharField(max_length=30,null=True, blank=True)
 
     def __str__(self):
         return f"{self.username} - {self.name}"
