@@ -1,4 +1,3 @@
-
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.shortcuts import render
 from .models import Profile, user_preference, application_data, Purchase, Product, Tag
@@ -39,7 +38,8 @@ def protected_serve(request, path, document_root=None, show_indexes=False):
 
 
 User = get_user_model()
-reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
+# reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
+reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$"
 for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 punctuation = "!#$%&()*+, -.:;<=>?@[\]^_`{|}~"
 
@@ -83,11 +83,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 				del data['access']
 				result["value"] = True
 				result["data"] = data
-				return result
+				return result,status.HTTP_200_OK
 		else:
 			result["value"] = False
 			result["message"] = "Account with this username is not exists"
-			return result
+			return result,status.HTTP_400_BAD_REQUEST
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -271,18 +271,33 @@ def social_media_registration(request):
 		else:
 			email = social_account
 
+		if 'first_name' in request.POST:
+			first_name = request.POST['first_name']
+		else:
+			first_name = social_account
+
+		if 'last_name' in request.POST:
+			last_name = request.POST['last_name']
+		else:
+			last_name = social_account
+
+		if 'city' in request.POST:
+			city = request.POST['city']
+		else:
+			city = social_account
+		
+
 		if social_token:
 			if not User.objects.filter(social_token=social_token).exists():
 				user = User.objects.create_user(
 					username=username[0:10], password=social_token, email=email,
-					social_token=social_token, social_registration=social_registration, social_account=social_account)
+					social_token=social_token, social_registration=social_registration, social_account=social_account,first_name=first_name,last_name=last_name,city=city)
 				user.save()
 
 				data = Profile(username=user)
 				if 'profile_image' in request.FILES:
 					data.profile_image = profile_image
 				data.save()
-
 				user_obj = User.objects.get(social_token=social_token)
 				profile_obj = Profile.objects.get(username=user_obj.id)
 				serializer_class = SocialSerializer(profile_obj)
@@ -624,10 +639,13 @@ def profile(request, para=None):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def specific_user(request):
+	result = dict()
 	if request.method == "GET":
 		queryset = Profile.objects.filter(username__username=request.user)
 		serializer_class = ProfileSerializer(queryset, many=True)
-		return Response({'data': serializer_class.data[0]}, status=status.HTTP_200_OK)
+		result['value']= True
+		result['data'] = serializer_class.data[0]
+		return Response(result, status=status.HTTP_200_OK)
 
 # get total user
 @api_view(['POST'])
@@ -896,7 +914,7 @@ def email_verification(request):
 		try:
 			user = User.objects.get(email=email)
 			result["value"] = False
-			result["message"] = "Email already in use!!!"
+			result["message"] = "Email is already registered!"
 			return Response(result, status=status.HTTP_400_BAD_REQUEST)
 		except:
 			result["value"] = True

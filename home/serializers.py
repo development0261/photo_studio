@@ -40,6 +40,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True,source="username")
     def get_user(self, register):
         return {
+            "first_name":register.username.first_name,
+            "last_name":register.username.last_name,
             "email":register.username.email,
             "username":register.username.username,
             "password":register.username.password,
@@ -52,6 +54,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True,source="username")
     def get_user(self, register):
         return {
+            "first_name":register.username.first_name,
+            "last_name":register.username.last_name,
             "email":register.username.email,
             "username":register.username.username,
             "password":register.username.password,
@@ -65,6 +69,8 @@ class SocialSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True,source="username")
     def get_user(self, register):
         return {
+            "first_name":register.username.first_name,
+            "last_name":register.username.last_name,
             "social_token":register.username.social_token,
             "social_account":register.username.social_account,
             "social_registration":register.username.social_registration,
