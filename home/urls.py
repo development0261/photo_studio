@@ -25,6 +25,7 @@ urlpatterns = [
     path('product/', views.product, name='product'),
     path('load_script/', views.load_script, name='load_script'),
     path('tag/', views.tag, name='tag'),
+    path('app_data_noauth/', views.AppDataNoAuth, name='app_data_noauth'), 
 
 ]
 

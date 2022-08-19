@@ -49,4 +49,5 @@ urlpatterns = [
     path('change_password/', views.change_password, name="change_password"),
     path('send_link/', views.send_link, name="send_link"),
     path('forgot_password/<str:token>', views.forgot_password, name="forgot_password"),
+    path('export_excel',views.export_excel,name="export_excel")
 ]

@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.shortcuts import render
-from .models import Profile, user_preference, application_data, Purchase, Product, Tag
+from .models import Profile, user_preference, application_data, Purchase, Product, Tag,application_data_noauth
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -27,6 +27,9 @@ from django.contrib.auth.decorators import login_required
 #get city and country
 import geocoder
 from geopy.geocoders import Nominatim
+from pycountry import countries
+
+from django.db.models import Q
 
 # initialize Nominatim API
 geolocator = Nominatim(user_agent="geoapiExercises")
@@ -34,12 +37,15 @@ geolocator = Nominatim(user_agent="geoapiExercises")
 @login_required
 def protected_serve(request, path, document_root=None, show_indexes=False):
 	return serve(request, path, document_root, show_indexes)
+
+def unprotected_serve(request, path, document_root=None, show_indexes=False):
+	return serve(request, path, document_root, show_indexes)	
 # end------------
 
 
 User = get_user_model()
 # reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
-reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$"
+reg = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$"
 for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 punctuation = "!#$%&()*+, -.:;<=>?@[\]^_`{|}~"
 
@@ -83,12 +89,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 				del data['access']
 				result["value"] = True
 				result["data"] = data
-				return result,status.HTTP_200_OK
+				return result
 		else:
 			result["value"] = False
 			result["message"] = "Account with this username is not exists"
-			return result,status.HTTP_400_BAD_REQUEST
-
+			return result
 
 class MyTokenObtainPairView(TokenObtainPairView):
 	serializer_class = MyTokenObtainPairSerializer
@@ -291,10 +296,10 @@ def social_media_registration(request):
 			if not User.objects.filter(social_token=social_token).exists():
 				user = User.objects.create_user(
 					username=username[0:10], password=social_token, email=email,
-					social_token=social_token, social_registration=social_registration, social_account=social_account,first_name=first_name,last_name=last_name,city=city)
+					social_token=social_token, social_registration=social_registration, social_account=social_account,first_name=first_name,last_name=last_name)
 				user.save()
 
-				data = Profile(username=user)
+				data = Profile(username=user,city=city)
 				if 'profile_image' in request.FILES:
 					data.profile_image = profile_image
 				data.save()
@@ -311,6 +316,7 @@ def social_media_registration(request):
 				result["value"] = True
 				result["data"] = serializer_class.data
 				return Response(result, status=status.HTTP_200_OK)
+	
 
 # send email for forgot password
 @api_view(['POST'])
@@ -550,50 +556,65 @@ def update_password(request):
 @permission_classes([IsAuthenticated])
 def profile(request, para=None):
 	result = dict()
-	if request.method == "POST":
-		email = request.POST.get('email')
-		name = request.POST.get('name')
-		mobile = request.POST.get('mobile')
-		gender = request.POST.get('gender')
-		date_of_Birth = request.POST.get('dob')
-		city = request.POST.get('city')
-		country = request.POST.get('country')
-		user_Latitude = request.POST.get('lat')
-		user_Longitude = request.POST.get('long')
-		snapchat = request.POST.get('snap')
-		facebook = request.POST.get('fb')
-		instagram = request.POST.get('insta')
-		website = request.POST.get('website')
-		
-		# try:
-		datetime.strptime(date_of_Birth, '%Y-%m-%d')
-		# except ValueError:
-		# 	result["value"] = False
-		# 	result["message"] = "date_of_Birth in incorrect date format. It should be YYYY-MM-DD"
-		# 	return Response(result, status=status.HTTP_400_BAD_REQUEST)
+	try:
+		if request.method == "POST":
+			email = request.POST.get('email')
+			name = request.POST.get('name')
+			mobile = request.POST.get('mobile')
+			gender = request.POST.get('gender')
+			date_of_Birth = request.POST.get('dob')
+			city = request.POST.get('city')
+			country = request.POST.get('country')
+			user_Latitude = request.POST.get('lat')
+			user_Longitude = request.POST.get('long')
+			snapchat = request.POST.get('snap')
+			facebook = request.POST.get('fb')
+			instagram = request.POST.get('insta')
+			website = request.POST.get('website')
+			# country_code = request.POST.get('country_code')
+			# g = geocoder.osm([user_Latitude,user_Longitude], method='reverse')
+			# print(g.json['county'])
+			country_code = None
+			if user_Latitude and user_Longitude:
+				location = geolocator.reverse(user_Latitude+","+user_Longitude)
+				address = location.raw['address']
+				# print(address)
+				country = address.get('country', '')
+				country_code = countries.get(name=country).alpha_2
+				# print('State : ',state)
+			try:
+				if(len(date_of_Birth)!= 0):
+					datetime.strptime(date_of_Birth, '%Y-%m-%d')
+			except ValueError:
+				result["value"] = False
+				result["message"] = "date_of_Birth in incorrect date format. It should be YYYY-MM-DD"
+				return Response(result, status=status.HTTP_400_BAD_REQUEST)
 
-		if 'profile_image' in request.FILES:
-			profile_image = request.FILES['profile_image']
-		else:
-			profile_image = None
+			if 'profile_image' in request.FILES:
+				profile_image = request.FILES['profile_image']
+			else:
+				profile_image = None
 
-		if 'avatar_image' in request.FILES:
-			avatar_image = request.FILES['avatar_image']
-		else:
-			avatar_image = None
+			if 'avatar_image' in request.FILES:
+				avatar_image = request.FILES['avatar_image']
+			else:
+				avatar_image = None
 
-		if 'bitmoji' in request.FILES:
-			bitmoji = request.FILES['bitmoji']
-		else:
-			bitmoji = None
-
-		if User.objects.filter(email=email).exists():
-			result["value"] = False
-			result["message"] = "Email already in use!!!"
-			return Response(result, status=status.HTTP_400_BAD_REQUEST)
-		else:
+			if 'bitmoji' in request.FILES:
+				bitmoji = request.FILES['bitmoji']
+			else:
+				bitmoji = None
+			
+			# if User.objects.filter(email=email).exists():
+			# 	result["value"] = False
+			# 	result["message"] = "Email already in use!!!"
+			# 	return Response(result, status=status.HTTP_400_BAD_REQUEST)
+			# else:
 			try:
 				user_obj = User.objects.get(username=request.user)
+				if user_obj.email != email:
+					if User.objects.filter(email=email):
+						return Response({"Error": "Email already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
 				profile_obj = Profile.objects.get(username=user_obj.id)
 				profile_obj.name = name
 				if email:
@@ -624,6 +645,10 @@ def profile(request, para=None):
 				profile_obj.avatar = avatar_image
 				profile_obj.bitmoji = bitmoji
 				profile_obj.updated_at = datetime.now()
+				if country_code:
+					profile_obj.country_code = country_code
+				else:
+					profile_obj.country_code = None
 				profile_obj.save()
 				user_obj.save()
 				result["value"] = True
@@ -634,6 +659,8 @@ def profile(request, para=None):
 				result["value"] = False
 				result["message"] = "User Not Exist!!!"
 				return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+	except Exception as e:
+		print(e)
 			
 # get specific user
 @api_view(['GET'])
@@ -807,18 +834,6 @@ def app_data(request):
 		total_ads_served = request.POST['total_ads_served']
 		Registered_user = request.POST['Registered_user']
 		Push_Notification_token = request.POST['Push_Notification_token']
-		g = geocoder.osm([latitude,longitude], method='reverse')
-		location = geolocator.reverse(latitude+","+longitude)
-		address = location.raw['address']
-		city = address.get('state_district', '')
-		state = address.get('state', '')
-		country = address.get('country', '')
-		country_code = address.get('country_code')
-		print(address)
-		print('City : ',city)
-		print('State : ',state)
-		print('Country : ',country)
-		print('Country : ',country_code)
 		try:
 			datetime.strptime(Purchase_date, '%Y-%m-%d')
 		except ValueError:
@@ -834,43 +849,39 @@ def app_data(request):
 			return Response(result, status=status.HTTP_400_BAD_REQUEST)
 		try:
 			user = User.objects.get(username=request.user)
-			try:
-				app_data_obj = application_data.objects.get(username=user.id) 
-				app_data_obj.UID = UID
-				app_data_obj.inApp_Products = inApp_Products
-				app_data_obj.Purchase_date = Purchase_date
-				app_data_obj.Purchased_product = Purchased_product
-				app_data_obj.Device_Model = Device_Model
-				app_data_obj.operating_system = operating_system
-				app_data_obj.Device_Storage = Device_Storage
-				app_data_obj.Lunch_count = Lunch_count
-				app_data_obj.Push_Notification_Status = Push_Notification_Status
-				app_data_obj.Library_permission_Status = Library_permission_Status
-				app_data_obj.latitude = latitude
-				app_data_obj.longitude = longitude
-				app_data_obj.Carrier = Carrier
-				app_data_obj.App_Last_Opened = App_Last_Opened
-				app_data_obj.Purchase_attempts = Purchase_attempts
-				app_data_obj.Grace_Period = Grace_Period
-				app_data_obj.Remaining_grace_period_days = Remaining_grace_period_days
-				app_data_obj.Number_of_projects = Number_of_projects
-				app_data_obj.Total_time_spent = Total_time_spent
-				app_data_obj.total_ads_served = total_ads_served
-				app_data_obj.Registered_user = Registered_user
-				app_data_obj.Push_Notification_token = Push_Notification_token
-				app_data_obj.city = city
-				app_data_obj.country = country
-				app_data_obj.country_code = country_code
-				app_data_obj.save()
-				result["value"] = True
-				result["message"] = "Details Updated."
-				return Response(result, status=status.HTTP_200_OK)
-			except Exception as e:
+			if application_data.objects.filter(username=user).exists():
 				if application_data.objects.filter(UID = UID).exists():
-					result["value"] = False
-					result["message"] = "UID already Exists!!!"
-					return Response(result, status=status.HTTP_400_BAD_REQUEST)
-				data = application_data(username=user,
+					try:
+						app_data_obj = application_data.objects.get(username =user, UID = UID)
+						# app_data_obj.UID = UID
+						app_data_obj.inApp_Products = inApp_Products
+						app_data_obj.Purchase_date = Purchase_date
+						app_data_obj.Purchased_product = Purchased_product
+						app_data_obj.Device_Model = Device_Model
+						app_data_obj.operating_system = operating_system
+						app_data_obj.Device_Storage = Device_Storage
+						app_data_obj.Lunch_count = Lunch_count
+						app_data_obj.Push_Notification_Status = Push_Notification_Status
+						app_data_obj.Library_permission_Status = Library_permission_Status
+						app_data_obj.latitude = latitude
+						app_data_obj.longitude = longitude
+						app_data_obj.Carrier = Carrier
+						app_data_obj.App_Last_Opened = App_Last_Opened
+						app_data_obj.Purchase_attempts = Purchase_attempts
+						app_data_obj.Grace_Period = Grace_Period
+						app_data_obj.Remaining_grace_period_days = Remaining_grace_period_days
+						app_data_obj.Number_of_projects = Number_of_projects
+						app_data_obj.Total_time_spent = Total_time_spent
+						app_data_obj.total_ads_served = total_ads_served
+						app_data_obj.Registered_user = Registered_user
+						app_data_obj.Push_Notification_token = Push_Notification_token
+						app_data_obj.save()
+						return Response({"Success": "Details Updated."}, status=status.HTTP_200_OK)
+					except Exception as e:
+						print(e)
+						return Response({"Error": "UID Exists!!!"}, status=status.HTTP_409_CONFLICT)
+				else:
+					data = application_data(username=user,
 										UID=UID,
 										inApp_Products=inApp_Products,
 										Purchase_date=Purchase_date,
@@ -892,18 +903,39 @@ def app_data(request):
 										Total_time_spent=Total_time_spent,
 										total_ads_served=total_ads_served,
 										Registered_user=Registered_user,
-										Push_Notification_token=Push_Notification_token,
-										city=city,
-										country=country,
-										country_code=country_code)
-				data.save()
-				result["value"] = True
-				result["message"] = "Details Added."
-				return Response(result, status=status.HTTP_200_OK)
+										Push_Notification_token=Push_Notification_token)
+					data.save()
+					return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
+
+
+			data = application_data(username=user,
+									UID=UID,
+									inApp_Products=inApp_Products,
+									Purchase_date=Purchase_date,
+									Purchased_product=Purchased_product,
+									Device_Model=Device_Model,
+									operating_system=operating_system,
+									Device_Storage=Device_Storage,
+									Lunch_count=Lunch_count,
+									Push_Notification_Status=Push_Notification_Status,
+									Library_permission_Status=Library_permission_Status,
+									latitude = latitude,
+									longitude = longitude,
+									Carrier=Carrier,
+									App_Last_Opened=App_Last_Opened,
+									Purchase_attempts=Purchase_attempts,
+									Grace_Period=Grace_Period,
+									Remaining_grace_period_days=Remaining_grace_period_days,
+									Number_of_projects=Number_of_projects,
+									Total_time_spent=Total_time_spent,
+									total_ads_served=total_ads_served,
+									Registered_user=Registered_user,
+									Push_Notification_token=Push_Notification_token)
+			data.save()
+			return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
 		except Exception as e:
-			result["value"] = False
-			result["message"] = "User not Found!!!"
-			return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+			print(e)
+			return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
 			
 # check whether email is available or not
 @api_view(['GET'])
@@ -1148,4 +1180,110 @@ def tag(request):
 			print(e)
 			result["value"] = False
 			result["message"] = "User not found"
+			return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+
+# application data no auth api
+@api_view(['POST'])
+def AppDataNoAuth(request):
+	result = dict()
+	if request.method == "POST":
+		UID = request.POST['UID']
+		inApp_Products = request.POST['inApp_Products']
+		Purchase_date = request.POST['Purchase_date']
+		Purchased_product = request.POST['Purchased_product']
+		Device_Model = request.POST['Device_Model']
+		operating_system = request.POST['operating_system']
+		Device_Storage = request.POST['Device_Storage']
+		Lunch_count = request.POST['Lunch_count']
+		Push_Notification_Status = request.POST['Push_Notification_Status']
+		Library_permission_Status = request.POST['Library_permission_Status']
+		latitude = request.POST['latitude']
+		longitude = request.POST['longitude']
+		Carrier = request.POST['Carrier']
+		App_Last_Opened = request.POST['App_Last_Opened']
+		Purchase_attempts = request.POST['Purchase_attempts']
+		Grace_Period = request.POST['Grace_Period']
+		Remaining_grace_period_days = request.POST['Remaining_grace_period_days']
+		Number_of_projects = request.POST['Number_of_projects']
+		Total_time_spent = request.POST['Total_time_spent']
+		total_ads_served = request.POST['total_ads_served']
+		Registered_user = request.POST['Registered_user']
+		Push_Notification_token = request.POST['Push_Notification_token']
+		try:
+			datetime.strptime(Purchase_date, '%Y-%m-%d')
+		except ValueError:
+			result["value"] = False
+			result["message"] = "Purchase_date in incorrect date format. It should be YYYY-MM-DD"
+			return Response(result, status=status.HTTP_400_BAD_REQUEST)
+
+		try:
+			datetime.strptime(App_Last_Opened, '%Y-%m-%d')
+		except ValueError:
+			result["value"] = False
+			result["message"] = "App_Last_Opened in incorrect date format. It should be YYYY-MM-DD"
+			return Response(result, status=status.HTTP_400_BAD_REQUEST)
+		try:
+			if application_data.objects.filter(UID = UID).exists():
+				app_data_obj = application_data_noauth.objects.get(UID=UID)
+				app_data_obj.UID = UID
+				app_data_obj.inApp_Products = inApp_Products
+				app_data_obj.Purchase_date = Purchase_date
+				app_data_obj.Purchased_product = Purchased_product
+				app_data_obj.Device_Model = Device_Model
+				app_data_obj.operating_system = operating_system
+				app_data_obj.Device_Storage = Device_Storage
+				app_data_obj.Lunch_count = Lunch_count
+				app_data_obj.Push_Notification_Status = Push_Notification_Status
+				app_data_obj.Library_permission_Status = Library_permission_Status
+				app_data_obj.latitude = latitude
+				app_data_obj.longitude = longitude
+				app_data_obj.Carrier = Carrier
+				app_data_obj.App_Last_Opened = App_Last_Opened
+				app_data_obj.Purchase_attempts = Purchase_attempts
+				app_data_obj.Grace_Period = Grace_Period
+				app_data_obj.Remaining_grace_period_days = Remaining_grace_period_days
+				app_data_obj.Number_of_projects = Number_of_projects
+				app_data_obj.Total_time_spent = Total_time_spent
+				app_data_obj.total_ads_served = total_ads_served
+				app_data_obj.Registered_user = Registered_user
+				app_data_obj.Push_Notification_token = Push_Notification_token
+				app_data_obj.save()
+				result["value"] = True
+				result["message"] = "Details Updated."
+				return Response(result, status=status.HTTP_200_OK)
+
+			else:
+				data = application_data_noauth(
+										UID=UID,
+										inApp_Products=inApp_Products,
+										Purchase_date=Purchase_date,
+										Purchased_product=Purchased_product,
+										Device_Model=Device_Model,
+										operating_system=operating_system,
+										Device_Storage=Device_Storage,
+										Lunch_count=Lunch_count,
+										Push_Notification_Status=Push_Notification_Status,
+										Library_permission_Status=Library_permission_Status,
+										latitude = latitude,
+										longitude = longitude,
+										Carrier=Carrier,
+										App_Last_Opened=App_Last_Opened,
+										Purchase_attempts=Purchase_attempts,
+										Grace_Period=Grace_Period,
+										Remaining_grace_period_days=Remaining_grace_period_days,
+										Number_of_projects=Number_of_projects,
+										Total_time_spent=Total_time_spent,
+										total_ads_served=total_ads_served,
+										Registered_user=Registered_user,
+										Push_Notification_token=Push_Notification_token
+										)
+				data.save()
+				result["value"] = True
+				result["message"] = "Details Added."
+				return Response(result, status=status.HTTP_200_OK)
+
+		except Exception as e:
+			print(e)
+			result["value"] = False
+			result["message"] = "User not Found!!!"
 			return Response(result, status=status.HTTP_401_UNAUTHORIZED)

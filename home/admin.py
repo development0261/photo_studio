@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import custom_user
-from .models import Profile, user_preference, application_data, Purchase, Tag, Product
+from .models import Profile, user_preference, application_data, Purchase, Tag, Product,application_data_noauth
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.admin import ModelAdmin
 from django.contrib.admin import SimpleListFilter
@@ -148,6 +148,10 @@ class CustomTag(admin.ModelAdmin):
 class CustomProduct(admin.ModelAdmin):
     search_fields = ["annaulSub", "annaulSubProd", "localeId", "monthlySub", "monthlySubProd", "product", "productID", "productPromo", "promoPrice"]
 
+class CustomApps2(admin.ModelAdmin):
+    list_display = ('UID',)
+    search_fields = ("Carrier", "Device_Model", "Device_Storage", "Grace_Period", "Latest_Geolocation",
+                     "Purchased_product", "Remaining_grace_period_days", "Total_time_spent", "UID", "aid", "iOS", "inApp_Products")
 
 admin.site.register(custom_user,CustomUserAdmin)
 admin.site.register(Profile, CustomProfile)
@@ -156,4 +160,5 @@ admin.site.register(application_data, CustomApps)
 admin.site.register(Purchase, CustomPurchase)
 admin.site.register(Tag, CustomTag)
 admin.site.register(Product, CustomProduct)
+admin.site.register(application_data_noauth, CustomApps2)
 

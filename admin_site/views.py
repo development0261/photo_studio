@@ -1,8 +1,8 @@
 from datetime import date, datetime, timedelta
 import copy
-from django.http import HttpResponseRedirect
+from urllib import response
+from django.http import HttpResponseRedirect,HttpResponse
 from django.shortcuts import redirect, render
-import admin_site
 from home.models import Product, Profile, Purchase, Tag, application_data, custom_user, user_preference
 from home.models import custom_user
 from django.apps import apps
@@ -23,10 +23,12 @@ from django.utils.html import strip_tags
 import base64
 from django.core.paginator import Paginator
 from django.db.models import Q
+import xlwt
 
 
 punctuation = "!#$%&()*+, -./:;<=>?@[\]^_`{|}~"
-reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
+# reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
+reg = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$"
 
 # Create your views here.
 
@@ -296,6 +298,7 @@ def app_data_model(request):
 
         if 'search' in request.GET:
             searchvalue = request.GET['search']
+            print(searchvalue)
             total_app_datas = application_data.objects.filter(
                                 Q(inApp_Products__icontains=searchvalue) |
                                 Q(Purchased_product__icontains=searchvalue) |
@@ -307,7 +310,7 @@ def app_data_model(request):
                                 Q(Total_time_spent__icontains=searchvalue) |
                                 Q(Push_Notification_token__icontains=searchvalue)
             )
-
+            print(total_app_datas)
         if 'show' in request.GET:
             showval = request.GET['show']
             p = Paginator(total_app_datas, showval)
@@ -622,12 +625,11 @@ def admin_edit(request, para):
             firstname = request.POST['firstname']
             lastname = request.POST['lastname']
             email = request.POST['email']
-            
-            if custom_user.objects.filter(email=email):
-                messages.error(request, 'Email already Exists!!!')
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
             obj = custom_user.objects.get(username=username)
+            if obj.email != email:
+                if custom_user.objects.filter(email=email):
+                    messages.error(request, 'Email already Exists!!!')
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             obj.first_name = firstname
             obj.last_name = lastname
             obj.email = email
@@ -1196,3 +1198,27 @@ def forgot_password(request,token):
 def logoutprocess(request):
     logout(request)
     return redirect("login")
+
+#export data
+def export_excel(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Profile.xls' 
+    wb = xlwt.Workbook(encoding='utf-8')    
+    ws = wb.add_sheet('Profile')
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    columns = ['NAME','REGISTRATION DATE','CITY','COUNTRY']
+    for col_num in range(len(columns)):
+        ws.write(row_num,col_num,columns[col_num],font_style)
+    font_style = xlwt.XFStyle()
+    rows = Profile.objects.all().values_list('name','created_at','city','country')
+  
+    for row in rows:
+        row_num +=1
+        for col_num in range(len(row)):
+            ws.write(row_num,col_num,str(row[col_num]),font_style)
+    wb.save(response)   
+    return response
+
+
