@@ -302,7 +302,7 @@ def social_media_registration(request):
 					data.profile_image = profile_image
 				data.save()
 				user_obj = User.objects.get(social_token=social_token)
-				profile_obj = Profile.objects.get(username=user_obj.id)
+				profile_obj = Profile.objects.get(username=user_obj.id, isSocial=True)
 				serializer_class = SocialSerializer(profile_obj)
 				result["value"] = True
 				result["data"] = serializer_class.data
@@ -576,12 +576,14 @@ def profile(request, para=None):
 			if user_Latitude and user_Longitude:
 				location = geolocator.reverse(user_Latitude+","+user_Longitude)
 				address = location.raw['address']
-				# print(address)
+				print(address)
+				print(address['country_code'])
 				country = address.get('country', '')
+				print(type(country))
 				country_code = countries.get(name=country).alpha_2
 				# print('State : ',state)
 			try:
-				if(len(date_of_Birth)!= 0):
+				if date_of_Birth in request.POST:
 					datetime.strptime(date_of_Birth, '%Y-%m-%d')
 			except ValueError:
 				result["value"] = False

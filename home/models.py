@@ -51,7 +51,7 @@ class Profile(models.Model):
     expiration_date = models.DateTimeField(null=True, blank=True)
     count_for_forgot_pass = models.PositiveSmallIntegerField(default=0)
     time_for_forgot_pass = models.DateTimeField(null=True, blank=True)
-    isSocial = models.BooleanField(default=True)
+    isSocial = models.BooleanField(default=False)
     country_code = models.CharField(max_length=30,null=True, blank=True,default=None)
 
     def __str__(self):

@@ -1220,5 +1220,3 @@ def export_excel(request):
             ws.write(row_num,col_num,str(row[col_num]),font_style)
     wb.save(response)   
     return response
-
-
