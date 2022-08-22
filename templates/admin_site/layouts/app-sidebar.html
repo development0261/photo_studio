@@ -17,44 +17,44 @@
                                 <h3>Main</h3>
                             </li>
                             <li class="slide">
-                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin_site/"><i class="side-menu__icon fe fe-home"></i><span {% if request.path == '/admin_site/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %} >Dashboard</span></a>
+                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin-site/"><i class="side-menu__icon fe fe-home"></i><span {% if request.path == '/admin-site/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %} >Dashboard</span></a>
                             </li>
                             <li class="sub-category">
                                 <h3>Tables</h3>
                             </li>
                             <li class="admin_tables">
-                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin_site/AdminUsers/"> <i class="side-menu__icon fa fa-angle-double-right"></i><span {% if request.path == '/admin_site/AdminUsers/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Admin Users</span></a>
+                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin-site/AdminUsers/"> <i class="side-menu__icon fa fa-angle-double-right"></i><span {% if request.path == '/admin-site/AdminUsers/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Admin Users</span></a>
                             </li>
                             <li class="admin_tables">
-                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin_site/AppUsers/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin_site/AppUsers/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>App Users</span></a>
+                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin-site/AppUsers/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin-site/AppUsers/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>App Users</span></a>
                             </li>
                             <li class="admin_tables">
-                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin_site/Profile/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin_site/Profile/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Profile</span></a>
+                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin-site/Profile/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin-site/Profile/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Profile</span></a>
                             </li>
                             <li class="admin_tables">
-                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin_site/user_preference/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin_site/user_preference/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>User Preference</span></a>
+                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin-site/user_preference/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin-site/user_preference/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>User Preference</span></a>
                             </li>
                             <li class="admin_tables">
-                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin_site/application_data/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin_site/application_data/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Application Data</span></a>
+                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin-site/application_data/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin-site/application_data/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Application Data</span></a>
                             </li>
                             <li class="admin_tables">
-                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin_site/Product/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin_site/Product/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Product</span></a>
+                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin-site/Product/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin-site/Product/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Product</span></a>
                             </li>
                             <li class="admin_tables">
-                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin_site/Purchase/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin_site/Purchase/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Purchase</span></a>
+                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin-site/Purchase/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin-site/Purchase/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Purchase</span></a>
                             </li>
                             <li class="admin_tables">
-                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin_site/Tag/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin_site/Tag/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Tag</span></a>
+                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin-site/Tag/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin-site/Tag/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Tag</span></a>
                             </li>
 
                             {% comment %} {% for row in home_models %}
                             <li class="admin_tables">
                                 <a class="side-menu__item" data-bs-toggle="slide"
                                     {% if row == "User Preference" %}
-                                        href="/admin_site/user_preference/"                                            
+                                        href="/admin-site/user_preference/"                                            
                                     {% elif row == "Application Data" %}
-                                        href="/admin_site/application_data/"
-                                    {% else %} href="/admin_site/{{row}}/" {% endif %}>
+                                        href="/admin-site/application_data/"
+                                    {% else %} href="/admin-site/{{row}}/" {% endif %}>
                                     <i class="side-menu__icon fa fa-angle-right"></i>
                                     <span class="side-menu__label">
                                         {{row}}

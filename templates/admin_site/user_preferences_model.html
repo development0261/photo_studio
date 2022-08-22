@@ -333,7 +333,7 @@
                                                         </td>
                                                         <td>
                                                             <div class="g-2">
-                                                                <a href='/admin_site/PreferencesEdit/user_preferences {{row.udid}}' class="btn text-primary btn-sm"
+                                                                <a href='/admin-site/PreferencesEdit/user_preferences {{row.udid}}' class="btn text-primary btn-sm"
                                                                     data-bs-toggle="tooltip"
                                                                     data-bs-original-title="Edit"><span
                                                                         class="fe fe-edit fs-14"></span></a>
@@ -489,7 +489,7 @@
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    window.location.href = "/admin_site/DeleteDetails/" + delete_id
+                    window.location.href = "/admin-site/DeleteDetails/" + delete_id
                 }
             }).catch(swal.noop);
         });
@@ -501,7 +501,7 @@
             id = $(this).attr('id');
             $.ajax({
                 type: "GET",
-                url: `/admin_site/user_preference/${id}`,
+                url: `/admin-site/user_preference/${id}`,
                 success: function (profileresult) {
                     var data = profileresult.res.fields;
                     $("#largeModalLabel").append(`User Deatils`)
@@ -711,7 +711,7 @@
                             `)
                     $(".modal-footer").append(`
                         <button type="button" id="editbtn" class="btn btn-success">
-                            <a class="editbtn" href="/admin_site/PreferencesEdit/user_preferences ${profileresult.res.pk}">Edit</a>
+                            <a class="editbtn" href="/admin-site/PreferencesEdit/user_preferences ${profileresult.res.pk}">Edit</a>
                         </button>
                     `);
                     $("#Modal").modal('show');

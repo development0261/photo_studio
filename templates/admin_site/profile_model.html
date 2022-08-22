@@ -141,7 +141,7 @@
                                                                     </td>
                                                                     <td class="text-center">
                                                                         <div class="g-2">
-                                                                            <a href="/admin_site/ProfileEdit/Profile {{ row.uid }}"
+                                                                            <a href="/admin-site/ProfileEdit/Profile {{ row.uid }}"
                                                                                 class="btn text-primary btn-sm"
                                                                                 data-bs-toggle="tooltip"
                                                                                 data-bs-original-title="Edit">
@@ -394,7 +394,7 @@
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    window.location.href = "/admin_site/DeleteProfile/" + delete_id
+                    window.location.href = "/admin-site/DeleteProfile/" + delete_id
                 }
             }).catch(swal.noop);
         });
@@ -415,7 +415,7 @@
             id = $(this).attr('id')
             $.ajax({
                 type: "GET",
-                url: `/admin_site/Profile/${id}`,
+                url: `/admin-site/Profile/${id}`,
                 success: function (profileresult) {
                     var data = profileresult.res.fields;
                     $("#largeModalLabel").append(`Profile`)
@@ -581,7 +581,7 @@
                             `)
                     $(".modal-footer").append(`
                         <button type="button" id="editbtn" class="btn btn-success">
-                            <a class="editbtn" href="/admin_site/ProfileEdit/Profile ${profileresult.res.pk}">Edit</a>
+                            <a class="editbtn" href="/admin-site/ProfileEdit/Profile ${profileresult.res.pk}">Edit</a>
                         </button>
                     `);
                     $("#Modal").modal('show');

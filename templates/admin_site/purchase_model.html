@@ -144,7 +144,7 @@
                                                                 </td>
                                                                 <td>
                                                                     <div class="g-2">
-                                                                        <a href="/admin_site/EditPurchase/Purchase {{ row.pid }}" class="btn text-primary btn-sm"                                                                           data-bs-toggle="tooltip"
+                                                                        <a href="/admin-site/EditPurchase/Purchase {{ row.pid }}" class="btn text-primary btn-sm"                                                                           data-bs-toggle="tooltip"
                                                                            data-bs-original-title="Edit"><span class="fe fe-edit fs-14"></span></a>
                                                                         <a class="btn text-danger btn-sm"
                                                                            data-bs-toggle="tooltip"
@@ -297,7 +297,7 @@
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    window.location.href = "/admin_site/DeletePurchase/" + delete_id
+                    window.location.href = "/admin-site/DeletePurchase/" + delete_id
                 }
             }).catch(swal.noop);
         });
@@ -310,7 +310,7 @@
             id = $(this).attr('id');
             $.ajax({
                 type: "GET",
-                url: `/admin_site/specific_purchase/${id}`,
+                url: `/admin-site/specific_purchase/${id}`,
                 success: function (profileresult) {
                     var data = profileresult.res.fields;
                     $("#largeModalLabel").append(`Purchase`)
@@ -384,7 +384,7 @@
                     `);
                     $(".modal-footer").append(`
                         <button type="button" id="editbtn" class="btn btn-success">
-                            <a class="editbtn" href="/admin_site/EditPurchase/Purchase ${profileresult.res.pk}">Edit</a>
+                            <a class="editbtn" href="/admin-site/EditPurchase/Purchase ${profileresult.res.pk}">Edit</a>
                         </button>
                     `);
                     $("#Modal").modal('show');

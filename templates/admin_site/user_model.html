@@ -250,7 +250,7 @@
                                                         </td>
                                                         <td class="text-center">
                                                             <div class="g-2">
-                                                                <a href="/admin_site/UserEdit/{{ i.username }} {{ i.id }}"
+                                                                <a href="/admin-site/UserEdit/{{ i.username }} {{ i.id }}"
                                                                     class="btn text-primary btn-sm"
                                                                     data-bs-toggle="tooltip"
                                                                     data-bs-original-title="Edit">
@@ -461,7 +461,7 @@
                 if (id.substring(0, 7) == 'Profile') {
                     $.ajax({
                         type: "GET",
-                        url: `/admin_site/Profile/${id}`,
+                        url: `/admin-site/Profile/${id}`,
                         success: function (profileresult) {
                             var data = profileresult.res.fields;
                             $("#largeModalLabel").append(`Profile`)
@@ -640,7 +640,7 @@
                 else if (id.substring(0, 3) == 'Pur') {
                     $.ajax({
                         type: "GET",
-                        url: `/admin_site/Purchase/${id}`,
+                        url: `/admin-site/Purchase/${id}`,
                         success: function (profileresult) {
                             var data = profileresult.res;
                             if(data.length != 0){
@@ -707,7 +707,7 @@
                 else if (id.substring(0, 3) == 'Tag') {
                     $.ajax({
                         type: "GET",
-                        url: `/admin_site/Tag/${id}`,
+                        url: `/admin-site/Tag/${id}`,
                         success: function (profileresult) {
                             var data = profileresult.res;
                             $("#largeModalLabel").append(`Tag`)
@@ -732,7 +732,7 @@
                 else if (id.substring(0, 3) == 'use') {
                     $.ajax({
                         type: "GET",
-                        url: `/admin_site/user_preference/${id}`,
+                        url: `/admin-site/user_preference/${id}`,
                         success: function (profileresult) {
                             var data = profileresult.res.fields;
                             $("#largeModalLabel").append(`User Deatils`)
@@ -949,7 +949,7 @@
                 else if (id.substring(0, 7) == 'Product') {
                     $.ajax({
                         type: "GET",
-                        url: `/admin_site/Product/${id}`,
+                        url: `/admin-site/Product/${id}`,
                         success: function (profileresult) {
                             var data = profileresult.res.fields;
                             $("#largeModalLabel").append(`Product`)
@@ -1036,7 +1036,7 @@
                 else if (id.substring(0, 3) == 'app') {
                     $.ajax({
                         type: "GET",
-                        url: `/admin_site/application_data/${id}`,
+                        url: `/admin-site/application_data/${id}`,
                         success: function (profileresult) {
                             var data = profileresult.res.fields;
                             $("#largeModalLabel").append(`Application Data`)
@@ -1236,7 +1236,7 @@
             id = $(this).attr('id');
             $.ajax({
                 type: "GET",
-                url: `/admin_site/specific_product/${id}`,
+                url: `/admin-site/specific_product/${id}`,
                 success: function (profileresult) {
                     var data = profileresult.res.fields;
                     $("#largeModalLabel").append(`Product`)
@@ -1355,7 +1355,7 @@
             })
                 .then((willDelete) => {
                     if (willDelete) {
-                        window.location.href = "/admin_site/DeleteUser/" + delete_id
+                        window.location.href = "/admin-site/DeleteUser/" + delete_id
                     }
                 }).catch(swal.noop);
         });
