@@ -25,11 +25,9 @@ from django.views.static import serve
 from django.contrib.auth.decorators import login_required
 
 #get city and country
-import geocoder
 from geopy.geocoders import Nominatim
 from pycountry import countries
 
-from django.db.models import Q
 
 # initialize Nominatim API
 geolocator = Nominatim(user_agent="geoapiExercises")
