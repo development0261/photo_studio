@@ -25,6 +25,6 @@ urlpatterns = [
     path('', main_index),
     path('admin/', admin.site.urls),
     path('home/', include('home.urls')),
-    path('admin_site/', include('admin_site.urls')),
+    path('admin-site/', include('admin_site.urls')),
     re_path(r'^%s(?P<path>.*)$' % settings.MEDIA_URL[1:], unprotected_serve, {'document_root': settings.MEDIA_ROOT}),
 ]

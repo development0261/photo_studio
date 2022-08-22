@@ -1144,8 +1144,8 @@ def send_link(request):
         email = request.POST['email']
         try:
             obj = custom_user.objects.get(email=email)
-            # Link = 'http://127.0.0.1:8001/admin_site/forgot_password/'
-            Link = 'https://kitaba.me/admin_site/forgot_password/'
+            # Link = 'http://127.0.0.1:8001/admin-site/forgot_password/'
+            Link = 'https://kitaba.me/admin-site/forgot_password/'
             characters = string.ascii_letters + string.digits + punctuation
             token = ''.join(random.choice(characters) for i in range(50))
             encrypted_token = base64.b64encode(
