@@ -4,13 +4,13 @@
 <link rel="stylesheet" href="{% static 'assets/css/profile_model.css' %}">
 {% endblock %}
 {% block content %}
-    <a href="{% url 'export_excel' %}" class="btn btn-secondary mt-2">Export</a>
+    <a href="{% url 'export_excel' %}?filter={{request.GET.filter}}" class="btn btn-secondary mt-2">Export</a>
     <div class="row">
         <div class="main-section">
             <div class="main-table">
                 <div class="card">
                     <div class="card-header">
-                        <div class="profiles" >
+                        <div class="profiles">
                             <h3 class="card-title mb-0">Profiles</h3>
                         </div>
                         <div class="main-header-center ms-3 d-none d-lg-block">
@@ -34,7 +34,7 @@
                                                     <table id="data-table" class="table table-bordered text-nowrap mb-0">
                                                         <thead class="border-top">
                                                             <tr>
-                                                                <th class="bg-transparent border-bottom-0">profile image</th>
+                                                                <th class="bg-transparent border-bottom-0">profile image <i class="fa fa-download" aria-hidden="true"></i></th>
                                                                 <th class="bg-transparent border-bottom-0 sortit">
                                                                     <span style="display:flex">name
                                                                     <div class="sort-order ml-2">
@@ -86,7 +86,7 @@
                                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                                 <h6 class="mb-0 fs-14 fw-semibold">
                                                                                     {% if row.profile_image %}
-                                                                                        <img src="/media/{{ row.profile_image }}" style="width: 45px;">
+                                                                                        <img src="{{ row.profile_image.url }}" style="width: 45px;">
                                                                                     {% else %}
                                                                                         None
                                                                                     {% endif %}
@@ -344,6 +344,22 @@
                                 </li>
                             </ul>
                         </div>
+
+                        <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By Created Date
+                            </h5>
+                            <ul>
+                                <li>
+                                    <form method="get">
+                                        <input type="date" id="start_date" name="start_date" value="{{last_record}}">
+                                        <input type="date" id="end_date" name="end_date" value="{{first_record}}">
+                                        <input class="btn btn-primary mt-2" type="submit" value="Submit" name="fromtodate">
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -640,6 +656,7 @@
             });
         });
     </script>
+
     <script>
         $(document).ready(function(){
           $(".togal-button").click(function(){

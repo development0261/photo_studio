@@ -24,6 +24,7 @@ import base64
 from django.core.paginator import Paginator
 from django.db.models import Q
 import xlwt
+import csv
 
 
 punctuation = "!#$%&()*+, -./:;<=>?@[\]^_`{|}~"
@@ -178,8 +179,8 @@ def app_user(request):
     else:
         return redirect("login")
 
-# profile model data
-def profile_model(request):
+#export data
+def export_excel(request):
     countries = Profile.objects.values('country').distinct()
     country_list1 = []
     for i in countries:
@@ -193,8 +194,97 @@ def profile_model(request):
         else:
             country_list.append(i)
 
+    total_profiles = Profile.objects.all().order_by('-created_at')
+    if 'searchval' in request.GET:
+        searchvalue = request.GET['searchval']
+        total_profiles = Profile.objects.filter(
+                            Q(name__icontains=searchvalue) |
+                            Q(mobile__icontains=searchvalue) |
+                            Q(gender__icontains=searchvalue) |
+                            Q(city__icontains=searchvalue) |
+                            Q(country__icontains=searchvalue)
+                        )
+
+    if 'filter' in request.GET:
+        val = request.GET['filter']
+
+        if val == 'today':
+          total_profiles = total_profiles.filter(
+                pass_update__exact=datetime.now())
+        if val == 'seven':
+            total_profiles = total_profiles.filter(pass_update__gte=datetime.now(
+            ) - timedelta(days=7), pass_update__lte=datetime.now())
+        if val == 'month':
+            total_profiles = total_profiles.filter(pass_update__gte=datetime.now(
+            ) - timedelta(days=30), pass_update__lte=datetime.now())
+        if val == 'year':
+            total_profiles = total_profiles.filter(pass_update__gte=datetime.now(
+            ) - timedelta(days=365), pass_update__lte=datetime.now())
+
+        if val == 'twenty':
+            total_profiles = total_profiles.filter(dob__gte=datetime.now(
+            ) - timedelta(days=(365*30)), dob__lt=datetime.now() - timedelta(days=(365*20)))
+        if val == 'thirty':
+            total_profiles = total_profiles.filter(dob__gte=datetime.now(
+            ) - timedelta(days=(365*40)), dob__lt=datetime.now() - timedelta(days=(365*30)))
+        if val == 'greater':
+            total_profiles = total_profiles.filter(
+                dob__lte=datetime.now() - timedelta(days=(365*40)))
+
+        if val == 'Male':
+            total_profiles = total_profiles.filter(gender__iexact="Male")
+        if val == 'Female':
+            total_profiles = total_profiles.filter(gender__iexact="Female")
+        if val == 'Other':
+            total_profiles = total_profiles.filter(gender__iexact="Other")
+
+        for i in country_list:
+            if i == val:
+                total_profiles = total_profiles.filter(country__iexact=val)
+
+    if 'fromtodate' in request.GET:
+        start_date = request.GET['start_date']
+        end_date = request.GET['end_date']
+
+        format_data = "%Y-%m-%d %H:%M:%S"
+        start_date = datetime.strptime(start_date+" 00:00:00", format_data)
+        end_date = datetime.strptime(end_date+" 23:59:59", format_data)
+
+        total_profiles = total_profiles.filter(created_at__gte = start_date, created_at__lte = end_date)
+
+    response = HttpResponse(content_type='application/ms-excel')
+    opts = total_profiles.model._meta
+    response = HttpResponse()
+    response['Content-Disposition'] = 'attachment;filename=export.csv'
+    writer = csv.writer(response)
+    field_names = [field.name for field in opts.fields]
+    writer.writerow(field_names)
+    for obj in total_profiles:
+        writer.writerow([getattr(obj, field) for field in field_names])
+    return response
+
+# profile model data
+def profile_model(request):
     if request.user.is_authenticated:
+        countries = Profile.objects.values('country').distinct()
+        country_list1 = []
+        for i in countries:
+            if i != 'None' or i !='none':
+                country_list1.append(str(i['country']).upper())
+        country_list1 = set(country_list1)
+        country_list = []
+        for i in country_list1:
+            if i=='NONE':
+                pass
+            else:
+                country_list.append(i)
+
         total_profiles = Profile.objects.all().order_by('-created_at')
+
+        first_record = total_profiles[0].created_at
+        last_record = total_profiles.reverse()[0].created_at
+        first_record = first_record.strftime("%Y-%m-%d")
+        last_record = last_record.strftime("%Y-%m-%d")
 
         if 'searchval' in request.GET:
             searchvalue = request.GET['searchval']
@@ -243,6 +333,19 @@ def profile_model(request):
                 if i == val:
                     total_profiles = total_profiles.filter(country__iexact=val)
 
+        if 'fromtodate' in request.GET:
+            start_date = request.GET['start_date']
+            end_date = request.GET['end_date']
+
+            format_data = "%Y-%m-%d %H:%M:%S"
+            start_date = datetime.strptime(start_date+" 00:00:00", format_data)
+            end_date = datetime.strptime(end_date+" 23:59:59", format_data)
+
+            total_profiles = total_profiles.filter(created_at__gte = start_date, created_at__lte = end_date)
+
+            last_record = start_date.strftime("%Y-%m-%d")
+            first_record = end_date.strftime("%Y-%m-%d")
+
         if 'show' in request.GET:
             showval = request.GET['show']
             p = Paginator(total_profiles, showval)
@@ -251,7 +354,9 @@ def profile_model(request):
         page_number = request.GET.get('page')
         page_obj = p.get_page(page_number)
 
-        return render(request, "admin_site/profile_model.html", {'total_profiles': page_obj, 'country_list':country_list})
+        # export_data = export_excel(total_profiles, ['NAME','REGISTRATION DATE','CITY','COUNTRY'], "'name','created_at','city','country'")
+
+        return render(request, "admin_site/profile_model.html", {'total_profiles': page_obj, 'country_list':country_list, "first_record": first_record, "last_record": last_record})
     else:
         return redirect("login")
 
@@ -298,7 +403,6 @@ def app_data_model(request):
 
         if 'search' in request.GET:
             searchvalue = request.GET['search']
-            print(searchvalue)
             total_app_datas = application_data.objects.filter(
                                 Q(inApp_Products__icontains=searchvalue) |
                                 Q(Purchased_product__icontains=searchvalue) |
@@ -310,7 +414,6 @@ def app_data_model(request):
                                 Q(Total_time_spent__icontains=searchvalue) |
                                 Q(Push_Notification_token__icontains=searchvalue)
             )
-            print(total_app_datas)
         if 'show' in request.GET:
             showval = request.GET['show']
             p = Paginator(total_app_datas, showval)
@@ -1198,25 +1301,3 @@ def forgot_password(request,token):
 def logoutprocess(request):
     logout(request)
     return redirect("login")
-
-#export data
-def export_excel(request):
-    response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename=Profile.xls' 
-    wb = xlwt.Workbook(encoding='utf-8')    
-    ws = wb.add_sheet('Profile')
-    row_num = 0
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
-    columns = ['NAME','REGISTRATION DATE','CITY','COUNTRY']
-    for col_num in range(len(columns)):
-        ws.write(row_num,col_num,columns[col_num],font_style)
-    font_style = xlwt.XFStyle()
-    rows = Profile.objects.all().values_list('name','created_at','city','country')
-  
-    for row in rows:
-        row_num +=1
-        for col_num in range(len(row)):
-            ws.write(row_num,col_num,str(row[col_num]),font_style)
-    wb.save(response)   
-    return response

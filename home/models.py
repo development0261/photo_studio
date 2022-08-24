@@ -12,6 +12,8 @@ class custom_user(AbstractUser):
     social_token = models.TextField(null=True, blank=True)
     social_registration = models.CharField(max_length=255, null=True, blank=True)
     social_account = models.CharField(max_length=255, null=True, blank=True)
+    first_name = models.CharField(max_length=20, null=True, blank=True)
+    last_name = models.CharField(max_length=20, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "custom_user"
