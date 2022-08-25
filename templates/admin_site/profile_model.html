@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{% static 'assets/css/profile_model.css' %}">
 {% endblock %}
 {% block content %}
-    <a href="{% url 'export_excel' %}?filter={{request.GET.filter}}" class="btn btn-secondary mt-2">Export</a>
+    <a id="export_link" href="{% url 'export_excel' %}?filter={{request.GET.filter}}&start_date={{request.GET.start_date}}&end_date={{request.GET.end_date}}&search={{request.GET.search}}&data=Profile" class="btn btn-secondary mt-2">Export</a>
     <div class="row">
         <div class="main-section">
             <div class="main-table">
@@ -34,7 +34,7 @@
                                                     <table id="data-table" class="table table-bordered text-nowrap mb-0">
                                                         <thead class="border-top">
                                                             <tr>
-                                                                <th class="bg-transparent border-bottom-0">profile image <i class="fa fa-download" aria-hidden="true"></i></th>
+                                                                <th class="bg-transparent border-bottom-0">profile image <input type="checkbox" class="export_data" id="profile_image"></i></th>
                                                                 <th class="bg-transparent border-bottom-0 sortit">
                                                                     <span style="display:flex">name
                                                                     <div class="sort-order ml-2">
@@ -42,6 +42,7 @@
                                                                     <i class="fa fa-caret-down" aria-hidden="true"></i>
                                                                     </div>
                                                                 </span>
+                                                                <input type="checkbox" class="export_data" id="name">
                                                                 </th>
                                                                 {% comment %} <th class="bg-transparent border-bottom-0 sortit">
                                                                     <span style="display:flex">Email
@@ -58,6 +59,7 @@
                                                                     <i class="fa fa-caret-down" aria-hidden="true"></i>
                                                                     </div>
                                                                 </span>
+                                                                <input type="checkbox" class="export_data" id="created_at">
                                                                 </th>
                                                                 <th class="bg-transparent border-bottom-0 sortit">
                                                                     <span style="display:flex">city
@@ -66,6 +68,7 @@
                                                                     <i class="fa fa-caret-down" aria-hidden="true"></i>
                                                                     </div>
                                                                 </span>
+                                                                <input type="checkbox" class="export_data" id="city">
                                                                 </th>
                                                                 <th class="bg-transparent border-bottom-0 sortit">
                                                                     <span style="display:flex">country
@@ -74,6 +77,7 @@
                                                                     <i class="fa fa-caret-down" aria-hidden="true"></i>
                                                                     </div>
                                                                 </span>
+                                                                <input type="checkbox" class="export_data" id="country">
                                                                 </th>
                                                                 <th class="bg-transparent border-bottom-0">Action</th>
                                                             </tr>
@@ -674,9 +678,26 @@
     <script>
         function search(ele) {
             if(event.key === 'Enter') {
-                window.location.href = "{% url 'Profile' %}?searchval="+ele.value;  
+                window.location.href = "{% url 'Profile' %}?search="+ele.value;  
             }
         }
+    </script>
+
+    {% comment %} export column {% endcomment %}
+    <script>
+        selectedCol = new Array();
+        $(document).on('change','.export_data',function(){
+            var default_link = $("#export_link").attr('href');
+            
+            if($(this).is(':checked')){
+                selectedCol.push($(this).attr('id'));
+            }else{
+                var idIndex = selectedCol.indexOf($(this).attr('id'));
+                selectedCol.splice(idIndex, 1);
+            }
+            default_link = `${default_link}&cols=${selectedCol}`
+            $("#export_link").attr('href',default_link)
+        })
     </script>
 
 {% endblock scripts %}

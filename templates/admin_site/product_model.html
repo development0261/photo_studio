@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{% static 'assets/css/product_model.css' %}">
 {% endblock %}
 {% block content %}
+<a id="export_link" href="{% url 'export_excel' %}?filter={{request.GET.filter}}&start_date={{request.GET.start_date}}&end_date={{request.GET.end_date}}&search={{request.GET.search}}&data=Product" class="btn btn-secondary mt-2">Export</a>
 <div class="row">
     <div class="col-lg-12 col-sm-12">
         <div class="card">
@@ -25,7 +26,9 @@
                                                 <thead class="border-top">
                                                     <tr>
                                                         <th class="bg-transparent border-bottom-0">
-                                                            product id</th>
+                                                            product id
+                                                        <input type="checkbox" class="export_data" id="productID">    
+                                                        </th>
                                                         <th class="bg-transparent border-bottom-0 sortit">
                                                             <span style="display:flex">product
                                                                 <div class="sort-order ml-2">
@@ -33,23 +36,32 @@
                                                                   <i class="fa fa-caret-down" aria-hidden="true"></i>
                                                                 </div>
                                                             </span>
+                                                            <input type="checkbox" class="export_data" id="product">
                                                         </th>
                                                         <th class="bg-transparent border-bottom-0">
-                                                            product Promo</th>
+                                                            product Promo
+                                                            <input type="checkbox" class="export_data" id="productPromo"></th>
                                                         <th class="bg-transparent border-bottom-0">
-                                                            promo Price</th>
+                                                            promo Price
+                                                            <input type="checkbox" class="export_data" id="promoPrice"></th>
                                                         <th class="bg-transparent border-bottom-0">
-                                                            annaul Sub Product</th>
+                                                            annaul Sub Product
+                                                            <input type="checkbox" class="export_data" id="annaulSubProd"></th>
                                                         <th class="bg-transparent border-bottom-0">
-                                                            annaul Sub</th>
+                                                            annaul Sub
+                                                            <input type="checkbox" class="export_data" id="annaulSub"></th>
                                                         <th class="bg-transparent border-bottom-0">
-                                                            monthly Sub Product</th>
+                                                            monthly Sub Product
+                                                            <input type="checkbox" class="export_data" id="monthlySubProd"></th>
                                                         <th class="bg-transparent border-bottom-0">
-                                                            monthly Sub</th>
+                                                            monthly Sub
+                                                            <input type="checkbox" class="export_data" id="monthlySub"></th>
                                                         <th class="bg-transparent border-bottom-0">
-                                                            locale Id</th>
+                                                            locale Id
+                                                            <input type="checkbox" class="export_data" id="localeId"></th>
                                                         <th class="bg-transparent border-bottom-0">
-                                                            Action</th>
+                                                            Action
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="table_body">
@@ -435,9 +447,26 @@
         function search(ele) {
             if(event.key === 'Enter') {
                 event.preventDefault()
-                window.location.href = "{% url 'Product' %}?search="+ele.value;  
+                window.location.href = "{% url 'Product' %}?search="+ele.value;
             }
         }
+    </script>
+
+    {% comment %} export column {% endcomment %}
+    <script>
+        selectedCol = new Array();
+        $(document).on('change','.export_data',function(){
+            var default_link = $("#export_link").attr('href');
+            
+            if($(this).is(':checked')){
+                selectedCol.push($(this).attr('id'));
+            }else{
+                var idIndex = selectedCol.indexOf($(this).attr('id'));
+                selectedCol.splice(idIndex, 1);
+            }
+            default_link = `${default_link}&cols=${selectedCol}`
+            $("#export_link").attr('href',default_link)
+        })
     </script>
 
 {% endblock scripts %}

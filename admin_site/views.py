@@ -15,7 +15,6 @@ from django.contrib import messages
 from django.core.mail import send_mail
 import string
 import random
-import os
 import re
 from django.core import mail
 from django.template.loader import render_to_string
@@ -23,8 +22,9 @@ from django.utils.html import strip_tags
 import base64
 from django.core.paginator import Paginator
 from django.db.models import Q
-import xlwt
 import csv
+from django.apps import apps
+
 
 
 punctuation = "!#$%&()*+, -./:;<=>?@[\]^_`{|}~"
@@ -181,86 +181,124 @@ def app_user(request):
 
 #export data
 def export_excel(request):
-    countries = Profile.objects.values('country').distinct()
-    country_list1 = []
-    for i in countries:
-        if i != 'None' or i !='none':
-            country_list1.append(str(i['country']).upper())
-    country_list1 = set(country_list1)
-    country_list = []
-    for i in country_list1:
-        if i=='NONE':
-            pass
-        else:
-            country_list.append(i)
+    if 'data' in request.GET:
+        model_name = request.GET['data']
+        Model = apps.get_model('home', model_name)
 
-    total_profiles = Profile.objects.all().order_by('-created_at')
-    if 'searchval' in request.GET:
-        searchvalue = request.GET['searchval']
-        total_profiles = Profile.objects.filter(
-                            Q(name__icontains=searchvalue) |
-                            Q(mobile__icontains=searchvalue) |
-                            Q(gender__icontains=searchvalue) |
-                            Q(city__icontains=searchvalue) |
-                            Q(country__icontains=searchvalue)
-                        )
+    result_queryset = Model.objects.all().order_by('-created_at')
+    if 'search' in request.GET:
+        if request.GET['search']:
+            searchvalue = request.GET['search']
+            if model_name == "Profile":
+                result_queryset = Model.objects.filter(
+                                    Q(name__icontains=searchvalue) |
+                                    Q(mobile__icontains=searchvalue) |
+                                    Q(gender__icontains=searchvalue) |
+                                    Q(city__icontains=searchvalue) |
+                                    Q(country__icontains=searchvalue)
+                                )
+            elif model_name == "Product":
+                result_queryset = Model.objects.filter(
+                                Q(productID__icontains=searchvalue) |
+                                Q(product__icontains=searchvalue) |
+                                Q(productPromo__icontains=searchvalue) |
+                                Q(promoPrice__icontains=searchvalue) |
+                                Q(annaulSubProd__icontains=searchvalue) |
+                                Q(annaulSub__icontains=searchvalue) |
+                                Q(monthlySubProd__icontains=searchvalue) |
+                                Q(monthlySub__icontains=searchvalue) |
+                                Q(localeId__icontains=searchvalue)
+                )
 
     if 'filter' in request.GET:
         val = request.GET['filter']
 
         if val == 'today':
-          total_profiles = total_profiles.filter(
+          result_queryset = result_queryset.filter(
                 pass_update__exact=datetime.now())
         if val == 'seven':
-            total_profiles = total_profiles.filter(pass_update__gte=datetime.now(
+            result_queryset = result_queryset.filter(pass_update__gte=datetime.now(
             ) - timedelta(days=7), pass_update__lte=datetime.now())
         if val == 'month':
-            total_profiles = total_profiles.filter(pass_update__gte=datetime.now(
+            result_queryset = result_queryset.filter(pass_update__gte=datetime.now(
             ) - timedelta(days=30), pass_update__lte=datetime.now())
         if val == 'year':
-            total_profiles = total_profiles.filter(pass_update__gte=datetime.now(
+            result_queryset = result_queryset.filter(pass_update__gte=datetime.now(
             ) - timedelta(days=365), pass_update__lte=datetime.now())
 
         if val == 'twenty':
-            total_profiles = total_profiles.filter(dob__gte=datetime.now(
+            result_queryset = result_queryset.filter(dob__gte=datetime.now(
             ) - timedelta(days=(365*30)), dob__lt=datetime.now() - timedelta(days=(365*20)))
         if val == 'thirty':
-            total_profiles = total_profiles.filter(dob__gte=datetime.now(
+            result_queryset = result_queryset.filter(dob__gte=datetime.now(
             ) - timedelta(days=(365*40)), dob__lt=datetime.now() - timedelta(days=(365*30)))
         if val == 'greater':
-            total_profiles = total_profiles.filter(
+            result_queryset = result_queryset.filter(
                 dob__lte=datetime.now() - timedelta(days=(365*40)))
 
         if val == 'Male':
-            total_profiles = total_profiles.filter(gender__iexact="Male")
+            result_queryset = result_queryset.filter(gender__iexact="Male")
         if val == 'Female':
-            total_profiles = total_profiles.filter(gender__iexact="Female")
+            result_queryset = result_queryset.filter(gender__iexact="Female")
         if val == 'Other':
-            total_profiles = total_profiles.filter(gender__iexact="Other")
+            result_queryset = result_queryset.filter(gender__iexact="Other")
 
-        for i in country_list:
-            if i == val:
-                total_profiles = total_profiles.filter(country__iexact=val)
-
-    if 'fromtodate' in request.GET:
+    if 'start_date' in request.GET and 'end_date' in request.GET:
         start_date = request.GET['start_date']
         end_date = request.GET['end_date']
+        if start_date and end_date:
 
-        format_data = "%Y-%m-%d %H:%M:%S"
-        start_date = datetime.strptime(start_date+" 00:00:00", format_data)
-        end_date = datetime.strptime(end_date+" 23:59:59", format_data)
+            format_data = "%Y-%m-%d %H:%M:%S"
+            start_date = datetime.strptime(start_date+" 00:00:00", format_data)
+            end_date = datetime.strptime(end_date+" 23:59:59", format_data)
 
-        total_profiles = total_profiles.filter(created_at__gte = start_date, created_at__lte = end_date)
+            result_queryset = result_queryset.filter(created_at__gte = start_date, created_at__lte = end_date)
 
     response = HttpResponse(content_type='application/ms-excel')
-    opts = total_profiles.model._meta
     response = HttpResponse()
-    response['Content-Disposition'] = 'attachment;filename=export.csv'
+    response['Content-Disposition'] = f'attachment;filename={model_name}.csv'
     writer = csv.writer(response)
+
+    if 'cols' in request.GET:
+        cols = request.GET['cols']
+        cols_list = cols.split(",")
+        
+        all = {}
+        for i in cols_list:
+            info = Model.objects.only(i)
+            all[i] = info
+        
+        writer.writerow(cols_list)
+        for i,j in all.items():
+            for obj in j:
+                columns_dict = {}
+                for field in cols_list:
+
+                    if field == "profile_image":
+                        if getattr(obj, field):
+                            columns_dict[field] = 'http://127.0.0.1:8001/media/' + str(getattr(obj, field))
+                        else:
+                            columns_dict[field] = getattr(obj, field)
+                    else:
+                        columns_dict[field] = getattr(obj, field)
+                writer.writerow(list(columns_dict.values()))
+            break
+        return response
+
+    opts = result_queryset.model._meta
     field_names = [field.name for field in opts.fields]
     writer.writerow(field_names)
-    for obj in total_profiles:
-        writer.writerow([getattr(obj, field) for field in field_names])
+    for obj in result_queryset:
+        temp_list = []
+        for field in field_names:
+            if field == "profile_image":
+                if getattr(obj, field):
+                    temp_list.append('http://127.0.0.1:8001/media/' + str(getattr(obj, field)))
+                else:
+                    temp_list.append(getattr(obj, field))
+            else:
+                temp_list.append(getattr(obj, field))
+        writer.writerow(temp_list)
     return response
 
 # profile model data
@@ -286,8 +324,8 @@ def profile_model(request):
         first_record = first_record.strftime("%Y-%m-%d")
         last_record = last_record.strftime("%Y-%m-%d")
 
-        if 'searchval' in request.GET:
-            searchvalue = request.GET['searchval']
+        if 'search' in request.GET:
+            searchvalue = request.GET['search']
             total_profiles = Profile.objects.filter(
                                 Q(name__icontains=searchvalue) |
                                 Q(mobile__icontains=searchvalue) |
