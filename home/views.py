@@ -114,9 +114,9 @@ def register(request):
 		username = request.POST['username']
 		email = request.POST['email']
 		password = request.POST['password']
-		name = request.POST['name']
+		name = request.POST.get('name')
 		mobile = request.POST.get('mobile')
-		gender = request.POST['gender']
+		gender = request.POST.get('gender')
 		first_name = request.POST.get('first_name')
 		last_name = request.POST.get('last_name')
 
@@ -681,34 +681,84 @@ def preferences(request):
 	result = dict()
 	if request.method == "POST":
 		export_quality = request.POST['export_quality']
-		Language = request.POST['Language']
-		user_stared_templates = request.POST['user_stared_templates']
-		user_stared_backgrounds = request.POST['user_stared_backgrounds']
-		user_stared_stickers = request.POST['user_stared_stickers']
-		user_stared_Textart = request.POST['user_stared_Textart']
-		user_stared_colors = request.POST['user_stared_colors']
-		user_stared_fonts = request.POST['user_stared_fonts']
-		most_used_fonts = request.POST['most_used_fonts']
-		user_custom_colors = request.POST['user_custom_colors']
-		instagram_follower = request.POST['instagram_follower']
-		grid_snapping = request.POST['grid_snapping']
-		user_recent_text = request.POST['user_recent_text']
+		Language = request.POST.get('Language')
+		user_stared_templates = request.POST.get('user_stared_templates')
+		user_stared_backgrounds = request.POST.get('user_stared_backgrounds')
+		user_stared_stickers = request.POST.get('user_stared_stickers')
+		user_stared_Textart = request.POST.get('user_stared_Textart')
+		user_stared_colors = request.POST.get('user_stared_colors')
+		user_stared_fonts = request.POST.get('user_stared_fonts')
+		most_used_fonts = request.POST.get('most_used_fonts')
+		user_custom_colors = request.POST.get('user_custom_colors')
+		instagram_follower = request.POST.get('instagram_follower')
+		grid_snapping = request.POST.get('grid_snapping')
+		user_recent_text = request.POST.get('user_recent_text')
 		appearance_mode = request.POST['appearance_mode']
-		enable_iCloud_backup = request.POST['enable_iCloud_backup']
-		save_projects_automatically = request.POST['save_projects_automatically']
-		save_projects_on_export = request.POST['save_projects_on_export']
-		notifications_permission = request.POST['notifications_permission']
-		inApp_notifications_permission = request.POST['inApp_notifications_permission']
-		photo_library_permission = request.POST['photo_library_permission']
-		digital_riyals_rewards = request.POST['digital_riyals_rewards']
-		enable_touch = request.POST['enable_touch']
+		enable_iCloud_backup = request.POST.get('enable_iCloud_backup')
+		save_projects_automatically = request.POST.get('save_projects_automatically')
+		save_projects_on_export = request.POST.get('save_projects_on_export')
+		notifications_permission = request.POST.get('notifications_permission')
+		inApp_notifications_permission = request.POST.get('inApp_notifications_permission')
+		photo_library_permission = request.POST.get('photo_library_permission')
+		digital_riyals_rewards = request.POST.get('digital_riyals_rewards')
+		enable_touch = request.POST.get('enable_touch')
 		app_theme = request.POST['app_theme']
-		always_crop = request.POST['always_crop']
+		always_crop = request.POST.get('always_crop')
 
 		if 'signature' in request.FILES:
 			signature = request.FILES['signature']
 		else:
 			signature = None
+
+		if instagram_follower:
+			instagram_follower = instagram_follower
+		else:
+			instagram_follower = False
+
+		if grid_snapping:
+			grid_snapping = grid_snapping
+		else:
+			grid_snapping = False
+
+		if enable_iCloud_backup:
+			enable_iCloud_backup = enable_iCloud_backup
+		else:
+			enable_iCloud_backup = False
+
+		if save_projects_automatically:
+			save_projects_automatically = save_projects_automatically
+		else:
+			save_projects_automatically = False
+
+		if save_projects_on_export:
+			save_projects_on_export = save_projects_on_export
+		else:
+			save_projects_on_export = False
+
+		if notifications_permission:
+			notifications_permission = notifications_permission
+		else:
+			notifications_permission = False
+
+		if inApp_notifications_permission:
+			inApp_notifications_permission = inApp_notifications_permission
+		else:
+			inApp_notifications_permission = False
+
+		if photo_library_permission:
+			photo_library_permission = photo_library_permission
+		else:
+			photo_library_permission = False
+
+		if enable_touch:
+			enable_touch = enable_touch
+		else:
+			enable_touch = False
+
+		if always_crop:
+			always_crop = always_crop
+		else:
+			always_crop = False			
 
 		try:
 			user = User.objects.get(username=request.user)
@@ -744,7 +794,8 @@ def preferences(request):
 					result["value"] = True
 					result["message"] = "preferences Added."
 					return Response(result, status=status.HTTP_200_OK)
-			except:
+			except Exception as e:
+				print("==>",e)
 				preferences_obj = user_preference.objects.get(username=user.id)
 				preferences_obj.signature = signature
 				preferences_obj.export_quality = export_quality
@@ -775,7 +826,8 @@ def preferences(request):
 				result["value"] = False
 				result["message"] = "User preferences updated."
 				return Response(result, status=status.HTTP_200_OK)
-		except:
+		except Exception as e:
+			print(e)
 			result["value"] = False
 			result["message"] = "User not Found!!!"
 			return Response(result, status=status.HTTP_401_UNAUTHORIZED)
@@ -787,36 +839,54 @@ def app_data(request):
 	result = dict()
 	if request.method == "POST":
 		UID = request.POST['UID']
-		inApp_Products = request.POST['inApp_Products']
-		Purchase_date = request.POST['Purchase_date']
-		Purchased_product = request.POST['Purchased_product']
-		Device_Model = request.POST['Device_Model']
-		operating_system = request.POST['operating_system']
-		Device_Storage = request.POST['Device_Storage']
-		Lunch_count = request.POST['Lunch_count']
-		Push_Notification_Status = request.POST['Push_Notification_Status']
-		Library_permission_Status = request.POST['Library_permission_Status']
-		latitude = request.POST['latitude']
-		longitude = request.POST['longitude']
-		Carrier = request.POST['Carrier']
-		App_Last_Opened = request.POST['App_Last_Opened']
-		Purchase_attempts = request.POST['Purchase_attempts']
-		Grace_Period = request.POST['Grace_Period']
-		Remaining_grace_period_days = request.POST['Remaining_grace_period_days']
-		Number_of_projects = request.POST['Number_of_projects']
-		Total_time_spent = request.POST['Total_time_spent']
-		total_ads_served = request.POST['total_ads_served']
-		Registered_user = request.POST['Registered_user']
-		Push_Notification_token = request.POST['Push_Notification_token']
+		inApp_Products = request.POST.get('inApp_Products')
+		Purchase_date = request.POST.get('Purchase_date')
+		Purchased_product = request.POST.get('Purchased_product')
+		Device_Model = request.POST.get('Device_Model')
+		operating_system = request.POST.get('operating_system')
+		Device_Storage = request.POST.get('Device_Storage')
+		Lunch_count = request.POST.get('Lunch_count')
+		Push_Notification_Status = request.POST.get('Push_Notification_Status')
+		Library_permission_Status = request.POST.get('Library_permission_Status')
+		latitude = request.POST.get('latitude')
+		longitude = request.POST.get('longitude')
+		Carrier = request.POST.get('Carrier')
+		App_Last_Opened = request.POST.get('App_Last_Opened')
+		Purchase_attempts = request.POST.get('Purchase_attempts')
+		Grace_Period = request.POST.get('Grace_Period')
+		Remaining_grace_period_days = request.POST.get('Remaining_grace_period_days')
+		Number_of_projects = request.POST.get('Number_of_projects')
+		Total_time_spent = request.POST.get('Total_time_spent')
+		total_ads_served = request.POST.get('total_ads_served')
+		Registered_user = request.POST.get('Registered_user')
+		Push_Notification_token = request.POST.get('Push_Notification_token')
+
+		if Push_Notification_Status:
+			Push_Notification_Status = Push_Notification_Status
+		else:
+			Push_Notification_Status = False
+
+		if Library_permission_Status:
+			Library_permission_Status = Library_permission_Status
+		else:
+			Library_permission_Status = False
+
+		if Registered_user:
+			Registered_user = Registered_user
+		else:
+			Registered_user = False
+
 		try:
-			datetime.strptime(Purchase_date, '%Y-%m-%d')
+			if Purchase_date:
+				datetime.strptime(Purchase_date, '%Y-%m-%d')
 		except ValueError:
 			result["value"] = False
 			result["message"] = "Purchase_date in incorrect date format. It should be YYYY-MM-DD"
 			return Response(result, status=status.HTTP_400_BAD_REQUEST)
 
 		try:
-			datetime.strptime(App_Last_Opened, '%Y-%m-%d')
+			if App_Last_Opened:
+				datetime.strptime(App_Last_Opened, '%Y-%m-%d')
 		except ValueError:
 			result["value"] = False
 			result["message"] = "App_Last_Opened in incorrect date format. It should be YYYY-MM-DD"
@@ -949,31 +1019,44 @@ def username_verification(request):
 def purchase_history(request):
 	result = dict()
 	if request.method == "POST":
+		product = request.POST['product']
 		pstatus = request.POST['pstatus']
-		auto_renew_status = request.POST['auto_renew_status']
-		is_in_billing_retry_period = request.POST['is_in_billing_retry_period']
-		is_in_intro_offer_period = request.POST['is_in_intro_offer_period']
-		is_trial_period = request.POST['is_trial_period']
-		start_date = request.POST['start_date']
-		end_date = request.POST['end_date'] 
-		subscription_type = request.POST['subscription_type']
+		auto_renew_status = request.POST.get('auto_renew_status')
+		is_in_billing_retry_period = request.POST.get('is_in_billing_retry_period')
+		is_in_intro_offer_period = request.POST.get('is_in_intro_offer_period')
+		is_trial_period = request.POST.get('is_trial_period')
+		start_date = request.POST.get('start_date')
+		end_date = request.POST.get('end_date')
+		subscription_type = request.POST.get('subscription_type')
 		try:
-			datetime.strptime(start_date, '%Y-%m-%d')
+			if start_date:
+				datetime.strptime(start_date, '%Y-%m-%d')
 		except ValueError:
 			result["value"]=False
 			result["message"]="start_date in incorrect date format. It should be YYYY-MM-DD"
 			return Response(result, status=status.HTTP_400_BAD_REQUEST)		
 		try:
-			datetime.strptime(end_date, '%Y-%m-%d')
+			if end_date:
+				datetime.strptime(end_date, '%Y-%m-%d')
 		except ValueError:
 			result["value"]=False
 			result["message"]="end_date in incorrect date format. It should be YYYY-MM-DD"
 			return Response(result, status=status.HTTP_400_BAD_REQUEST)
-		
+		from django.core.exceptions import ObjectDoesNotExist
+
+		try:
+			product_obj = Product.objects.get(product=product)
+			print(product_obj)
+		except ObjectDoesNotExist:
+			result["value"]=False
+			result["message"]="Product does not exists!"
+			return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+
 		try:
 			user = User.objects.get(username=request.user)
 			try:
 				purchase_obj = Purchase.objects.get(username=user.id)
+				purchase_obj.product = product_obj
 				purchase_obj.pstatus = pstatus
 				purchase_obj.auto_renew_status = auto_renew_status
 				purchase_obj.is_in_billing_retry_period = is_in_billing_retry_period
@@ -989,6 +1072,7 @@ def purchase_history(request):
 			except Exception as e:
 				obj = Purchase(
 					username=user,
+					product = product_obj,
 					pstatus=pstatus,
 					auto_renew_status=auto_renew_status,
 					is_in_billing_retry_period=is_in_billing_retry_period,
@@ -1003,6 +1087,7 @@ def purchase_history(request):
 				result["message"]="Data Added"
 				return Response(result, status=status.HTTP_200_OK)
 		except Exception as e:
+			print(e)
 			result["value"]=False
 			result["message"]="User Not Exist!!!"
 			return Response(result, status=status.HTTP_401_UNAUTHORIZED)
@@ -1035,49 +1120,48 @@ def product(request):
 	if request.method == "POST":
 		productID = request.POST['productID']
 		product = request.POST['product']
-		productPromo = request.POST['productPromo']
-		promoPrice = request.POST['promoPrice']
-		annaulSubProd = request.POST['annaulSubProd']
-		annaulSub = request.POST['annaulSub']
-		monthlySubProd = request.POST['monthlySubProd']
-		monthlySub = request.POST['monthlySub']
-		localeId = request.POST['localeId']
+		productPromo = request.POST.get('productPromo')
+		promoPrice = request.POST.get('promoPrice')
+		annaulSubProd = request.POST.get('annaulSubProd')
+		annaulSub = request.POST.get('annaulSub')
+		monthlySubProd = request.POST.get('monthlySubProd')
+		monthlySub = request.POST.get('monthlySub')
+		localeId = request.POST.get('localeId')
 
 		try:
-			user_obj = User.objects.get(username=request.user)
-			try:
-				product1 = Product.objects.get(product=product)
-				product1.productPromo = productPromo
-				product1.promoPrice = promoPrice
-				product1.annaulSubProd = annaulSubProd
-				product1.annaulSub = annaulSub
-				product1.monthlySubProd = monthlySubProd
-				product1.monthlySub = monthlySub
-				product1.localeId = localeId
-				product1.save()
-				result["value"] = True
-				result["message"] = "Product Details Updated."
-				return Response(result, status=status.HTTP_200_OK)
-			except Exception as e:
-				product1 = Product.objects.create(
-					# username=user_obj,
-					productID=productID,
-					product=product,
-					productPromo=productPromo,
-					promoPrice=promoPrice,
-					annaulSubProd=annaulSubProd,
-					annaulSub=annaulSub,
-					monthlySubProd=monthlySubProd,
-					monthlySub=monthlySub,
-					localeId=localeId
-				)
-				result["value"] = True
-				result["message"] = "Product Details Added."
-				return Response(result, status=status.HTTP_200_OK)
+			product1 = Product.objects.get(product=product, productID=productID)
+			product1.productPromo = productPromo
+			product1.promoPrice = promoPrice
+			product1.annaulSubProd = annaulSubProd
+			product1.annaulSub = annaulSub
+			product1.monthlySubProd = monthlySubProd
+			product1.monthlySub = monthlySub
+			product1.localeId = localeId
+			product1.save()
+			result["value"] = True
+			result["message"] = "Product Details Updated."
+			return Response(result, status=status.HTTP_200_OK)
 		except Exception as e:
-			result["value"] = False
-			result["message"] = "User not found"
-			return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+			if Product.objects.filter(productID=productID).exists() or Product.objects.filter(product=product).exists():
+				result["value"] = False
+				result["message"] = "Product or ProductID already exists!"
+				return Response(result, status=status.HTTP_400_BAD_REQUEST)
+
+			product1 = Product.objects.create(
+				productID=productID,
+				product=product,
+				productPromo=productPromo,
+				promoPrice=promoPrice,
+				annaulSubProd=annaulSubProd,
+				annaulSub=annaulSub,
+				monthlySubProd=monthlySubProd,
+				monthlySub=monthlySub,
+				localeId=localeId
+			)
+			result["value"] = True
+			result["message"] = "Product Details Added."
+			return Response(result, status=status.HTTP_200_OK)
+			
 
 
 # load script
