@@ -43,17 +43,17 @@ def unprotected_serve(request, path, document_root=None, show_indexes=False):
 # end------------
 
 
-User = get_user_model()
-# reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
-reg = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$"
-for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-punctuation = "!#$%&()*+, -.:;<=>?@[\]^_`{|}~"
+# User = get_user_model()
+# # reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
+# reg = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$"
+# for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+# punctuation = "!#$%&()*+, -.:;<=>?@[\]^_`{|}~"
 
-#check time after user request for delete account
-users_obj = User.objects.filter(is_active=False)
-for row in users_obj:
-	if row.delete_date + timedelta(days=30):
-		users_obj.delete()
+# #check time after user request for delete account
+# users_obj = User.objects.filter(is_active=False)
+# for row in users_obj:
+# 	if row.delete_date + timedelta(days=30):
+# 		users_obj.delete()
 		
 def main_index(request):
 	return render(request,"main_index.html")
