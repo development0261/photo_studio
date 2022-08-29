@@ -65,6 +65,17 @@ class CustomUserAdmin(UserAdmin):
                     'last_name', "password", 'is_staff', 'delete_date', 'confirm_token')
     list_filter = (RegisterFilter, RecentlyRegisterFilter)
     search_list = ('username', 'email', 'first_name', 'last_name') 
+    fieldsets = (
+        *UserAdmin.fieldsets,  # original form fieldsets, expanded
+        (                      # new fieldset added on to the bottom
+            'Custom Field Heading',  # group heading of your choice; set to None for a blank space instead of a header
+            {
+                'fields': (
+                    'delete_date','social_token','social_registration','social_account','auth_token',
+                ),
+            },
+        ),
+    )
 
 
 class AgeFilter(SimpleListFilter):
@@ -153,6 +164,18 @@ class CustomApps2(admin.ModelAdmin):
     search_fields = ("Carrier", "Device_Model", "Device_Storage", "Grace_Period", "Latest_Geolocation",
                      "Purchased_product", "Remaining_grace_period_days", "Total_time_spent", "UID", "aid", "iOS", "inApp_Products")
 
+# class CustomUserAdmin(UserAdmin):
+#     fieldsets = (
+#         *UserAdmin.fieldsets,  # original form fieldsets, expanded
+#         (                      # new fieldset added on to the bottom
+#             'Custom Field Heading',  # group heading of your choice; set to None for a blank space instead of a header
+#             {
+#                 'fields': (
+#                     'delete_date','social_token','social_registration','social_account','auth_token',
+#                 ),
+#             },
+#         ),
+#     )
 admin.site.register(custom_user,CustomUserAdmin)
 admin.site.register(Profile, CustomProfile)
 admin.site.register(user_preference, CustomDetails)
