@@ -328,8 +328,6 @@ def social_media_registration(request):
 						result["value"] = True
 						result["data"] = serializer_class.data
 
-						print(result)
-
 						if user.auth_token:
 							if len(user.auth_token)==3:
 								user.auth_token[0] = (str(result['data']['token']))
@@ -338,6 +336,7 @@ def social_media_registration(request):
 						else:
 							user.auth_token = "{"+str(result['data']['token'])+"}"
 						user.save()
+
 						return Response(result, status=status.HTTP_200_OK)
 					except IntegrityError:
 						result["value"] = False
@@ -349,7 +348,7 @@ def social_media_registration(request):
 					serializer_class = SocialSerializer(profile_obj)
 					result["value"] = True
 					result["data"] = serializer_class.data
-					print(result)
+
 					if user_obj.auth_token:
 						if len(user_obj.auth_token)==3:
 							user_obj.auth_token[0] = (str(result['data']['token']))
@@ -358,6 +357,7 @@ def social_media_registration(request):
 					else:
 						user_obj.auth_token = "{"+str(result['data']['token'])+"}"
 					user_obj.save()
+
 					return Response(result, status=status.HTTP_200_OK)
 	except Exception:
 		result["value"] = False
@@ -667,13 +667,13 @@ def profile(request):
 				if User.objects.filter(username=username).exists():
 					return Response({"Error": "username already taken!!!"}, status=status.HTTP_400_BAD_REQUEST)
 
-			# user_obj = User.objects.get(username=request.user)
 			if user_obj.email != email:
 				if User.objects.filter(email=email).exists():
 					return Response({"Error": "Email already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
 
-			user_obj.username = username
-			user_obj.save()
+			if username:
+				user_obj.username = username
+				user_obj.save()
 			profile_obj = Profile.objects.get(username=user_obj.id)
 			profile_obj.name = name
 			if email:
@@ -715,9 +715,9 @@ def profile(request):
 			return Response(result, status=status.HTTP_200_OK)
 	except Exception as e:
 		result["value"] = False
-		result["message"] = "User Not Exist!!!"
+		result["message"] = "Something went wrong! Please contact to support team."
 		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
-			
+
 # get specific user
 @api_view(['GET'])
 def specific_user(request):
