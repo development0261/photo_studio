@@ -298,8 +298,6 @@ def register(request):
 def social_media_registration(request):
 	try:
 		result = dict()
-		# Email (optional),Token (M),
-		# SocialMediaSite (M),Username (M)
 		if request.method == "POST":
 			username = request.POST['username']
 			token = request.POST['token']
@@ -363,6 +361,7 @@ def social_media_registration(request):
 					user_obj = User.objects.get(token=token)
 					user_obj.first_name = first_name
 					user_obj.first_name = first_name
+					user_obj.username = username
 					user_obj.save()
 					profile_obj = Profile(username=user_obj, is_social=is_social, name=name, city=city, country=country, lat=latitude, long=longitude)
 					serializer_class = SocialSerializer(profile_obj)
@@ -1242,14 +1241,21 @@ def delete_account(request):
 		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
 	if request.method == "POST":
 		try:
-			user_obj = User.objects.get(username=request.user)
-			user_obj.is_active = False
-			user_obj.delete_date = datetime.now()
-			user_obj.save()
-			result["value"] = True
-			result["message"] = "Your account is under deleting process and deleted in 30 days."
-			return Response(result, status=status.HTTP_200_OK)
+			password = request.POST['password']
+			user_obj = User.objects.get(auth_token__contains = "{" + header_token + "}")
+			if user_obj.check_password(password):
+				user_obj.is_active = False
+				user_obj.delete_date = datetime.now()
+				user_obj.save()
+				result["value"] = True
+				result["message"] = "Your account is under deleting process and deleted in 30 days."
+				return Response(result, status=status.HTTP_200_OK)
+			else:
+				result["value"] = False
+				result["message"] = "Incorrect Password!"
+				return Response(result, status=status.HTTP_400_BAD_REQUEST)
 		except Exception as e:
+			print(e)
 			result["value"] = False
 			result["message"] = "User not found"
 			return Response(result, status=status.HTTP_401_UNAUTHORIZED)
