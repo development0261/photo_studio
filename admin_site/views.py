@@ -252,7 +252,7 @@ def export_excel(request):
             start_date = datetime.strptime(start_date+" 00:00:00", format_data)
             end_date = datetime.strptime(end_date+" 23:59:59", format_data)
 
-            result_queryset = result_queryset.filter(created_at__gte = start_date, created_at__lte = end_date)
+            result_queryset = result_queryset.filter(created_at__gte = start_date, created_at__lte = end_date)      
 
     response = HttpResponse(content_type='application/ms-excel')
     response = HttpResponse()
@@ -284,6 +284,12 @@ def export_excel(request):
                 writer.writerow(list(columns_dict.values()))
             break
         return response
+
+    # if 'users' in request.GET:
+    #     users = request.GET['users']
+    #     users_list = users.split(",")
+    #     res = [int(i) for i in users_list]
+    #     result_queryset = Profile.objects.filter(pk__in = res)
 
     opts = result_queryset.model._meta
     field_names = [field.name for field in opts.fields]

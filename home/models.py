@@ -3,10 +3,9 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
-from django.contrib.auth.models import User
-User._meta.get_field('email')._unique = True
 
 class custom_user(AbstractUser):
+    email = models.EmailField(max_length=70, blank=True, null= True, unique= False)
     delete_date = models.DateTimeField(null=True, blank=True)
     confirm_token = models.CharField(null=True, blank=True, max_length=50)
     token = models.TextField(null=True, blank=True)

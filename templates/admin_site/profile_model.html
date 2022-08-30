@@ -89,6 +89,7 @@
                                                                         <div class="d-flex">
                                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                                 <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                    {% comment %} <input type="checkbox" class="export_data_row" id="{{row.pk}}"> {% endcomment %}
                                                                                     {% if row.profile_image %}
                                                                                         <img src="{{ row.profile_image.url }}" style="width: 45px;">
                                                                                     {% else %}
@@ -699,5 +700,46 @@
             $("#export_link").attr('href',default_link)
         })
     </script>
+
+    {% comment %} export user {% endcomment %}
+    <script>
+        selectedrow = new Array();
+        $(document).on('change','.export_data_row',function(){
+            var default_link = $("#export_link").attr('href');
+            
+            if($(this).is(':checked')){
+                selectedrow.push($(this).attr('id'));
+            }else{
+                var idIndex = selectedrow.indexOf($(this).attr('id'));
+                selectedrow.splice(idIndex, 1);
+            }
+
+            default_link = `${default_link}&users=${selectedrow}`
+            $("#export_link").attr('href',default_link)
+        })
+    </script>
+
+    {% comment %} uncheck {% endcomment %}
+    {% comment %} <script>
+        $(document).ready(function(){
+            $('.export_data').click(function(){
+                if($(this).prop("checked") == true){
+                    $('.export_data_row').prop('checked', false);
+                    selectedrow = new Array();
+                    selectedCol = new Array();
+                }
+            });
+        });
+
+        $(document).ready(function(){
+            $('.export_data_row').click(function(){
+                if($(this).prop("checked") == true){
+                    $('.export_data').prop('checked', false);
+                    selectedCol = new Array();
+                    selectedrow = new Array();
+                }
+            });
+        });
+    </script> {% endcomment %}
 
 {% endblock scripts %}

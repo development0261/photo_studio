@@ -307,9 +307,7 @@ def social_media_registration(request):
 			if 'profile_image' in request.FILES:
 				profile_image = request.FILES['profile_image']
 
-			if 'email' in request.POST:
-				email = request.POST['email']
-
+			email = request.POST.get('email')
 			first_name = request.POST.get('first_name')
 			last_name = request.POST.get('last_name')
 			name = request.POST.get('name')
@@ -317,6 +315,7 @@ def social_media_registration(request):
 			country = request.POST.get('country')
 			latitude = request.POST.get('latitude')
 			longitude = request.POST.get('longitude')
+
 			if latitude:
 				latitude = latitude
 			else:
@@ -329,41 +328,46 @@ def social_media_registration(request):
 
 			if token:
 				if not User.objects.filter(token=token).exists():
-					try:
-						user_obj = User.objects.create_user(
-							username=username, password=token, email=email,
-							token=token, social_media_site=social_media_site, first_name=first_name, last_name=last_name)
-						user_obj.save()
-
-						profile_obj = Profile(username=user_obj, is_social=is_social, name=name, city=city, country=country, lat=latitude, long=longitude)
-						if 'profile_image' in request.FILES:
-							profile_obj.profile_image = profile_image
-						profile_obj.save()
-						serializer_class = SocialSerializer(profile_obj)
-						result["value"] = True
-						result["data"] = serializer_class.data
-
-						if user_obj.auth_token:
-							if len(user_obj.auth_token)==3:
-								user_obj.auth_token[0] = (str(result['data']['token']))
-							else:
-								user_obj.auth_token.append(str(result['data']['token']))
+					if email:
+						if(re.fullmatch(for_email, email)):
+							if User.objects.filter(email=email).exists():
+								result["value"] = False
+								result["message"] = "Email already Used!"
+								return Response(result,status=status.HTTP_400_BAD_REQUEST)
 						else:
-							user_obj.auth_token = "{"+str(result['data']['token'])+"}"
-						user_obj.save()
+							result["value"] = False
+							result["message"] = "Enter valid email address"
+							return Response(result, status=status.HTTP_400_BAD_REQUEST)
+					user_obj = User.objects.create_user(
+						username=username, password=token, email=email,
+						token=token, social_media_site=social_media_site, first_name=first_name, last_name=last_name)
+					user_obj.save()
 
-						return Response(result, status=status.HTTP_200_OK)
-					except IntegrityError:
-						result["value"] = False
-						result["message"] = "Email already Used!"
-						return Response(result,status=status.HTTP_400_BAD_REQUEST)
+					profile_obj = Profile(username=user_obj, is_social=is_social, name=name, city=city, country=country, lat=latitude, long=longitude)
+					if 'profile_image' in request.FILES:
+						profile_obj.profile_image = profile_image
+					profile_obj.save()
+					serializer_class = SocialSerializer(profile_obj)
+					result["value"] = True
+					result["data"] = serializer_class.data
+
+					if user_obj.auth_token:
+						if len(user_obj.auth_token)==3:
+							user_obj.auth_token[0] = (str(result['data']['token']))
+						else:
+							user_obj.auth_token.append(str(result['data']['token']))
+					else:
+						user_obj.auth_token = "{"+str(result['data']['token'])+"}"
+					user_obj.save()
+
+					return Response(result, status=status.HTTP_200_OK)
 				else:
 					user_obj = User.objects.get(token=token)
 					user_obj.first_name = first_name
-					user_obj.first_name = first_name
+					user_obj.last_name = last_name
 					user_obj.username = username
 					user_obj.save()
-					profile_obj = Profile(username=user_obj, is_social=is_social, name=name, city=city, country=country, lat=latitude, long=longitude)
+					profile_obj = Profile.objects.get(username=user_obj)
 					serializer_class = SocialSerializer(profile_obj)
 					result["value"] = True
 					result["data"] = serializer_class.data
@@ -688,8 +692,13 @@ def profile(request):
 					return Response({"Error": "username already taken!!!"}, status=status.HTTP_400_BAD_REQUEST)
 
 			if user_obj.email != email:
-				if User.objects.filter(email=email).exists():
-					return Response({"Error": "Email already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
+				if(re.fullmatch(for_email, email)):
+					if User.objects.filter(email=email).exists():
+						return Response({"Error": "Email already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
+				else:
+					result["value"] = False
+					result["message"] = "Enter valid email address"
+					return Response(result, status=status.HTTP_400_BAD_REQUEST)
 
 			if username:
 				user_obj.username = username
