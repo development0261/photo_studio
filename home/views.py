@@ -43,17 +43,17 @@ def unprotected_serve(request, path, document_root=None, show_indexes=False):
 # end------------
 
 
-User = get_user_model()
-# reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
-reg = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$"
-for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-punctuation = "!#$%&()*+, -.:;<=>?@[\]^_`{|}~"
+# User = get_user_model()
+# # reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&*+,-./:;<=>?@\^_`|~])[A-Za-z\d!#$%&*+,-./:;<=>?@\^_`|~]{6,20}$"
+# reg = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,20}$"
+# for_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+# punctuation = "!#$%&()*+, -.:;<=>?@[\]^_`{|}~"
 
-#check time after user request for delete account
-users_obj = User.objects.filter(is_active=False)
-for row in users_obj:
-	if row.delete_date + timedelta(days=30):
-		users_obj.delete()
+# #check time after user request for delete account
+# users_obj = User.objects.filter(is_active=False)
+# for row in users_obj:
+# 	if row.delete_date + timedelta(days=30):
+# 		users_obj.delete()
 		
 def main_index(request):
 	return render(request,"main_index.html")
@@ -298,10 +298,13 @@ def register(request):
 def social_media_registration(request):
 	try:
 		result = dict()
+		# Email (optional),Token (M),
+		# SocialMediaSite (M),Username (M)
 		if request.method == "POST":
-			social_token = request.POST['social_token']
-			social_registration = request.POST['social_registration']
-			social_account = request.POST['social_account']
+			username = request.POST['username']
+			token = request.POST['token']
+			social_media_site = request.POST['social_media_site']
+			is_social = request.POST['is_social']
 
 			if 'profile_image' in request.FILES:
 				profile_image = request.FILES['profile_image']
@@ -311,16 +314,30 @@ def social_media_registration(request):
 
 			first_name = request.POST.get('first_name')
 			last_name = request.POST.get('last_name')
+			name = request.POST.get('name')
+			city = request.POST.get('city')
+			country = request.POST.get('country')
+			latitude = request.POST.get('latitude')
+			longitude = request.POST.get('longitude')
+			if latitude:
+				latitude = latitude
+			else:
+				latitude = None
 
-			if social_token:
-				if not User.objects.filter(social_token=social_token).exists():
+			if longitude:
+				longitude = longitude
+			else:
+				longitude = None
+
+			if token:
+				if not User.objects.filter(token=token).exists():
 					try:
-						user = User.objects.create_user(
-							username=social_token, password=social_token, email=email,
-							social_token=social_token, social_registration=social_registration, social_account=social_account,first_name=first_name,last_name=last_name)
-						user.save()
+						user_obj = User.objects.create_user(
+							username=username, password=token, email=email,
+							token=token, social_media_site=social_media_site, first_name=first_name, last_name=last_name)
+						user_obj.save()
 
-						profile_obj = Profile(username=user, isSocial=True)
+						profile_obj = Profile(username=user_obj, is_social=is_social, name=name, city=city, country=country, lat=latitude, long=longitude)
 						if 'profile_image' in request.FILES:
 							profile_obj.profile_image = profile_image
 						profile_obj.save()
@@ -328,14 +345,14 @@ def social_media_registration(request):
 						result["value"] = True
 						result["data"] = serializer_class.data
 
-						if user.auth_token:
-							if len(user.auth_token)==3:
-								user.auth_token[0] = (str(result['data']['token']))
+						if user_obj.auth_token:
+							if len(user_obj.auth_token)==3:
+								user_obj.auth_token[0] = (str(result['data']['token']))
 							else:
-								user.auth_token.append(str(result['data']['token']))
+								user_obj.auth_token.append(str(result['data']['token']))
 						else:
-							user.auth_token = "{"+str(result['data']['token'])+"}"
-						user.save()
+							user_obj.auth_token = "{"+str(result['data']['token'])+"}"
+						user_obj.save()
 
 						return Response(result, status=status.HTTP_200_OK)
 					except IntegrityError:
@@ -343,8 +360,11 @@ def social_media_registration(request):
 						result["message"] = "Email already Used!"
 						return Response(result,status=status.HTTP_400_BAD_REQUEST)
 				else:
-					user_obj = User.objects.get(social_token=social_token)
-					profile_obj = Profile.objects.get(username=user_obj, isSocial=True)
+					user_obj = User.objects.get(token=token)
+					user_obj.first_name = first_name
+					user_obj.first_name = first_name
+					user_obj.save()
+					profile_obj = Profile(username=user_obj, is_social=is_social, name=name, city=city, country=country, lat=latitude, long=longitude)
 					serializer_class = SocialSerializer(profile_obj)
 					result["value"] = True
 					result["data"] = serializer_class.data
@@ -359,7 +379,8 @@ def social_media_registration(request):
 					user_obj.save()
 
 					return Response(result, status=status.HTTP_200_OK)
-	except Exception:
+	except Exception as e:
+		print(e)
 		result["value"] = False
 		result["message"] = "Something went wrong! Please contact to support team."
 		return Response(result,status=status.HTTP_200_OK)
@@ -1376,102 +1397,98 @@ def AppDataNoAuth(request):
 	result = dict()
 	if request.method == "POST":
 		UID = request.POST['UID']
-		inApp_Products = request.POST['inApp_Products']
-		Purchase_date = request.POST['Purchase_date']
-		Purchased_product = request.POST['Purchased_product']
-		Device_Model = request.POST['Device_Model']
-		operating_system = request.POST['operating_system']
-		Device_Storage = request.POST['Device_Storage']
-		Lunch_count = request.POST['Lunch_count']
-		Push_Notification_Status = request.POST['Push_Notification_Status']
-		Library_permission_Status = request.POST['Library_permission_Status']
-		latitude = request.POST['latitude']
-		longitude = request.POST['longitude']
-		Carrier = request.POST['Carrier']
-		App_Last_Opened = request.POST['App_Last_Opened']
-		Purchase_attempts = request.POST['Purchase_attempts']
-		Grace_Period = request.POST['Grace_Period']
-		Remaining_grace_period_days = request.POST['Remaining_grace_period_days']
-		Number_of_projects = request.POST['Number_of_projects']
-		Total_time_spent = request.POST['Total_time_spent']
-		total_ads_served = request.POST['total_ads_served']
-		Registered_user = request.POST['Registered_user']
-		Push_Notification_token = request.POST['Push_Notification_token']
+		inApp_Products = request.POST.get('inApp_Products')
+		Purchase_date = request.POST.get('Purchase_date')
+		Purchased_product = request.POST.get('Purchased_product')
+		Device_Model = request.POST.get('Device_Model')
+		operating_system = request.POST.get('operating_system')
+		Device_Storage = request.POST.get('Device_Storage')
+		Lunch_count = request.POST.get('Lunch_count')
+		Push_Notification_Status = request.POST.get('Push_Notification_Status')
+		Library_permission_Status = request.POST.get('Library_permission_Status')
+		latitude = request.POST.get('latitude')
+		longitude = request.POST.get('longitude')
+		Carrier = request.POST.get('Carrier')
+		App_Last_Opened = request.POST.get('App_Last_Opened')
+		Purchase_attempts = request.POST.get('Purchase_attempts')
+		Grace_Period = request.POST.get('Grace_Period')
+		Remaining_grace_period_days = request.POST.get('Remaining_grace_period_days')
+		Number_of_projects = request.POST.get('Number_of_projects')
+		Total_time_spent = request.POST.get('Total_time_spent')
+		total_ads_served = request.POST.get('total_ads_served')
+		Registered_user = request.POST.get('Registered_user')
+		Push_Notification_token = request.POST.get('Push_Notification_token')
 		try:
-			datetime.strptime(Purchase_date, '%Y-%m-%d')
+			if Purchase_date:
+				datetime.strptime(Purchase_date, '%Y-%m-%d')
 		except ValueError:
 			result["value"] = False
 			result["message"] = "Purchase_date in incorrect date format. It should be YYYY-MM-DD"
 			return Response(result, status=status.HTTP_400_BAD_REQUEST)
 
 		try:
-			datetime.strptime(App_Last_Opened, '%Y-%m-%d')
+			if App_Last_Opened:
+				datetime.strptime(App_Last_Opened, '%Y-%m-%d')
 		except ValueError:
 			result["value"] = False
 			result["message"] = "App_Last_Opened in incorrect date format. It should be YYYY-MM-DD"
 			return Response(result, status=status.HTTP_400_BAD_REQUEST)
-		try:
-			if application_data.objects.filter(UID = UID).exists():
-				app_data_obj = application_data_noauth.objects.get(UID=UID)
-				app_data_obj.UID = UID
-				app_data_obj.inApp_Products = inApp_Products
-				app_data_obj.Purchase_date = Purchase_date
-				app_data_obj.Purchased_product = Purchased_product
-				app_data_obj.Device_Model = Device_Model
-				app_data_obj.operating_system = operating_system
-				app_data_obj.Device_Storage = Device_Storage
-				app_data_obj.Lunch_count = Lunch_count
-				app_data_obj.Push_Notification_Status = Push_Notification_Status
-				app_data_obj.Library_permission_Status = Library_permission_Status
-				app_data_obj.latitude = latitude
-				app_data_obj.longitude = longitude
-				app_data_obj.Carrier = Carrier
-				app_data_obj.App_Last_Opened = App_Last_Opened
-				app_data_obj.Purchase_attempts = Purchase_attempts
-				app_data_obj.Grace_Period = Grace_Period
-				app_data_obj.Remaining_grace_period_days = Remaining_grace_period_days
-				app_data_obj.Number_of_projects = Number_of_projects
-				app_data_obj.Total_time_spent = Total_time_spent
-				app_data_obj.total_ads_served = total_ads_served
-				app_data_obj.Registered_user = Registered_user
-				app_data_obj.Push_Notification_token = Push_Notification_token
-				app_data_obj.save()
-				result["value"] = True
-				result["message"] = "Details Updated."
-				return Response(result, status=status.HTTP_200_OK)
 
-			else:
-				data = application_data_noauth(
-										UID=UID,
-										inApp_Products=inApp_Products,
-										Purchase_date=Purchase_date,
-										Purchased_product=Purchased_product,
-										Device_Model=Device_Model,
-										operating_system=operating_system,
-										Device_Storage=Device_Storage,
-										Lunch_count=Lunch_count,
-										Push_Notification_Status=Push_Notification_Status,
-										Library_permission_Status=Library_permission_Status,
-										latitude = latitude,
-										longitude = longitude,
-										Carrier=Carrier,
-										App_Last_Opened=App_Last_Opened,
-										Purchase_attempts=Purchase_attempts,
-										Grace_Period=Grace_Period,
-										Remaining_grace_period_days=Remaining_grace_period_days,
-										Number_of_projects=Number_of_projects,
-										Total_time_spent=Total_time_spent,
-										total_ads_served=total_ads_served,
-										Registered_user=Registered_user,
-										Push_Notification_token=Push_Notification_token
-										)
-				data.save()
-				result["value"] = True
-				result["message"] = "Details Added."
-				return Response(result, status=status.HTTP_200_OK)
+		if application_data_noauth.objects.filter(UID = UID).exists():
+			app_data_obj = application_data_noauth.objects.get(UID=UID)
+			app_data_obj.UID = UID
+			app_data_obj.inApp_Products = inApp_Products
+			app_data_obj.Purchase_date = Purchase_date
+			app_data_obj.Purchased_product = Purchased_product
+			app_data_obj.Device_Model = Device_Model
+			app_data_obj.operating_system = operating_system
+			app_data_obj.Device_Storage = Device_Storage
+			app_data_obj.Lunch_count = Lunch_count
+			app_data_obj.Push_Notification_Status = Push_Notification_Status
+			app_data_obj.Library_permission_Status = Library_permission_Status
+			app_data_obj.latitude = latitude
+			app_data_obj.longitude = longitude
+			app_data_obj.Carrier = Carrier
+			app_data_obj.App_Last_Opened = App_Last_Opened
+			app_data_obj.Purchase_attempts = Purchase_attempts
+			app_data_obj.Grace_Period = Grace_Period
+			app_data_obj.Remaining_grace_period_days = Remaining_grace_period_days
+			app_data_obj.Number_of_projects = Number_of_projects
+			app_data_obj.Total_time_spent = Total_time_spent
+			app_data_obj.total_ads_served = total_ads_served
+			app_data_obj.Registered_user = Registered_user
+			app_data_obj.Push_Notification_token = Push_Notification_token
+			app_data_obj.save()
+			result["value"] = True
+			result["message"] = "Details Updated."
+			return Response(result, status=status.HTTP_200_OK)
 
-		except Exception as e:
-			print(e)
-			result["value"] = False
-			result["message"] = "User not Found!!!"
-			return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+		else:
+			data = application_data_noauth(
+									UID=UID,
+									inApp_Products=inApp_Products,
+									Purchase_date=Purchase_date,
+									Purchased_product=Purchased_product,
+									Device_Model=Device_Model,
+									operating_system=operating_system,
+									Device_Storage=Device_Storage,
+									Lunch_count=Lunch_count,
+									Push_Notification_Status=Push_Notification_Status,
+									Library_permission_Status=Library_permission_Status,
+									latitude = latitude,
+									longitude = longitude,
+									Carrier=Carrier,
+									App_Last_Opened=App_Last_Opened,
+									Purchase_attempts=Purchase_attempts,
+									Grace_Period=Grace_Period,
+									Remaining_grace_period_days=Remaining_grace_period_days,
+									Number_of_projects=Number_of_projects,
+									Total_time_spent=Total_time_spent,
+									total_ads_served=total_ads_served,
+									Registered_user=Registered_user,
+									Push_Notification_token=Push_Notification_token
+									)
+			data.save()
+			result["value"] = True
+			result["message"] = "Details Added."
+			return Response(result, status=status.HTTP_200_OK)

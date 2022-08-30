@@ -9,9 +9,8 @@ User._meta.get_field('email')._unique = True
 class custom_user(AbstractUser):
     delete_date = models.DateTimeField(null=True, blank=True)
     confirm_token = models.CharField(null=True, blank=True, max_length=50)
-    social_token = models.TextField(null=True, blank=True)
-    social_registration = models.CharField(max_length=255, null=True, blank=True)
-    social_account = models.CharField(max_length=255, null=True, blank=True)
+    token = models.TextField(null=True, blank=True)
+    social_media_site = models.CharField(max_length=255, null=True, blank=True)
     first_name = models.CharField(max_length=20, null=True, blank=True)
     last_name = models.CharField(max_length=20, null=True, blank=True)
     auth_token = ArrayField(models.CharField(max_length=255), blank=True, null=True)
@@ -54,7 +53,7 @@ class Profile(models.Model):
     expiration_date = models.DateTimeField(null=True, blank=True)
     count_for_forgot_pass = models.PositiveSmallIntegerField(default=0)
     time_for_forgot_pass = models.DateTimeField(null=True, blank=True)
-    isSocial = models.BooleanField(default=False)
+    is_social = models.BooleanField(default=False)
     country_code = models.CharField(max_length=30,null=True, blank=True,default=None)
 
     def __str__(self):
@@ -219,33 +218,32 @@ class Tag(models.Model):
 class application_data_noauth(models.Model):
     aid = models.AutoField(primary_key=True, auto_created=True)
     UID = models.CharField(unique=True, max_length=200)
-    # username = models.ForeignKey(custom_user, on_delete=models.CASCADE)
-    inApp_Products = models.CharField(max_length=100)
+    inApp_Products = models.CharField(max_length=100, blank=True, null=True)
     Purchase_date = models.DateTimeField(blank=True, null=True)
-    Purchased_product = models.CharField(max_length=100)
-    Device_Model = models.CharField(max_length=50)
-    operating_system = models.CharField(max_length=100)
-    Device_Storage = models.CharField(max_length=10)
-    Lunch_count = models.IntegerField()
-    Push_Notification_Status = models.BooleanField(default=False)
-    Library_permission_Status = models.BooleanField(default=False)
-    latitude = models.FloatField(blank=True, null=True,max_length=30)
-    longitude = models.FloatField(blank=True, null=True,max_length=30)
-    Carrier = models.CharField(max_length=100)
+    Purchased_product = models.CharField(max_length=100, blank=True, null=True)
+    Device_Model = models.CharField(max_length=50, blank=True, null=True)
+    operating_system = models.CharField(max_length=100, blank=True, null=True)
+    Device_Storage = models.CharField(max_length=10, blank=True, null=True)
+    Lunch_count = models.IntegerField(null=True, blank=True)
+    Push_Notification_Status = models.BooleanField(default=False, blank=True, null=True)
+    Library_permission_Status = models.BooleanField(default=False, blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True, max_length=30)
+    longitude = models.FloatField(blank=True, null=True, max_length=30)
+    Carrier = models.CharField(max_length=100, null=True, blank=True)
     App_Last_Opened = models.DateTimeField(blank=True, null=True)
-    Purchase_attempts = models.IntegerField()
-    Grace_Period = models.CharField(max_length=100)
-    Remaining_grace_period_days = models.IntegerField()
-    Number_of_projects = models.IntegerField()
-    Total_time_spent = models.CharField(max_length=10)
-    total_ads_served = models.IntegerField()
-    Registered_user = models.BooleanField(default=False)
+    Purchase_attempts = models.IntegerField(null=True, blank=True)
+    Grace_Period = models.CharField(max_length=100, blank=True, null=True)
+    Remaining_grace_period_days = models.IntegerField(null=True, blank=True)
+    Number_of_projects = models.IntegerField(null=True, blank=True)
+    Total_time_spent = models.CharField(max_length=10, blank=True, null=True)
+    total_ads_served = models.IntegerField(null=True, blank=True)
+    Registered_user = models.BooleanField(default=False, blank=True, null=True)
     Push_Notification_token = models.CharField(
         max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.username} - {self.UID}"
+        return f"{self.UID}"
 
     class Meta:
         verbose_name_plural = "Application data no auth"

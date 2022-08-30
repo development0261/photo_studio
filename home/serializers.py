@@ -71,9 +71,8 @@ class SocialSerializer(serializers.ModelSerializer):
         return {
             "first_name":register.username.first_name,
             "last_name":register.username.last_name,
-            "social_token":register.username.social_token,
-            "social_account":register.username.social_account,
-            "social_registration":register.username.social_registration,
+            "token":register.username.token,
+            "social_media_site":register.username.social_media_site,
             "email":register.username.email,
         }
     class Meta:
