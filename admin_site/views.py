@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from datetime import date, datetime, timedelta
 import copy
 from urllib import response
@@ -323,12 +324,28 @@ def profile_model(request):
             else:
                 country_list.append(i)
 
+        cities = Profile.objects.values('city').distinct()
+        city_list1 = []
+        for i in cities:
+            if i != 'None' or i !='none':
+                city_list1.append(str(i['city']).upper())
+        city_list1 = set(city_list1)
+        city_list = []
+        for i in city_list1:
+            if i=='NONE':
+                pass
+            else:
+                city_list.append(i)
+
         total_profiles = Profile.objects.all().order_by('-created_at')
 
         first_record = total_profiles[0].created_at
         last_record = total_profiles.reverse()[0].created_at
         first_record = first_record.strftime("%Y-%m-%d")
         last_record = last_record.strftime("%Y-%m-%d")
+
+        smallest_age_record = ""
+        biggest_age_record = ""
 
         if 'search' in request.GET:
             searchvalue = request.GET['search']
@@ -377,6 +394,10 @@ def profile_model(request):
                 if i == val:
                     total_profiles = total_profiles.filter(country__iexact=val)
 
+            for i in city_list:
+                if i == val:
+                    total_profiles = total_profiles.filter(city__iexact=val)
+
         if 'fromtodate' in request.GET:
             start_date = request.GET['start_date']
             end_date = request.GET['end_date']
@@ -390,6 +411,22 @@ def profile_model(request):
             last_record = start_date.strftime("%Y-%m-%d")
             first_record = end_date.strftime("%Y-%m-%d")
 
+        if 'agefilter' in request.GET:
+            start_age = request.GET['start_age']
+            end_age = request.GET['end_age']
+
+            if not start_age:
+                start_age = 0
+
+            if len(end_age) == 0:
+                total_profiles = total_profiles.filter(dob__lt=datetime.now() - timedelta(days=(365*int(start_age))))
+            else:
+                total_profiles = total_profiles.filter(dob__gte=datetime.now(
+                    ) - timedelta(days=(365*int(end_age))), dob__lt=datetime.now() - timedelta(days=(365*int(start_age))))
+
+            smallest_age_record = start_age
+            biggest_age_record = end_age
+
         if 'show' in request.GET:
             showval = request.GET['show']
             p = Paginator(total_profiles, showval)
@@ -398,9 +435,7 @@ def profile_model(request):
         page_number = request.GET.get('page')
         page_obj = p.get_page(page_number)
 
-        # export_data = export_excel(total_profiles, ['NAME','REGISTRATION DATE','CITY','COUNTRY'], "'name','created_at','city','country'")
-
-        return render(request, "admin_site/profile_model.html", {'total_profiles': page_obj, 'country_list':country_list, "first_record": first_record, "last_record": last_record})
+        return render(request, "admin_site/profile_model.html", {'total_profiles': page_obj, 'country_list':country_list, 'city_list':city_list, "first_record": first_record, "last_record": last_record, "smallest_age_record":smallest_age_record, "biggest_age_record":biggest_age_record})
     else:
         return redirect("login")
 

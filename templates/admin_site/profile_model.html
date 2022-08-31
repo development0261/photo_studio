@@ -290,6 +290,22 @@
                                 </li>
                             </ul>
                         </div>
+
+                        <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By city
+                            </h5>
+                            <ul>
+                                <li>
+                                    <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
+                                </li>
+                                {% for row in city_list %}
+                                    <li>
+                                        <a href="{% url 'Profile' %}?filter={{row}}" {% if request.GET.filter == row %} class="active" {% endif %}>{{row}}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                     
                         <div class="filter_data_list">
                             <h5 class="filter_title">
@@ -346,6 +362,21 @@
                                 </li>
                                 <li>
                                     <a href="{% url 'Profile' %}?filter=year" {% if request.GET.filter == 'year' %} class="active" {% endif %}>This year</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By Age
+                            </h5>
+                            <ul>
+                                <li>
+                                    <form method="get">
+                                        <input type="text" id="start_age" name="start_age" value="{{smallest_age_record}}">
+                                        <input type="text" id="end_age" name="end_age" value="{{biggest_age_record}}">
+                                        <input class="btn btn-primary mt-2" type="submit" value="Submit" name="agefilter">
+                                    </form>
                                 </li>
                             </ul>
                         </div>
