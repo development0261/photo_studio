@@ -1,31 +1,35 @@
-span.fe.fe-edit.fs-14:hover{
+span.fe.fe-edit.fs-14:hover {}
 
-}
 .row {
     margin-top: 7px !important;
 }
-.profile_name{
+
+.profile_name {
     cursor: pointer;
 }
-label{
+
+label {
     padding-left: 8px;
 }
+
 a.editbtn {
     color: white;
 }
 
-.main-profile-modal-wrp{
+.main-profile-modal-wrp {
     padding: 10px 17px;
 }
 
- /* sorting  */
+/* sorting  */
 .sort-order {}
 
-i.fa.fa-caret-up, i.fa.fa-caret-down {
+i.fa.fa-caret-up,
+i.fa.fa-caret-down {
     padding-left: 5px;
     color: #6c5ffc !important;
     opacity: 0.5;
 }
+
 .downOrder i.fa.fa-caret-down {
     opacity: 1;
 }
@@ -56,6 +60,8 @@ i.fa.fa-caret-up, i.fa.fa-caret-down {
 
 .filter_body {
     padding: 1.2rem 1.5rem;
+    height: calc(100vh + 9.5vh);
+    overflow: auto;
 }
 
 h5.filter_title {
@@ -92,20 +98,24 @@ h6:hover {
 
 /* end filter css  */
 
- /* sidebar toggle btn  */
-.togal-button p{
+/* sidebar toggle btn  */
+.togal-button p {
     text-align: right;
     margin: 0;
 }
-.filter_box{
+
+.filter_box {
     width: 318px;
 }
-.filter_box{
+
+.filter_box {
     display: none;
 }
-.card-header{
+
+.card-header {
     justify-content: space-between;
 }
+
 .table_length_outer select {
     height: 2.375rem !important;
     background-color: #f6f7fc;
@@ -138,34 +148,40 @@ h6:hover {
 .table_length_outer select:focus {
     outline: none;
 }
-.main-section{
+
+.main-section {
     position: relative;
     display: flex;
     justify-content: space-between;
     margin-top: 27px;
 }
-.main-table{
+
+.main-table {
     width: 100%;
 }
-.main-profile-table{
+
+.main-profile-table {
     width: calc(100% - 358px);
 }
 
- /* pagination  */
+/* pagination  */
 .pagination {
     justify-content: flex-end;
 }
+
 .pagination_div {
     margin-top: 30px;
 }
 
- /* tooltip  */
+/* tooltip  */
 .togal-button:hover span.toggletooltip {
     visibility: visible;
 }
+
 .togal-button {
     position: relative;
 }
+
 span.toggletooltip {
     visibility: hidden;
     width: 120px;
@@ -195,7 +211,7 @@ span.toggletooltip::after {
 
 
 /* searchbar  */
-.main-header-center{
+.main-header-center {
     margin-left: auto !important;
     margin-right: 4px;
 }
@@ -209,4 +225,15 @@ button.btn.btn-light {
 ul.pagination.justify-content-center {
     margin-left: auto !important;
     margin-right: 93px !important;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    gap: 10px;
+}
+
+.search-form .form-submit {
+    position: inherit;
 }

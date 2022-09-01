@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 from datetime import date, datetime, timedelta
 import copy
 from urllib import response
@@ -186,6 +185,12 @@ def export_excel(request):
         model_name = request.GET['data']
         Model = apps.get_model('home', model_name)
 
+    smallest_age_record = ""
+    biggest_age_record = ""
+    filter_mobile_val = ""
+    latitude = ""
+    longitude = ""
+
     result_queryset = Model.objects.all().order_by('-created_at')
     if 'search' in request.GET:
         if request.GET['search']:
@@ -211,49 +216,133 @@ def export_excel(request):
                                 Q(localeId__icontains=searchvalue)
                 )
 
-    if 'filter' in request.GET:
-        val = request.GET['filter']
+    if 'filter_mobile' in request.GET:
+        if request.GET['filter_mobile']:
+            searchvalue = request.GET['filter_mobile']
+            filter_mobile_val = searchvalue
+            result_queryset = result_queryset.filter(Q(mobile__icontains=searchvalue))
 
-        if val == 'today':
-          result_queryset = result_queryset.filter(
-                pass_update__exact=datetime.now())
-        if val == 'seven':
-            result_queryset = result_queryset.filter(pass_update__gte=datetime.now(
-            ) - timedelta(days=7), pass_update__lte=datetime.now())
-        if val == 'month':
-            result_queryset = result_queryset.filter(pass_update__gte=datetime.now(
-            ) - timedelta(days=30), pass_update__lte=datetime.now())
-        if val == 'year':
-            result_queryset = result_queryset.filter(pass_update__gte=datetime.now(
-            ) - timedelta(days=365), pass_update__lte=datetime.now())
+    if 'gender' in request.GET:
+        if request.GET['gender']:
+            val = request.GET['gender']
+            if val == 'All':
+                result_queryset = result_queryset.all()
+            if val == 'Male':
+                result_queryset = result_queryset.filter(gender__iexact="Male")
+            if val == 'Female':
+                result_queryset = result_queryset.filter(gender__iexact="Female")
+            if val == 'Other':
+                result_queryset = result_queryset.filter(gender__iexact="Other")
 
-        if val == 'twenty':
-            result_queryset = result_queryset.filter(dob__gte=datetime.now(
-            ) - timedelta(days=(365*30)), dob__lt=datetime.now() - timedelta(days=(365*20)))
-        if val == 'thirty':
-            result_queryset = result_queryset.filter(dob__gte=datetime.now(
-            ) - timedelta(days=(365*40)), dob__lt=datetime.now() - timedelta(days=(365*30)))
-        if val == 'greater':
-            result_queryset = result_queryset.filter(
-                dob__lte=datetime.now() - timedelta(days=(365*40)))
+    if 'age' in request.GET:
+        if request.GET['age']:
+            val = request.GET['age']
+            if val == 'All':
+                result_queryset = result_queryset.all()
+            if val == 'twenty':
+                result_queryset = result_queryset.filter(dob__gte=datetime.now(
+                ) - timedelta(days=(365*30)), dob__lt=datetime.now() - timedelta(days=(365*20)))
+            if val == 'thirty':
+                result_queryset = result_queryset.filter(dob__gte=datetime.now(
+                ) - timedelta(days=(365*40)), dob__lt=datetime.now() - timedelta(days=(365*30)))
+            if val == 'greater':
+                result_queryset = result_queryset.filter(
+                    dob__lte=datetime.now() - timedelta(days=(365*40)))
 
-        if val == 'Male':
-            result_queryset = result_queryset.filter(gender__iexact="Male")
-        if val == 'Female':
-            result_queryset = result_queryset.filter(gender__iexact="Female")
-        if val == 'Other':
-            result_queryset = result_queryset.filter(gender__iexact="Other")
+    if 'city' in request.GET:
+        if request.GET['city']:
+            val = request.GET['city']
+            cities = Profile.objects.values('city').distinct()
+            city_list1 = []
+            for i in cities:
+                if i != 'None' or i !='none':
+                    city_list1.append(str(i['city']).upper())
+            city_list1 = set(city_list1)
+            city_list = []
+            for i in city_list1:
+                if i=='NONE':
+                    pass
+                else:
+                    city_list.append(i)
 
-    if 'start_date' in request.GET and 'end_date' in request.GET:
-        start_date = request.GET['start_date']
-        end_date = request.GET['end_date']
-        if start_date and end_date:
+            if val == 'All':
+                result_queryset = result_queryset.all()
+            for i in city_list:
+                if i == val:
+                    result_queryset = result_queryset.filter(city__iexact=val)
+
+    if 'country' in request.GET:
+        if request.GET['country']:
+            val = request.GET['country']
+            countries = Profile.objects.values('country').distinct()
+            country_list1 = []
+            for i in countries:
+                if i != 'None' or i !='none':
+                    country_list1.append(str(i['country']).upper())
+            country_list1 = set(country_list1)
+            country_list = []
+            for i in country_list1:
+                if i=='NONE':
+                    pass
+                else:
+                    country_list.append(i)
+            if val == 'All':
+                result_queryset = result_queryset.all()
+            for i in country_list:
+                if i == val:
+                    result_queryset = result_queryset.filter(country__iexact=val)                  
+
+    if 'password_update' in request.GET:
+        if request.GET['password_update']:
+            val = request.GET['password_update']
+            if val == 'All':
+                result_queryset = result_queryset.all()
+            if val == 'today':
+              result_queryset = result_queryset.filter(
+                    pass_update__exact=datetime.now())
+            if val == 'seven':
+                result_queryset = result_queryset.filter(pass_update__gte=datetime.now(
+                ) - timedelta(days=7), pass_update__lte=datetime.now())
+            if val == 'month':
+                result_queryset = result_queryset.filter(pass_update__gte=datetime.now(
+                ) - timedelta(days=30), pass_update__lte=datetime.now())
+            if val == 'year':
+                result_queryset = result_queryset.filter(pass_update__gte=datetime.now(
+                ) - timedelta(days=365), pass_update__lte=datetime.now())
+
+    if 'fromtodate' in request.GET:
+        if request.GET['fromtodate']:
+            start_date = request.GET['start_date']
+            end_date = request.GET['end_date']
 
             format_data = "%Y-%m-%d %H:%M:%S"
-            start_date = datetime.strptime(start_date+" 00:00:00", format_data)
-            end_date = datetime.strptime(end_date+" 23:59:59", format_data)
+            if start_date:
+                start_date = datetime.strptime(start_date+" 00:00:00", format_data)
+            if end_date:
+                end_date = datetime.strptime(end_date+" 23:59:59", format_data)
 
-            result_queryset = result_queryset.filter(created_at__gte = start_date, created_at__lte = end_date)      
+            if start_date or end_date:
+                result_queryset = result_queryset.filter(created_at__gte = start_date, created_at__lte = end_date)
+
+    if 'agefilter' in request.GET:
+        if request.GET['agefilter']:
+            start_age = request.GET['start_age']
+            end_age = request.GET['end_age']
+
+            if not start_age:
+                start_age = 0
+
+            if len(end_age) == 0:
+                result_queryset = result_queryset.filter(dob__lt=datetime.now() - timedelta(days=(365*int(start_age))))
+            else:
+                result_queryset = result_queryset.filter(dob__gte=datetime.now(
+                    ) - timedelta(days=(365*int(end_age))), dob__lt=datetime.now() - timedelta(days=(365*int(start_age))))
+
+    if 'radius' in request.GET:
+        if request.GET['radius']:
+            latitude = request.GET['latitude']
+            longitude = request.GET['longitude']
+            result_queryset = result_queryset.filter(Q(lat__icontains = latitude) |  Q(long__icontains = longitude))
 
     response = HttpResponse(content_type='application/ms-excel')
     response = HttpResponse()
@@ -346,6 +435,9 @@ def profile_model(request):
 
         smallest_age_record = ""
         biggest_age_record = ""
+        filter_mobile_val = ""
+        latitude = ""
+        longitude = ""
 
         if 'search' in request.GET:
             searchvalue = request.GET['search']
@@ -357,9 +449,56 @@ def profile_model(request):
                                 Q(country__icontains=searchvalue)
                             )
 
-        if 'filter' in request.GET:
-            val = request.GET['filter']
+        if 'filter_mobile' in request.GET:
+            searchvalue = request.GET['filter_mobile']
+            filter_mobile_val = searchvalue
+            total_profiles = Profile.objects.filter(Q(mobile__icontains=searchvalue))
 
+        if 'gender' in request.GET:
+            val = request.GET['gender']
+            if val == 'All':
+                total_profiles = total_profiles.all()
+            if val == 'Male':
+                total_profiles = total_profiles.filter(gender__iexact="Male")
+            if val == 'Female':
+                total_profiles = total_profiles.filter(gender__iexact="Female")
+            if val == 'Other':
+                total_profiles = total_profiles.filter(gender__iexact="Other")
+
+        if 'age' in request.GET:
+            val = request.GET['age']
+            if val == 'All':
+                total_profiles = total_profiles.all()
+            if val == 'twenty':
+                total_profiles = total_profiles.filter(dob__gte=datetime.now(
+                ) - timedelta(days=(365*30)), dob__lt=datetime.now() - timedelta(days=(365*20)))
+            if val == 'thirty':
+                total_profiles = total_profiles.filter(dob__gte=datetime.now(
+                ) - timedelta(days=(365*40)), dob__lt=datetime.now() - timedelta(days=(365*30)))
+            if val == 'greater':
+                total_profiles = total_profiles.filter(
+                    dob__lte=datetime.now() - timedelta(days=(365*40)))
+
+        if 'city' in request.GET:
+            val = request.GET['city']
+            if val == 'All':
+                total_profiles = total_profiles.all()
+            for i in city_list:
+                if i == val:
+                    total_profiles = total_profiles.filter(city__iexact=val)
+
+        if 'country' in request.GET:
+            val = request.GET['country']
+            if val == 'All':
+                total_profiles = total_profiles.all()
+            for i in country_list:
+                if i == val:
+                    total_profiles = total_profiles.filter(country__iexact=val)                  
+
+        if 'password_update' in request.GET:
+            val = request.GET['password_update']
+            if val == 'All':
+                total_profiles = total_profiles.all()
             if val == 'today':
               total_profiles = total_profiles.filter(
                     pass_update__exact=datetime.now())
@@ -373,30 +512,6 @@ def profile_model(request):
                 total_profiles = total_profiles.filter(pass_update__gte=datetime.now(
                 ) - timedelta(days=365), pass_update__lte=datetime.now())
 
-            if val == 'twenty':
-                total_profiles = total_profiles.filter(dob__gte=datetime.now(
-                ) - timedelta(days=(365*30)), dob__lt=datetime.now() - timedelta(days=(365*20)))
-            if val == 'thirty':
-                total_profiles = total_profiles.filter(dob__gte=datetime.now(
-                ) - timedelta(days=(365*40)), dob__lt=datetime.now() - timedelta(days=(365*30)))
-            if val == 'greater':
-                total_profiles = total_profiles.filter(
-                    dob__lte=datetime.now() - timedelta(days=(365*40)))
-
-            if val == 'Male':
-                total_profiles = total_profiles.filter(gender__iexact="Male")
-            if val == 'Female':
-                total_profiles = total_profiles.filter(gender__iexact="Female")
-            if val == 'Other':
-                total_profiles = total_profiles.filter(gender__iexact="Other")
-
-            for i in country_list:
-                if i == val:
-                    total_profiles = total_profiles.filter(country__iexact=val)
-
-            for i in city_list:
-                if i == val:
-                    total_profiles = total_profiles.filter(city__iexact=val)
 
         if 'fromtodate' in request.GET:
             start_date = request.GET['start_date']
@@ -427,6 +542,11 @@ def profile_model(request):
             smallest_age_record = start_age
             biggest_age_record = end_age
 
+        if 'radius' in request.GET:
+            latitude = request.GET['latitude']
+            longitude = request.GET['longitude']
+            total_profiles = total_profiles.filter(Q(lat__icontains = latitude) |  Q(long__icontains = longitude))
+
         if 'show' in request.GET:
             showval = request.GET['show']
             p = Paginator(total_profiles, showval)
@@ -435,7 +555,7 @@ def profile_model(request):
         page_number = request.GET.get('page')
         page_obj = p.get_page(page_number)
 
-        return render(request, "admin_site/profile_model.html", {'total_profiles': page_obj, 'country_list':country_list, 'city_list':city_list, "first_record": first_record, "last_record": last_record, "smallest_age_record":smallest_age_record, "biggest_age_record":biggest_age_record})
+        return render(request, "admin_site/profile_model.html", {'total_profiles': page_obj, 'total_records':len(page_obj), 'country_list':country_list, 'city_list':city_list, "first_record": first_record, "last_record": last_record, "smallest_age_record":smallest_age_record, "biggest_age_record":biggest_age_record, "filter_mobile_val":filter_mobile_val, "searched_lat":latitude, "searched_long":longitude})
     else:
         return redirect("login")
 

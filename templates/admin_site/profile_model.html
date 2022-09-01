@@ -3,8 +3,9 @@
 {% block styles %}
 <link rel="stylesheet" href="{% static 'assets/css/profile_model.css' %}">
 {% endblock %}
+{% load customtag %}
 {% block content %}
-    <a id="export_link" href="{% url 'export_excel' %}?filter={{request.GET.filter}}&start_date={{request.GET.start_date}}&end_date={{request.GET.end_date}}&search={{request.GET.search}}&data=Profile" class="btn btn-secondary mt-2">Export</a>
+    <a id="export_link" href="{% url 'export_excel' %}?gender={{request.GET.gender}}&filter_mobile={{request.GET.filter_mobile}}&age={{request.GET.age}}&city={{request.GET.city}}&country={{request.GET.country}}&password_update={{request.GET.password_update}}&fromtodate={{request.GET.fromtodate}}&agefilter={{request.GET.agefilter}}&radius={{request.GET.radius}}&start_date={{request.GET.start_date}}&end_date={{request.GET.end_date}}&search={{request.GET.search}}&data=Profile" class="btn btn-secondary mt-2">Export</a>
     <div class="row">
         <div class="main-section">
             <div class="main-table">
@@ -14,7 +15,15 @@
                             <h3 class="card-title mb-0">Profiles</h3>
                         </div>
                         <div class="main-header-center ms-3 d-none d-lg-block">
-                            <input id='searchbar' class="form-control" placeholder="Search for results..." type="search" onkeydown="search(this)"/>
+                            <form method="get" class="search-form">
+                                <input id='searchbar' class="form-control" placeholder="Search for results..." name="search" type="search"/>
+                                {% for key,val in request.GET.items %}
+                                    {% if key != "search" %}
+                                        <input type="hidden" value="{{val}}" name="{{key}}" />
+                                    {% endif %}
+                                {% endfor %}
+                                <input class="btn btn-primary form-submit" type="submit" value="Submit">
+                            </form> 
                         </div>
                         <div class="togal-button">
                             <span class="toggletooltip">Filters</span>
@@ -163,6 +172,9 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
+                                                <div class="total_record">
+                                                    <p style="padding:1% 0% 0% 0.5%"> {{total_records}} profile</p>
+                                                </div>
                                                 <div class="pagination_div">
                                                     <div class="row align-items-center">
                                                         <!--show entries-->
@@ -277,16 +289,16 @@
                             </h5>
                             <ul>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
+                                    <a href="{% if request.GET.gender %} {% replace_query_param request.get_full_path 'gender' 'All' %} {% else %} {% if request.GET %} {{request.get_full_path}}&gender=All {% else %} {% url 'Profile' %}?gender=All {% endif %} {% endif %}" {% if request.GET.gender == 'All' or request.GET.gender == None %} class="active" {% endif %}>All</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=Male" {% if request.GET.filter == 'Male' %} class="active" {% endif %}>Male</a>
+                                    <a href="{% if request.GET.gender %} {% replace_query_param request.get_full_path 'gender' 'Male' %} {% else %} {% if request.GET %} {{request.get_full_path}}&gender=Male {% else %} {% url 'Profile' %}?gender=Male {% endif %} {% endif %}" {% if request.GET.gender == 'Male' %} class="active" {% endif %}>Male</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=Female" {% if request.GET.filter == 'Female' %} class="active" {% endif %}>Female</a>
+                                    <a href="{% if request.GET.gender %} {% replace_query_param request.get_full_path 'gender' 'Female' %} {% else %} {% if request.GET %} {{request.get_full_path}}&gender=Female {% else %} {% url 'Profile' %}?gender=Female {% endif %} {% endif %}" {% if request.GET.gender == 'Female' %} class="active" {% endif %}>Female</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=Other" {% if request.GET.filter == 'Other' %} class="active" {% endif %}>Other</a>
+                                    <a href="{% if request.GET.gender %} {% replace_query_param request.get_full_path 'gender' 'Other' %} {% else %} {% if request.GET %} {{request.get_full_path}}&gender=Other {% else %} {% url 'Profile' %}?gender=Other {% endif %} {% endif %}" {% if request.GET.gender == 'Other' %} class="active" {% endif %}>Other</a>
                                 </li>
                             </ul>
                         </div>
@@ -297,11 +309,11 @@
                             </h5>
                             <ul>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
+                                    <a href="{% if request.GET.city %} {% replace_query_param request.get_full_path 'city' 'All' %} {% else %} {% if request.GET %} {{request.get_full_path}}&city=All {% else %} {% url 'Profile' %}?city=All {% endif %} {% endif %}" {% if request.GET.city == 'All' or request.GET.city == None %} class="active" {% endif %}>All</a>
                                 </li>
                                 {% for row in city_list %}
                                     <li>
-                                        <a href="{% url 'Profile' %}?filter={{row}}" {% if request.GET.filter == row %} class="active" {% endif %}>{{row}}</a>
+                                        <a href="{% if request.GET.city %} {% replace_query_param request.get_full_path 'city' row %} {% else %} {% if request.GET %} {{request.get_full_path}}&city={{row}} {% else %} {% url 'Profile' %}?city={{row}} {% endif %} {% endif %}" {% if request.GET.city == row %} class="active" {% endif %}>{{row}}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -313,11 +325,11 @@
                             </h5>
                             <ul>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
+                                    <a href="{% if request.GET.country %} {% replace_query_param request.get_full_path 'country' 'All' %} {% else %} {% if request.GET %} {{request.get_full_path}}&country=All {% else %} {% url 'Profile' %}?country=All {% endif %} {% endif %}" {% if request.GET.country == 'All' or request.GET.country == None %} class="active" {% endif %}>All</a>
                                 </li>
                                 {% for row in country_list %}
                                     <li>
-                                        <a href="{% url 'Profile' %}?filter={{row}}" {% if request.GET.filter == row %} class="active" {% endif %}>{{row}}</a>
+                                        <a href="{% if request.GET.country %} {% replace_query_param request.get_full_path 'country' row %} {% else %} {% if request.GET %} {{request.get_full_path}}&country={{row}} {% else %} {% url 'Profile' %}?country={{row}} {% endif %} {% endif %}" {% if request.GET.country == row %} class="active" {% endif %}>{{row}}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -329,16 +341,16 @@
                             </h5>
                             <ul>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
+                                    <a href="{% if request.GET.age %} {% replace_query_param request.get_full_path 'age' 'All' %} {% else %} {% if request.GET %} {{request.get_full_path}}&age=All {% else %} {% url 'Profile' %}?age=All {% endif %} {% endif %}" {% if request.GET.age == 'All' or request.GET.age == None %} class="active" {% endif %}>All</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=twenty" {% if request.GET.filter == 'twenty' %} class="active" {% endif %}>20 - 30</a>
+                                    <a href="{% if request.GET.age %} {% replace_query_param request.get_full_path 'age' 'twenty' %} {% else %} {% if request.GET %} {{request.get_full_path}}&age=twenty {% else %} {% url 'Profile' %}?age=twenty {% endif %} {% endif %}" {% if request.GET.age == 'twenty' %} class="active" {% endif %}>20 - 30</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=thirty" {% if request.GET.filter == 'thirty' %} class="active" {% endif %}>30 - 40</a>
+                                    <a href="{% if request.GET.age %} {% replace_query_param request.get_full_path 'age' 'thirty' %} {% else %} {% if request.GET %} {{request.get_full_path}}&age=thirty {% else %} {% url 'Profile' %}?age=thirty {% endif %} {% endif %}" {% if request.GET.age == 'thirty' %} class="active" {% endif %}>30 - 40</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=greater" {% if request.GET.filter == 'greater' %} class="active" {% endif %}>Greater than 40</a>
+                                    <a href="{% if request.GET.age %} {% replace_query_param request.get_full_path 'age' 'greater' %} {% else %} {% if request.GET %} {{request.get_full_path}}&age=greater {% else %} {% url 'Profile' %}?age=greater {% endif %} {% endif %}" {% if request.GET.age == 'greater' %} class="active" {% endif %}>Greater than 40</a>
                                 </li>
                             </ul>
                         </div>
@@ -349,19 +361,19 @@
                             </h5>
                             <ul>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=All" {% if request.GET.filter == 'All' or request.GET.filter == None %} class="active" {% endif %}>All</a>
+                                    <a href="{% if request.GET.password_update %} {% replace_query_param request.get_full_path 'password_update' 'All' %} {% else %} {% if request.GET %} {{request.get_full_path}}&password_update=All {% else %} {% url 'Profile' %}?password_update=All {% endif %} {% endif %}" {% if request.GET.password_update == 'All' or request.GET.password_update == None %} class="active" {% endif %}>All</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=today" {% if request.GET.filter == 'today' %} class="active" {% endif %}>Today</a>
+                                    <a href="{% if request.GET.password_update %} {% replace_query_param request.get_full_path 'password_update' 'today' %} {% else %} {% if request.GET %} {{request.get_full_path}}&password_update=today {% else %} {% url 'Profile' %}?password_update=today {% endif %} {% endif %}" {% if request.GET.password_update == 'today' %} class="active" {% endif %}>Today</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=seven" {% if request.GET.filter == 'seven' %} class="active" {% endif %}>Past 7 days</a>
+                                    <a href="{% if request.GET.password_update %} {% replace_query_param request.get_full_path 'password_update' 'seven' %} {% else %} {% if request.GET %} {{request.get_full_path}}&password_update=seven {% else %} {% url 'Profile' %}?password_update=seven {% endif %} {% endif %}" {% if request.GET.password_update == 'seven' %} class="active" {% endif %}>Past 7 days</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=month" {% if request.GET.filter == 'month' %} class="active" {% endif %}>This month</a>
+                                    <a href="{% if request.GET.password_update %} {% replace_query_param request.get_full_path 'password_update' 'month' %} {% else %} {% if request.GET %} {{request.get_full_path}}&password_update=month {% else %} {% url 'Profile' %}?password_update=month {% endif %} {% endif %}" {% if request.GET.password_update == 'month' %} class="active" {% endif %}>This month</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'Profile' %}?filter=year" {% if request.GET.filter == 'year' %} class="active" {% endif %}>This year</a>
+                                    <a href="{% if request.GET.password_update %} {% replace_query_param request.get_full_path 'password_update' 'year' %} {% else %} {% if request.GET %} {{request.get_full_path}}&password_update=year {% else %} {% url 'Profile' %}?password_update=year {% endif %} {% endif %}" {% if request.GET.password_update == 'year' %} class="active" {% endif %}>This year</a>
                                 </li>
                             </ul>
                         </div>
@@ -373,8 +385,16 @@
                             <ul>
                                 <li>
                                     <form method="get">
-                                        <input type="text" id="start_age" name="start_age" value="{{smallest_age_record}}">
-                                        <input type="text" id="end_age" name="end_age" value="{{biggest_age_record}}">
+                                        <input class="form-control mb-3" type="text" id="start_age" name="start_age" value="{{smallest_age_record}}">
+                                        <input class="form-control" type="text" id="end_age" name="end_age" value="{{biggest_age_record}}">
+                                        {% for key,val in request.GET.items %}
+                                            {% if key == "agefilter" %}
+                                            {% elif key == "start_age" %}
+                                            {% elif key == "end_age" %}
+                                            {% else %}
+                                                <input class="form-control" type="hidden" value="{{val}}" name="{{key}}" />
+                                            {% endif %}
+                                        {% endfor %}
                                         <input class="btn btn-primary mt-2" type="submit" value="Submit" name="agefilter">
                                     </form>
                                 </li>
@@ -388,9 +408,59 @@
                             <ul>
                                 <li>
                                     <form method="get">
-                                        <input type="date" id="start_date" name="start_date" value="{{last_record}}">
-                                        <input type="date" id="end_date" name="end_date" value="{{first_record}}">
-                                        <input class="btn btn-primary mt-2" type="submit" value="Submit" name="fromtodate">
+                                        <input  class="form-control mb-3" type="date" id="start_date" name="start_date" value="{{last_record}}">
+                                        <input  class="form-control mb-3" type="date" id="end_date" name="end_date" value="{{first_record}}">
+                                        {% for key,val in request.GET.items %}
+                                            {% if key == "fromtodate" %}
+                                            {% elif key == "start_date" %}
+                                            {% elif key == "end_date" %}
+                                            {% else %}
+                                                <input  class="form-control mb-3" type="hidden" value="{{val}}" name="{{key}}" />
+                                            {% endif %}
+                                        {% endfor %}
+                                        <input  class="btn btn-primary mt-2" type="submit" value="Submit" name="fromtodate">
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By Mobile
+                            </h5>
+                            <ul>
+                                <li>
+                                    <form method="get">
+                                        <input class="form-control mb-3" type="text" id="filter_mobile" name="filter_mobile" value="{{filter_mobile_val}}">
+                                        {% for key,val in request.GET.items %}
+                                            {% if key != "filter_mobile" %}
+                                                <input type="hidden" value="{{val}}" name="{{key}}" />
+                                            {% endif %}
+                                        {% endfor %}
+                                        <input class="btn btn-primary mt-2" type="submit" value="Submit" name="mobile">
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By Radius
+                            </h5>
+                            <ul>
+                                <li>
+                                    <form method="get">
+                                        <input class="form-control mb-3" type="text" id="latitude" name="latitude" value="{{searched_lat}}">
+                                        <input class="form-control mb-3" type="text" id="longitude" name="longitude" value="{{searched_long}}">
+                                        {% for key,val in request.GET.items %}
+                                            {% if key == "radius" %}
+                                            {% elif key == "latitude" %}
+                                            {% elif key == "longitude" %}
+                                            {% else %}
+                                                <input class="form-control mb-3" type="hidden" value="{{val}}" name="{{key}}" />
+                                            {% endif %}
+                                        {% endfor %}
+                                        <input class="btn btn-primary mt-2" type="submit" value="Submit" name="radius">
                                     </form>
                                 </li>
                             </ul>
@@ -707,13 +777,13 @@
     </script>
 
     {% comment %} searchbar backend {% endcomment %}
-    <script>
+    {% comment %} <script>
         function search(ele) {
             if(event.key === 'Enter') {
                 window.location.href = "{% url 'Profile' %}?search="+ele.value;  
             }
         }
-    </script>
+    </script> {% endcomment %}
 
     {% comment %} export column {% endcomment %}
     <script>
