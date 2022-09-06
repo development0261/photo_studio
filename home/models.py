@@ -10,6 +10,7 @@ class custom_user(AbstractUser):
     confirm_token = models.CharField(null=True, blank=True, max_length=50)
     token = models.TextField(null=True, blank=True)
     social_media_site = models.CharField(max_length=255, null=True, blank=True)
+    social_id = models.CharField(max_length=255, null=True, blank=True)
     first_name = models.CharField(max_length=20, null=True, blank=True)
     last_name = models.CharField(max_length=20, null=True, blank=True)
     auth_token = ArrayField(models.CharField(max_length=255), blank=True, null=True)

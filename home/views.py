@@ -29,6 +29,7 @@ from django.core.exceptions import ObjectDoesNotExist
 #get city and country
 from geopy.geocoders import Nominatim
 from pycountry import countries
+import requests
 
 
 # initialize Nominatim API
@@ -327,20 +328,80 @@ def social_media_registration(request):
 				longitude = None
 
 			if token:
-				if not User.objects.filter(token=token).exists():
-					if email:
-						if(re.fullmatch(for_email, email)):
-							if User.objects.filter(email=email).exists():
-								result["value"] = False
-								result["message"] = "Email already Used!"
-								return Response(result,status=status.HTTP_400_BAD_REQUEST)
+				if social_media_site.lower()=="apple" or social_media_site.lower()=="snapchat":
+					if not User.objects.filter(token=token).exists():
+						user_obj = User.objects.create_user(
+							username=username, password=token, email=email,
+							token=token, social_media_site=social_media_site, first_name=first_name, last_name=last_name)
+						user_obj.save()
+
+						profile_obj = Profile(username=user_obj, is_social=is_social, name=name, city=city, country=country, lat=latitude, long=longitude)
+						if 'profile_image' in request.FILES:
+							profile_obj.profile_image = profile_image
+						profile_obj.save()
+						serializer_class = SocialSerializer(profile_obj)
+						result["value"] = True
+						result["data"] = serializer_class.data
+
+						if user_obj.auth_token:
+							if len(user_obj.auth_token)==3:
+								user_obj.auth_token[0] = (str(result['data']['token']))
+							else:
+								user_obj.auth_token.append(str(result['data']['token']))
 						else:
+							user_obj.auth_token = "{"+str(result['data']['token'])+"}"
+						user_obj.save()
+
+						return Response(result, status=status.HTTP_200_OK)
+					else:
+						user_obj = User.objects.get(token=token)
+						if not user_obj.is_active:
 							result["value"] = False
-							result["message"] = "Enter valid email address"
-							return Response(result, status=status.HTTP_400_BAD_REQUEST)
+							result["message"] = "Account with this username is not exists!"
+							return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+						profile_obj = Profile.objects.get(username=user_obj)
+						serializer_class = SocialSerializer(profile_obj)
+						result["value"] = True
+						result["data"] = serializer_class.data
+
+						if user_obj.auth_token:
+							if len(user_obj.auth_token)==3:
+								user_obj.auth_token[0] = (str(result['data']['token']))
+							else:
+								user_obj.auth_token.append(str(result['data']['token']))
+						else:
+							user_obj.auth_token = "{"+str(result['data']['token'])+"}"
+						user_obj.save()
+
+						return Response(result, status=status.HTTP_200_OK)
+
+				elif social_media_site.lower()=="google":
+					url = f'https://oauth2.googleapis.com/tokeninfo?id_token={token}'
+					r = requests.get(url = url)
+					data = r.json()
+					if 'error' in data:
+						result["value"] = False
+						result["message"] = "Please check your token!"
+						return Response(result, status=status.HTTP_400_BAD_REQUEST)
+					social_id = data['sub']
+				elif social_media_site.lower()=="facebook":
+					url = f'https://graph.facebook.com/me?access_token={token}'
+					r = requests.get(url = url)
+					data = r.json()
+					if 'error' in data:
+						result["value"] = False
+						result["message"] = "Please check your tokenbad!"
+						return Response(result, status=status.HTTP_400_BAD_REQUEST)
+					social_id = data['id']
+				if not User.objects.filter(social_id=social_id).exists():
+					if User.objects.filter(username=username).exists():
+						result["value"] = False
+						result["message"] = "User already exists with this username!"
+						return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+
 					user_obj = User.objects.create_user(
 						username=username, password=token, email=email,
-						token=token, social_media_site=social_media_site, first_name=first_name, last_name=last_name)
+						token=token, social_media_site=social_media_site, social_id=social_id, first_name=first_name, last_name=last_name)
 					user_obj.save()
 
 					profile_obj = Profile(username=user_obj, is_social=is_social, name=name, city=city, country=country, lat=latitude, long=longitude)
@@ -362,11 +423,11 @@ def social_media_registration(request):
 
 					return Response(result, status=status.HTTP_200_OK)
 				else:
-					user_obj = User.objects.get(token=token)
-					user_obj.first_name = first_name
-					user_obj.last_name = last_name
-					user_obj.username = username
-					user_obj.save()
+					user_obj = User.objects.get(social_id=social_id)
+					if not user_obj.is_active:
+						result["value"] = False
+						result["message"] = "Account with this username is not exists!"
+						return Response(result, status=status.HTTP_401_UNAUTHORIZED)
 					profile_obj = Profile.objects.get(username=user_obj)
 					serializer_class = SocialSerializer(profile_obj)
 					result["value"] = True
@@ -382,6 +443,11 @@ def social_media_registration(request):
 					user_obj.save()
 
 					return Response(result, status=status.HTTP_200_OK)
+
+		else:
+			result["value"] = False
+			result["message"] = "Method not Allowed!"
+			return Response(result,status=status.HTTP_405_METHOD_NOT_ALLOWED)
 	except Exception as e:
 		print(e)
 		result["value"] = False
@@ -1250,8 +1316,20 @@ def delete_account(request):
 		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
 	if request.method == "POST":
 		try:
-			password = request.POST['password']
+			password = request.POST.get('password')
 			user_obj = User.objects.get(auth_token__contains = "{" + header_token + "}")
+			if user_obj.profile.is_social:
+				user_obj.is_active = False
+				user_obj.delete_date = datetime.now()
+				user_obj.save()
+				result["value"] = True
+				result["message"] = "Your account is under deleting process and deleted in 30 days."
+				return Response(result, status=status.HTTP_200_OK)
+
+			if not password:
+				result["value"] = False
+				result["message"] = "Password required for Delete Account!"
+				return Response(result, status=status.HTTP_400_BAD_REQUEST)
 			if user_obj.check_password(password):
 				user_obj.is_active = False
 				user_obj.delete_date = datetime.now()

@@ -12,7 +12,9 @@ urlpatterns = [
     path('DeleteUser/<str:para>', views.delete_user, name="delete_user"),
 
     path('Profile/', views.profile_model, name="Profile"),
+    path('Profile/filter',views.filter,name="filter"),
     path('Profile/<str:info>', views.view_profile, name="view_profile"),
+
     path('DeleteProfile/<str:para>', views.delete_profile, name="delete_profile"),
 
     path('user_preference/', views.user_preference_model, name="user_preference"),
@@ -24,6 +26,7 @@ urlpatterns = [
     path('DeleteAppData/<str:para>', views.delete_app_data, name="delete_app_data"),
 
     path('Purchase/', views.purchase_model, name="Purchase"),
+    
     path('Purchase/<str:info>', views.view_purchases, name="view_purchases"),
     path('specific_purchase/<str:info>', views.view_purchase, name="view_purchase"),
     path('DeletePurchase/<str:para>', views.delete_purchase, name="delete_purchase"),
@@ -49,5 +52,8 @@ urlpatterns = [
     path('change_password/', views.change_password, name="change_password"),
     path('send_link/', views.send_link, name="send_link"),
     path('forgot_password/<str:token>', views.forgot_password, name="forgot_password"),
-    path('export_excel',views.export_excel,name="export_excel")
+    path('export_excel',views.export_excel,name="export_excel"),
+
+
+
 ]

@@ -283,6 +283,25 @@
                             <a href="{% url 'Profile' %}" id="Clear all filters" class="active"><i class="fa fa-close"></i> Clear all
                                 filters</a>
                         </h6>
+                        {% comment %} <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By gender
+                            </h5>
+                            <ul class="filter_class">
+                                <li>
+                                    <a href="?" title="All">All</a>
+                                </li>
+                                <li>
+                                    <a title="Male" filter-type="gender">Male</a>
+                                </li>
+                                <li>
+                                    <a>Female</a>
+                                </li>
+                                <li>
+                                    <a>Other</a>
+                                </li>
+                            </ul>
+                        </div> {% endcomment %}
                         <div class="filter_data_list">
                             <h5 class="filter_title">
                                 By gender
@@ -385,8 +404,8 @@
                             <ul>
                                 <li>
                                     <form method="get">
-                                        <input class="form-control mb-3" type="text" id="start_age" name="start_age" value="{{smallest_age_record}}">
-                                        <input class="form-control" type="text" id="end_age" name="end_age" value="{{biggest_age_record}}">
+                                        Min : <input class="form-control mb-3" type="text" id="start_age" name="start_age" value="{{smallest_age_record}}">
+                                        Max : <input class="form-control" type="text" id="end_age" name="end_age" value="{{biggest_age_record}}">
                                         {% for key,val in request.GET.items %}
                                             {% if key == "agefilter" %}
                                             {% elif key == "start_age" %}
@@ -431,7 +450,7 @@
                             <ul>
                                 <li>
                                     <form method="get">
-                                        <input class="form-control mb-3" type="text" id="filter_mobile" name="filter_mobile" value="{{filter_mobile_val}}">
+                                        Mobile no.:<input class="form-control mb-3" type="text" id="filter_mobile" name="filter_mobile" value="{{filter_mobile_val}}">
                                         {% for key,val in request.GET.items %}
                                             {% if key != "filter_mobile" %}
                                                 <input type="hidden" value="{{val}}" name="{{key}}" />
@@ -450,8 +469,8 @@
                             <ul>
                                 <li>
                                     <form method="get">
-                                        <input class="form-control mb-3" type="text" id="latitude" name="latitude" value="{{searched_lat}}">
-                                        <input class="form-control mb-3" type="text" id="longitude" name="longitude" value="{{searched_long}}">
+                                        Latitude : <input class="form-control mb-3" type="text" id="latitude" name="latitude" value="{{searched_lat}}">
+                                        Longitude : <input class="form-control mb-3" type="text" id="longitude" name="longitude" value="{{searched_long}}">
                                         {% for key,val in request.GET.items %}
                                             {% if key == "radius" %}
                                             {% elif key == "latitude" %}
@@ -818,6 +837,21 @@
             default_link = `${default_link}&users=${selectedrow}`
             $("#export_link").attr('href',default_link)
         })
+    </script>
+
+    <script>
+        $(".filter_class li a").click(function(){
+            var title = $(this).attr('title');
+            var filter_type = $(this).attr('filter-type');
+            var full_url = window.location.href;
+            console.log(full_url)
+            console.log(document.URL)
+            console.log(window.location.search)
+            alert(title);
+            $.ajax({url: "/admin-site/Profile/filter?gender="+title, success: function(result){
+                console.log("after success");
+            }});
+        });
     </script>
 
     {% comment %} uncheck {% endcomment %}
