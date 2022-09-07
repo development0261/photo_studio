@@ -283,7 +283,7 @@
                             <a href="{% url 'Profile' %}" id="Clear all filters" class="active"><i class="fa fa-close"></i> Clear all
                                 filters</a>
                         </h6>
-                        {% comment %} <div class="filter_data_list">
+                        <div class="filter_data_list">
                             <h5 class="filter_title">
                                 By gender
                             </h5>
@@ -301,7 +301,7 @@
                                     <a>Other</a>
                                 </li>
                             </ul>
-                        </div> {% endcomment %}
+                        </div>
                         <div class="filter_data_list">
                             <h5 class="filter_title">
                                 By gender
@@ -850,6 +850,82 @@
             alert(title);
             $.ajax({url: "/admin-site/Profile/filter?gender="+title, success: function(result){
                 console.log("after success");
+                console.log(result, typeof result);
+                const data = JSON.parse(result);
+                console.log(data);
+                if(data.length != 0){
+                    $("#table_body").html(`
+                    ${data.map((item,index)=>{
+                        return `
+                            <tr class="border-bottom"> 
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                {% comment %} <input type="checkbox" class="export_data_row" id="{{row.pk}}"> {% endcomment %}
+                                                {% if row.profile_image %}
+                                                    <img src="${item.fields.profile_image.url}" style="width: 45px;">
+                                                {% else %}
+                                                    None
+                                                {% endif %}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.name}">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.name}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                <span style="display:none">${item.fields.created_at|date:'U'}</span>${item.fields.created_at}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.city}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.country}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="g-2">
+                                        <a href="/admin-site/ProfileEdit/Profile ${item.fields.uid}"
+                                            class="btn text-primary btn-sm"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-original-title="Edit">
+                                            <span class="fe fe-edit fs-14">
+                                            </span>
+                                        </a>
+                                        <a class="btn text-danger btn-sm"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-original-title="Delete"><span id="Profile ${item.fields.uid}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                    </div>
+                                </td>
+                            </tr>`
+                        }).join('')}
+                    `)
+                }
             }});
         });
     </script>

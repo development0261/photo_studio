@@ -555,6 +555,11 @@ def profile_model(request):
         page_number = request.GET.get('page')
         page_obj = p.get_page(page_number)
 
+        print(total_profiles)
+        print(page_obj)
+        for i in page_obj:
+            print(i)
+
         return render(request, "admin_site/profile_model.html", {'total_profiles': page_obj, 'total_records':len(page_obj), 'country_list':country_list, 'city_list':city_list, "first_record": first_record, "last_record": last_record, "smallest_age_record":smallest_age_record, "biggest_age_record":biggest_age_record, "filter_mobile_val":filter_mobile_val, "searched_lat":latitude, "searched_long":longitude})
     else:
         return redirect("login")
@@ -1650,6 +1655,7 @@ def filter(request):
             longitude = request.GET['longitude']
             total_profiles = total_profiles.filter(Q(lat__icontains = latitude) |  Q(long__icontains = longitude))
 
+        print(total_profiles)
         if 'show' in request.GET:
             showval = request.GET['show']
             p = Paginator(total_profiles, showval)
@@ -1658,6 +1664,14 @@ def filter(request):
         page_number = request.GET.get('page')
         page_obj = p.get_page(page_number)
 
-        return render(request, "admin_site/profile_model.html", {'total_profiles': page_obj, 'total_records':len(page_obj), 'country_list':country_list, 'city_list':city_list, "first_record": first_record, "last_record": last_record, "smallest_age_record":smallest_age_record, "biggest_age_record":biggest_age_record, "filter_mobile_val":filter_mobile_val, "searched_lat":latitude, "searched_long":longitude})
+        print(page_obj, type(page_obj))
+        for i in page_obj:
+            print(i)
+        # from django.http import JsonResponse
+        from django.core import serializers
+        return HttpResponse(serializers.serialize(queryset = page_obj, format="json"))
+        # return JsonResponse({"total_profiles": page_obj})
+
+        # return render(request, "admin_site/profile_model.html", {'total_profiles': page_obj, 'total_records':len(page_obj), 'country_list':country_list, 'city_list':city_list, "first_record": first_record, "last_record": last_record, "smallest_age_record":smallest_age_record, "biggest_age_record":biggest_age_record, "filter_mobile_val":filter_mobile_val, "searched_lat":latitude, "searched_long":longitude})
     else:
         return redirect("login")
