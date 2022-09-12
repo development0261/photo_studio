@@ -17,7 +17,6 @@ class custom_user(AbstractUser):
 
     class Meta:
         verbose_name_plural = "custom_user"
-        unique_together = ('email',)
 
 
 class Profile(models.Model):
