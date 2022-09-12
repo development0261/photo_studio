@@ -25,10 +25,14 @@ urlpatterns = [
     path('application_data/<str:info>', views.view_app_data, name="view_app_data"),
     path('DeleteAppData/<str:para>', views.delete_app_data, name="delete_app_data"),
 
+    path('no_auth_app_data_model/', views.no_auth_app_data_model, name="no_auth_app_data_model"),
+    path('application_data_without_auth/<str:info>', views.view_app_data_without_auth, name="view_app_data_without_auth"),
+    path('DeleteNoAuthAppData/<str:para>', views.delete_no_auth_app_data, name="delete_no_auth_app_data"),
+
     path('Purchase/', views.purchase_model, name="Purchase"),
     
     path('Purchase/<str:info>', views.view_purchases, name="view_purchases"),
-    path('specific_purchase/<str:info>', views.view_purchase, name="view_purchase"),
+    path('specific_purchase/<str:info>', views.specific_purchase, name="specific_purchase"),
     path('DeletePurchase/<str:para>', views.delete_purchase, name="delete_purchase"),
     
     path('Tag/', views.tag_model, name="Tag"),
@@ -45,6 +49,8 @@ urlpatterns = [
     path('ProfileEdit/<str:para>', views.profile_edit, name="profile_edit"),
     path('PreferencesEdit/<str:para>', views.preferences_edit, name="preferences_edit"),
     path('EditAppData/<str:para>', views.app_data_edit, name="app_data_edit"),
+    path('EditNoAuthAppData/<str:para>', views.no_auth_app_data_edit, name="no_auth_app_data_edit"),
+
     path('EditPurchase/<str:para>', views.purchase_edit, name="purchase_edit"),
     path('EditTag/<str:para>', views.tag_edit, name="tag_edit"),
     path('EditProduct/<str:para>', views.product_edit, name="product_edit"),

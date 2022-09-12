@@ -183,7 +183,7 @@ class Product(models.Model):
 
 
 class Purchase(models.Model):
-    pid = models.AutoField(primary_key=True, auto_created=True)
+    purchase_id = models.PositiveBigIntegerField(unique=True)
     username = models.ForeignKey(custom_user, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     pstatus = models.CharField(max_length=20)

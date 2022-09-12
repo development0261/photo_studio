@@ -48,6 +48,14 @@
                                                                     </div>
                                                                 </span>
                                                             </th>
+                                                            <th class="bg-transparent border-bottom-0 sortit">
+                                                                    <span style="display:flex">Registration date
+                                                                    <div class="sort-order ml-2 downOrder">
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                    </div>
+                                                                </span>
+                                                            </th>
                                                             <th class="bg-transparent border-bottom-0">auto renew status</th>
                                                             <th class="bg-transparent border-bottom-0">is in billing retry period</th>
                                                             <th class="bg-transparent border-bottom-0">is in intro offer period</th>
@@ -86,17 +94,26 @@
                                                                 <td>
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
-                                                                            <h6 class="mb-0 fs-14 fw-semibold">{{ row.product }}</h6>
+                                                                            <h6 class="mb-0 fs-14 fw-semibold puchase_view" id="{{ row.purchase_id }}">{{ row.product }}</h6>
                                                                         </div>
                                                                     </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
-                                                                            <h6 class="mb-0 fs-14 fw-semibold puchase_view" id="{{row.username}} - {{ row.pstatus }}">{{ row.pstatus }}</h6>
+                                                                            <h6 class="mb-0 fs-14 fw-semibold">{{ row.pstatus }}</h6>
                                                                         </div>
                                                                     </div>
                                                                 </td>
+                                                                <td class="text-center">
+                                                                        <div class="d-flex">
+                                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                    <span style="display:none">{{row.created_at|date:"U"}}</span>{{row.created_at}}
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
                                                                 <td>
                                                                     <div class="mt-sm-1 d-block">
                                                                         <span class="badge rounded-pill {% if row.auto_renew_status %} bg-success-transparent text-success {% else %} bg-danger-transparent text-danger {% endif %}p-2 px-3">{{ row.auto_renew_status }}</span>

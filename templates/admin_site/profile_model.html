@@ -2,6 +2,11 @@
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" href="{% static 'assets/css/profile_model.css' %}">
+<style>
+.filter_class li a{
+    cursor:pointer;
+}
+</style>
 {% endblock %}
 {% load customtag %}
 {% block content %}
@@ -15,14 +20,14 @@
                             <h3 class="card-title mb-0">Profiles</h3>
                         </div>
                         <div class="main-header-center ms-3 d-none d-lg-block">
-                            <form method="get" class="search-form">
+                             <form method="get" class="search-form"> 
                                 <input id='searchbar' class="form-control" placeholder="Search for results..." name="search" type="search"/>
                                 {% for key,val in request.GET.items %}
                                     {% if key != "search" %}
                                         <input type="hidden" value="{{val}}" name="{{key}}" />
                                     {% endif %}
                                 {% endfor %}
-                                <input class="btn btn-primary form-submit" type="submit" value="Submit">
+                                <input class="btn btn-primary form-submit" id="searchSubmit" value="Submit">
                             </form> 
                         </div>
                         <div class="togal-button">
@@ -289,20 +294,20 @@
                             </h5>
                             <ul class="filter_class">
                                 <li>
-                                    <a href="?" title="All">All</a>
+                                    <a title="All" filter-type="gender">All</a>
                                 </li>
                                 <li>
                                     <a title="Male" filter-type="gender">Male</a>
                                 </li>
                                 <li>
-                                    <a>Female</a>
+                                    <a title="Female" filter-type="gender">Female</a>
                                 </li>
                                 <li>
-                                    <a>Other</a>
+                                    <a title="Other" filter-type="gender">Other</a>
                                 </li>
                             </ul>
                         </div>
-                        <div class="filter_data_list">
+                        {% comment %} <div class="filter_data_list">
                             <h5 class="filter_title">
                                 By gender
                             </h5>
@@ -320,9 +325,24 @@
                                     <a href="{% if request.GET.gender %} {% replace_query_param request.get_full_path 'gender' 'Other' %} {% else %} {% if request.GET %} {{request.get_full_path}}&gender=Other {% else %} {% url 'Profile' %}?gender=Other {% endif %} {% endif %}" {% if request.GET.gender == 'Other' %} class="active" {% endif %}>Other</a>
                                 </li>
                             </ul>
-                        </div>
-
+                        </div> {% endcomment %}
                         <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By city
+                            </h5>
+                            <ul class="filter_class">
+                                <li>
+                                    <a  title="All" filter-type="city" {% if request.GET.city == 'All' or request.GET.city == None %} class="active" {% endif %}>All</a>
+                                </li>
+                                {% for row in city_list %}
+                                    <li>
+                                    
+                                        <a {% if request.GET.city == row %} class="active" {% endif %} title="{{row}}" filter-type="city">{{row}}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% comment %} <div class="filter_data_list">
                             <h5 class="filter_title">
                                 By city
                             </h5>
@@ -336,9 +356,23 @@
                                     </li>
                                 {% endfor %}
                             </ul>
+                        </div> {% endcomment %}
+                     <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By country
+                            </h5>
+                            <ul class="filter_class">
+                                <li>
+                                    <a title="All" filter-type="country" {% if request.GET.country == 'All' or request.GET.country == None %} class="active" {% endif %}>All</a>
+                                </li>
+                                {% for row in country_list %}
+                                    <li>
+                                        <a title="{{row}}" filter-type="country" {% if request.GET.country == row %} class="active" {% endif %}>{{row}}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
                         </div>
-                    
-                        <div class="filter_data_list">
+                        {% comment %} <div class="filter_data_list">
                             <h5 class="filter_title">
                                 By country
                             </h5>
@@ -352,9 +386,27 @@
                                     </li>
                                 {% endfor %}
                             </ul>
+                        </div> {% endcomment %}
+                    <div class="filter_data_list">
+                            <h5 class="filter_title">
+                                By age
+                            </h5>
+                            <ul class="filter_class">
+                                <li>
+                                    <a title="All" filter-type="age" {% if request.GET.age == 'All' or request.GET.age == None %} class="active" {% endif %}>All</a>
+                                </li>
+                                <li>
+                                    <a title="twenty" filter-type="age" {% if request.GET.age == 'twenty' %} class="active" {% endif %}>20 - 30</a>
+                                </li>
+                                <li>
+                                    <a title="thirty" filter-type="age" {% if request.GET.age == 'thirty' %} class="active" {% endif %}>30 - 40</a>
+                                </li>
+                                <li>
+                                    <a title="greater" filter-type="age" {% if request.GET.age == 'greater' %} class="active" {% endif %}>Greater than 40</a>
+                                </li>
+                            </ul>
                         </div>
-                    
-                        <div class="filter_data_list">
+                        {% comment %} <div class="filter_data_list">
                             <h5 class="filter_title">
                                 By age
                             </h5>
@@ -372,27 +424,27 @@
                                     <a href="{% if request.GET.age %} {% replace_query_param request.get_full_path 'age' 'greater' %} {% else %} {% if request.GET %} {{request.get_full_path}}&age=greater {% else %} {% url 'Profile' %}?age=greater {% endif %} {% endif %}" {% if request.GET.age == 'greater' %} class="active" {% endif %}>Greater than 40</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> {% endcomment %}
                     
                         <div class="filter_data_list">
                             <h5 class="filter_title">
                                 By last password updated
                             </h5>
-                            <ul>
+                            <ul  class="filter_class">
                                 <li>
-                                    <a href="{% if request.GET.password_update %} {% replace_query_param request.get_full_path 'password_update' 'All' %} {% else %} {% if request.GET %} {{request.get_full_path}}&password_update=All {% else %} {% url 'Profile' %}?password_update=All {% endif %} {% endif %}" {% if request.GET.password_update == 'All' or request.GET.password_update == None %} class="active" {% endif %}>All</a>
+                                    <a filter-type="password_update" title="All" {% if request.GET.password_update == 'All' or request.GET.password_update == None %} class="active" {% endif %}>All</a>
                                 </li>
                                 <li>
-                                    <a href="{% if request.GET.password_update %} {% replace_query_param request.get_full_path 'password_update' 'today' %} {% else %} {% if request.GET %} {{request.get_full_path}}&password_update=today {% else %} {% url 'Profile' %}?password_update=today {% endif %} {% endif %}" {% if request.GET.password_update == 'today' %} class="active" {% endif %}>Today</a>
+                                    <a filter-type="password_update" title="today" {% if request.GET.password_update == 'today' %} class="active" {% endif %}>Today</a>
                                 </li>
                                 <li>
-                                    <a href="{% if request.GET.password_update %} {% replace_query_param request.get_full_path 'password_update' 'seven' %} {% else %} {% if request.GET %} {{request.get_full_path}}&password_update=seven {% else %} {% url 'Profile' %}?password_update=seven {% endif %} {% endif %}" {% if request.GET.password_update == 'seven' %} class="active" {% endif %}>Past 7 days</a>
+                                    <a filter-type="password_update" title="seven" {% if request.GET.password_update == 'seven' %} class="active" {% endif %}>Past 7 days</a>
                                 </li>
                                 <li>
-                                    <a href="{% if request.GET.password_update %} {% replace_query_param request.get_full_path 'password_update' 'month' %} {% else %} {% if request.GET %} {{request.get_full_path}}&password_update=month {% else %} {% url 'Profile' %}?password_update=month {% endif %} {% endif %}" {% if request.GET.password_update == 'month' %} class="active" {% endif %}>This month</a>
+                                    <a filter-type="password_update" title="month" {% if request.GET.password_update == 'month' %} class="active" {% endif %}>This month</a>
                                 </li>
                                 <li>
-                                    <a href="{% if request.GET.password_update %} {% replace_query_param request.get_full_path 'password_update' 'year' %} {% else %} {% if request.GET %} {{request.get_full_path}}&password_update=year {% else %} {% url 'Profile' %}?password_update=year {% endif %} {% endif %}" {% if request.GET.password_update == 'year' %} class="active" {% endif %}>This year</a>
+                                    <a filter-type="password_update" title="year" {% if request.GET.password_update == 'year' %} class="active" {% endif %}>This year</a>
                                 </li>
                             </ul>
                         </div>
@@ -403,7 +455,7 @@
                             </h5>
                             <ul>
                                 <li>
-                                    <form method="get">
+                                    
                                         Min : <input class="form-control mb-3" type="text" id="start_age" name="start_age" value="{{smallest_age_record}}">
                                         Max : <input class="form-control" type="text" id="end_age" name="end_age" value="{{biggest_age_record}}">
                                         {% for key,val in request.GET.items %}
@@ -414,8 +466,8 @@
                                                 <input class="form-control" type="hidden" value="{{val}}" name="{{key}}" />
                                             {% endif %}
                                         {% endfor %}
-                                        <input class="btn btn-primary mt-2" type="submit" value="Submit" name="agefilter">
-                                    </form>
+                                        <input class="btn btn-primary mt-2" id="ageSubmit" value="Submit" name="agefilter">
+                                   
                                 </li>
                             </ul>
                         </div>
@@ -426,7 +478,7 @@
                             </h5>
                             <ul>
                                 <li>
-                                    <form method="get">
+                                    
                                         <input  class="form-control mb-3" type="date" id="start_date" name="start_date" value="{{last_record}}">
                                         <input  class="form-control mb-3" type="date" id="end_date" name="end_date" value="{{first_record}}">
                                         {% for key,val in request.GET.items %}
@@ -437,8 +489,8 @@
                                                 <input  class="form-control mb-3" type="hidden" value="{{val}}" name="{{key}}" />
                                             {% endif %}
                                         {% endfor %}
-                                        <input  class="btn btn-primary mt-2" type="submit" value="Submit" name="fromtodate">
-                                    </form>
+                                        <input  class="btn btn-primary mt-2" id="dateRangeFilter" value="Submit" name="fromtodate">
+                                    
                                 </li>
                             </ul>
                         </div>
@@ -449,15 +501,15 @@
                             </h5>
                             <ul>
                                 <li>
-                                    <form method="get">
+                                    
                                         Mobile no.:<input class="form-control mb-3" type="text" id="filter_mobile" name="filter_mobile" value="{{filter_mobile_val}}">
                                         {% for key,val in request.GET.items %}
                                             {% if key != "filter_mobile" %}
                                                 <input type="hidden" value="{{val}}" name="{{key}}" />
                                             {% endif %}
                                         {% endfor %}
-                                        <input class="btn btn-primary mt-2" type="submit" value="Submit" name="mobile">
-                                    </form>
+                                        <input class="btn btn-primary mt-2" id="filter_mobile_btn" value="Submit" name="mobile">
+                                    
                                 </li>
                             </ul>
                         </div>
@@ -468,7 +520,7 @@
                             </h5>
                             <ul>
                                 <li>
-                                    <form method="get">
+                                   
                                         Latitude : <input class="form-control mb-3" type="text" id="latitude" name="latitude" value="{{searched_lat}}">
                                         Longitude : <input class="form-control mb-3" type="text" id="longitude" name="longitude" value="{{searched_long}}">
                                         {% for key,val in request.GET.items %}
@@ -479,8 +531,8 @@
                                                 <input class="form-control mb-3" type="hidden" value="{{val}}" name="{{key}}" />
                                             {% endif %}
                                         {% endfor %}
-                                        <input class="btn btn-primary mt-2" type="submit" value="Submit" name="radius">
-                                    </form>
+                                        <input class="btn btn-primary mt-2" id="radiusFilter" value="Submit" name="radius">
+                                   
                                 </li>
                             </ul>
                         </div>
@@ -542,15 +594,6 @@
 
     </script>
 
-    {% comment %} filters {% endcomment %}
-    <script>
-        $('.filter_body a').on('click', function () {
-            $('.filter_body a.active').removeClass('active');
-            $(this).addClass('active');
-        });
-    </script>
-
-    {% comment %} view modal {% endcomment %}
     <script>
         $('.profile_name').on('click', function () {
             id = $(this).attr('id')
@@ -838,21 +881,61 @@
             $("#export_link").attr('href',default_link)
         })
     </script>
-
+<script src="https://momentjs.com/downloads/moment.js"></script>
     <script>
+
+    var queryDict = {}
+    const toTimestamp = (strDate) => {  
+  const dt = new Date(strDate).getTime();  
+  return dt / 1000;  
+}  
         $(".filter_class li a").click(function(){
-            var title = $(this).attr('title');
+            
             var filter_type = $(this).attr('filter-type');
             var full_url = window.location.href;
             console.log(full_url)
             console.log(document.URL)
             console.log(window.location.search)
-            alert(title);
-            $.ajax({url: "/admin-site/Profile/filter?gender="+title, success: function(result){
+            var title = ""
+            var urlTocall = ""
+           
+                    title = $(this).attr('title');
+            
+            urlTocall = `/admin-site/Profile/filter`
+        
+            queryDict[filter_type] = title
+
+            if(title == "All"){
+                console.log(filter_type)
+                delete queryDict[filter_type]
+            }
+           
+            $(this).parent().parent().children('li').each(function(i) { 
+                console.log($(this))
+                $(this).children('a').removeClass('active')
+            });
+            $(this).addClass('active')
+            if(Object.keys(queryDict).length > 0){
+                urlTocall = "/admin-site/Profile/filter"
+                counter = 0
+                for(const property in queryDict) {
+                    counter = counter + 1
+                    if(counter == 1){
+                        urlTocall = urlTocall + `?${property}=${queryDict[property]}` 
+                    }else{
+                        urlTocall = urlTocall + `&${property}=${queryDict[property]}` 
+                    }
+                    
+                }
+            }
+
+
+            $.ajax({url: urlTocall, success: function(result){
                 console.log("after success");
                 console.log(result, typeof result);
                 const data = JSON.parse(result);
                 console.log(data);
+                $("#table_body").empty()
                 if(data.length != 0){
                     $("#table_body").html(`
                     ${data.map((item,index)=>{
@@ -863,11 +946,9 @@
                                         <div class="mt-0 mt-sm-2 d-block">
                                             <h6 class="mb-0 fs-14 fw-semibold">
                                                 {% comment %} <input type="checkbox" class="export_data_row" id="{{row.pk}}"> {% endcomment %}
-                                                {% if row.profile_image %}
-                                                    <img src="${item.fields.profile_image.url}" style="width: 45px;">
-                                                {% else %}
-                                                    None
-                                                {% endif %}
+                                                
+                                                ${item.fields.profile_image ? `<img src="/media/${item.fields.profile_image}" style="width: 45px;">`:'None'}
+                                                
                                             </h6>
                                         </div>
                                     </div>
@@ -885,7 +966,7 @@
                                     <div class="d-flex">
                                         <div class="mt-0 mt-sm-2 d-block">
                                             <h6 class="mb-0 fs-14 fw-semibold">
-                                                <span style="display:none">${item.fields.created_at|date:'U'}</span>${item.fields.created_at}
+                                                <span style="display:none">${toTimestamp(item.fields.created_at)}</span>${moment(new Date(item.fields.created_at)).format("MMM. D, 	YYYY, hh:mm a")}
                                             </h6>
                                         </div>
                                     </div>
@@ -928,6 +1009,518 @@
                 }
             }});
         });
+
+       $(document).on('click','#ageSubmit',function(){
+            var startage = $("#start_age").val()
+         
+            var endage = $("#end_age").val()
+            urlTocall = `/admin-site/Profile/filter`
+        
+            queryDict[filter_type] = title
+
+            if(title == "All"){
+                console.log(filter_type)
+                delete queryDict[filter_type]
+            }
+            if(Object.keys(queryDict).length > 0){
+                urlTocall = "/admin-site/Profile/filter"
+                counter = 0
+                for(const property in queryDict) {
+                    counter = counter + 1
+                    if(counter == 1){
+                        urlTocall = urlTocall + `?${property}=${queryDict[property]}` 
+                    }else{
+                        urlTocall = urlTocall + `&${property}=${queryDict[property]}` 
+                    }
+                    
+                }
+            }
+            $.ajax({url: urlTocall, success: function(result){
+                console.log("after success");
+                console.log(result, typeof result);
+                const data = JSON.parse(result);
+                console.log(data);
+
+                $("#table_body").empty()
+                if(data.length != 0){
+                    $("#table_body").html(`
+                    ${data.map((item,index)=>{
+                        return `
+                            <tr class="border-bottom"> 
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                {% comment %} <input type="checkbox" class="export_data_row" id="{{row.pk}}"> {% endcomment %}
+                                               ${item.fields.profile_image ? `<img src="/media/${item.fields.profile_image}" style="width: 45px;">`:'None'}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.name}">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.name}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                <span style="display:none">${toTimestamp(item.fields.created_at)}</span>${moment(new Date(item.fields.created_at)).format("MMM. D, 	YYYY, hh:mm a")}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.city}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.country}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="g-2">
+                                        <a href="/admin-site/ProfileEdit/Profile ${item.fields.uid}"
+                                            class="btn text-primary btn-sm"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-original-title="Edit">
+                                            <span class="fe fe-edit fs-14">
+                                            </span>
+                                        </a>
+                                        <a class="btn text-danger btn-sm"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-original-title="Delete"><span id="Profile ${item.fields.uid}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                    </div>
+                                </td>
+                            </tr>`
+                        }).join('')}
+                    `)
+                }
+            }});
+       })
+
+        $(document).on('click','#dateRangeFilter',function(){
+            var startdate = $("#start_date").val()
+         
+            var enddate = $("#end_date").val()
+           urlTocall = `/admin-site/Profile/filter`
+        
+            queryDict[filter_type] = title
+
+            if(title == "All"){
+                console.log(filter_type)
+                delete queryDict[filter_type]
+            }
+              if(Object.keys(queryDict).length > 0){
+                urlTocall = "/admin-site/Profile/filter"
+                counter = 0
+                for(const property in queryDict) {
+                    counter = counter + 1
+                    if(counter == 1){
+                        urlTocall = urlTocall + `?${property}=${queryDict[property]}` 
+                    }else{
+                        urlTocall = urlTocall + `&${property}=${queryDict[property]}` 
+                    }
+                    
+                }
+            }
+            $.ajax({url: urlTocall, success: function(result){
+                console.log("after success");
+                console.log(result, typeof result);
+                const data = JSON.parse(result);
+                console.log(data);
+                $("#table_body").empty()
+                if(data.length != 0){
+                    $("#table_body").html(`
+                    ${data.map((item,index)=>{
+                        return `
+                            <tr class="border-bottom"> 
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                {% comment %} <input type="checkbox" class="export_data_row" id="{{row.pk}}"> {% endcomment %}
+                                               ${item.fields.profile_image ? `<img src="/media/${item.fields.profile_image}" style="width: 45px;">`:'None'}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.name}">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.name}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                <span style="display:none">${toTimestamp(item.fields.created_at)}</span>${moment(new Date(item.fields.created_at)).format("MMM. D, 	YYYY, hh:mm a")}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.city}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.country}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="g-2">
+                                        <a href="/admin-site/ProfileEdit/Profile ${item.fields.uid}"
+                                            class="btn text-primary btn-sm"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-original-title="Edit">
+                                            <span class="fe fe-edit fs-14">
+                                            </span>
+                                        </a>
+                                        <a class="btn text-danger btn-sm"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-original-title="Delete"><span id="Profile ${item.fields.uid}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                    </div>
+                                </td>
+                            </tr>`
+                        }).join('')}
+                    `)
+                }
+            }});
+       })
+       $(document).on('click','#filter_mobile_btn',function(){
+            var filter_mobile = $("#filter_mobile").val()
+
+            urlTocall = `/admin-site/Profile/filter`
+        
+            queryDict[filter_type] = title
+
+            if(title == "All"){
+                console.log(filter_type)
+                delete queryDict[filter_type]
+            }
+           if(Object.keys(queryDict).length > 0){
+                urlTocall = "/admin-site/Profile/filter"
+                counter = 0
+                for(const property in queryDict) {
+                    counter = counter + 1
+                    if(counter == 1){
+                        urlTocall = urlTocall + `?${property}=${queryDict[property]}` 
+                    }else{
+                        urlTocall = urlTocall + `&${property}=${queryDict[property]}` 
+                    }
+                    
+                }
+            }
+            $.ajax({url: urlTocall, success: function(result){
+                console.log("after success");
+                console.log(result, typeof result);
+                const data = JSON.parse(result);
+                console.log(data);
+                $("#table_body").empty()
+                if(data.length != 0){
+                    $("#table_body").html(`
+                    ${data.map((item,index)=>{
+                        return `
+                            <tr class="border-bottom"> 
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                {% comment %} <input type="checkbox" class="export_data_row" id="{{row.pk}}"> {% endcomment %}
+                                             ${item.fields.profile_image ? `<img src="/media/${item.fields.profile_image}" style="width: 45px;">`:'None'}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.name}">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.name}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                <span style="display:none">${toTimestamp(item.fields.created_at)}</span>${moment(new Date(item.fields.created_at)).format("MMM. D, 	YYYY, hh:mm a")}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.city}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.country}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="g-2">
+                                        <a href="/admin-site/ProfileEdit/Profile ${item.fields.uid}"
+                                            class="btn text-primary btn-sm"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-original-title="Edit">
+                                            <span class="fe fe-edit fs-14">
+                                            </span>
+                                        </a>
+                                        <a class="btn text-danger btn-sm"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-original-title="Delete"><span id="Profile ${item.fields.uid}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                    </div>
+                                </td>
+                            </tr>`
+                        }).join('')}
+                    `)
+                }
+            }});
+       })
+
+       $(document).on('click','#radiusFilter',function(){
+         var latitude = $("#latitude").val()
+         
+            var longitude = $("#longitude").val()
+            urlTocall = `/admin-site/Profile/filter`
+        
+            queryDict[filter_type] = title
+
+            if(title == "All"){
+                console.log(filter_type)
+                delete queryDict[filter_type]
+            }
+           if(Object.keys(queryDict).length > 0){
+                urlTocall = "/admin-site/Profile/filter"
+                counter = 0
+                for(const property in queryDict) {
+                    counter = counter + 1
+                    if(counter == 1){
+                        urlTocall = urlTocall + `?${property}=${queryDict[property]}` 
+                    }else{
+                        urlTocall = urlTocall + `&${property}=${queryDict[property]}` 
+                    }
+                    
+                }
+            }
+            $.ajax({url: urlTocall, success: function(result){
+                console.log("after success");
+                console.log(result, typeof result);
+                const data = JSON.parse(result);
+                console.log(data);
+                $("#table_body").empty()
+                if(data.length != 0){
+                    $("#table_body").html(`
+                    ${data.map((item,index)=>{
+                        return `
+                            <tr class="border-bottom"> 
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                {% comment %} <input type="checkbox" class="export_data_row" id="{{row.pk}}"> {% endcomment %}
+                                           ${item.fields.profile_image ? `<img src="/media/${item.fields.profile_image}" style="width: 45px;">`:'None'}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.name}">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.name}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                <span style="display:none">${toTimestamp(item.fields.created_at)}</span>${moment(new Date(item.fields.created_at)).format("MMM. D, 	YYYY, hh:mm a")}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.city}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.country}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="g-2">
+                                        <a href="/admin-site/ProfileEdit/Profile ${item.fields.uid}"
+                                            class="btn text-primary btn-sm"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-original-title="Edit">
+                                            <span class="fe fe-edit fs-14">
+                                            </span>
+                                        </a>
+                                        <a class="btn text-danger btn-sm"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-original-title="Delete"><span id="Profile ${item.fields.uid}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                    </div>
+                                </td>
+                            </tr>`
+                        }).join('')}
+                    `)
+                }
+            }});
+       })
+
+       $(document).on('click','#searchSubmit',function(){
+         var searchbar = $("#searchbar").val()
+          urlTocall = `/admin-site/Profile/filter`
+        
+            queryDict[filter_type] = title
+
+            if(title == "All"){
+                console.log(filter_type)
+                delete queryDict[filter_type]
+            }
+           if(Object.keys(queryDict).length > 0){
+                urlTocall = "/admin-site/Profile/filter"
+                counter = 0
+                for(const property in queryDict) {
+                    counter = counter + 1
+                    if(counter == 1){
+                        urlTocall = urlTocall + `?${property}=${queryDict[property]}` 
+                    }else{
+                        urlTocall = urlTocall + `&${property}=${queryDict[property]}` 
+                    }
+                    
+                }
+            }
+            $.ajax({url: urlTocall, success: function(result){
+                console.log("after success");
+                console.log(result, typeof result);
+                const data = JSON.parse(result);
+                console.log(data);
+                $("#table_body").empty()
+                if(data.length != 0){
+                    $("#table_body").html(`
+                    ${data.map((item,index)=>{
+                        return `
+                            <tr class="border-bottom"> 
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                {% comment %} <input type="checkbox" class="export_data_row" id="{{row.pk}}"> {% endcomment %}
+                                           ${item.fields.profile_image ? `<img src="/media/${item.fields.profile_image}" style="width: 45px;">`:'None'}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.name}">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.name}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                <span style="display:none">${toTimestamp(item.fields.created_at)}</span>${moment(new Date(item.fields.created_at)).format("MMM. D, 	YYYY, hh:mm a")}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.city}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.country}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="g-2">
+                                        <a href="/admin-site/ProfileEdit/Profile ${item.fields.uid}"
+                                            class="btn text-primary btn-sm"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-original-title="Edit">
+                                            <span class="fe fe-edit fs-14">
+                                            </span>
+                                        </a>
+                                        <a class="btn text-danger btn-sm"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-original-title="Delete"><span id="Profile ${item.fields.uid}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                    </div>
+                                </td>
+                            </tr>`
+                        }).join('')}
+                    `)
+                }
+            }});
+       })
     </script>
 
     {% comment %} uncheck {% endcomment %}

@@ -38,6 +38,9 @@
                                 <a class="side-menu__item" data-bs-toggle="slide" href="/admin-site/application_data/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin-site/application_data/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Application Data</span></a>
                             </li>
                             <li class="admin_tables">
+                                <a class="side-menu__item" data-bs-toggle="slide" href="/admin-site/no_auth_app_data_model/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin-site/no_auth_app_data_model/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Application Data Without Auth</span></a>
+                            </li>
+                            <li class="admin_tables">
                                 <a class="side-menu__item" data-bs-toggle="slide" href="/admin-site/Product/"> <i class="side-menu__icon fa fa-angle-right"></i><span {% if request.path == '/admin-site/Product/' %}class="side-menu__label activated" {% else %}class="side-menu__label" {% endif %}>Product</span></a>
                             </li>
                             <li class="admin_tables">

@@ -30,6 +30,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from geopy.geocoders import Nominatim
 from pycountry import countries
 import requests
+from random import randint
+
+def random_with_N_digits(n):
+    range_start = 10**(n-1)
+    range_end = (10**n)-1
+    return randint(range_start, range_end)
 
 
 # initialize Nominatim API
@@ -126,7 +132,7 @@ def logoutProcess(request):
 			user_obj.auth_token.remove(i)
 
 	user_obj.save()
-	result["value"] = False
+	result["value"] = True
 	result["data"] = "Successfully Logged Out"
 	return Response(result, status=status.HTTP_200_OK)
 
@@ -1263,38 +1269,39 @@ def purchase_history(request):
 
 			try:
 				user = User.objects.get(auth_token__contains = "{" + header_token + "}")
-				try:
-					purchase_obj = Purchase.objects.get(username=user.id)
-					purchase_obj.product = product_obj
-					purchase_obj.pstatus = pstatus
-					purchase_obj.auto_renew_status = auto_renew_status
-					purchase_obj.is_in_billing_retry_period = is_in_billing_retry_period
-					purchase_obj.is_in_intro_offer_period = is_in_intro_offer_period
-					purchase_obj.is_trial_period = is_trial_period
-					purchase_obj.start_date = start_date
-					purchase_obj.end_date = end_date
-					purchase_obj.subscription_type = subscription_type
-					purchase_obj.save()
-					result["value"]=True
-					result["message"]= "Data Updated"
-					return Response(result, status=status.HTTP_200_OK)
-				except Exception as e:
-					obj = Purchase(
-						username=user,
-						product = product_obj,
-						pstatus=pstatus,
-						auto_renew_status=auto_renew_status,
-						is_in_billing_retry_period=is_in_billing_retry_period,
-						is_in_intro_offer_period=is_in_intro_offer_period,
-						is_trial_period=is_trial_period,
-						start_date=start_date,
-						end_date=end_date,
-						subscription_type=subscription_type
-					)
-					obj.save()
-					result["value"]=True
-					result["message"]="Data Added"
-					return Response(result, status=status.HTTP_200_OK)
+				# try:
+				# 	purchase_obj = Purchase.objects.get(username=user.id)
+				# 	purchase_obj.product = product_obj
+				# 	purchase_obj.pstatus = pstatus
+				# 	purchase_obj.auto_renew_status = auto_renew_status
+				# 	purchase_obj.is_in_billing_retry_period = is_in_billing_retry_period
+				# 	purchase_obj.is_in_intro_offer_period = is_in_intro_offer_period
+				# 	purchase_obj.is_trial_period = is_trial_period
+				# 	purchase_obj.start_date = start_date
+				# 	purchase_obj.end_date = end_date
+				# 	purchase_obj.subscription_type = subscription_type
+				# 	purchase_obj.save()
+				# 	result["value"]=True
+				# 	result["message"]= "Data Updated"
+				# 	return Response(result, status=status.HTTP_200_OK)
+				# except Exception as e:
+				obj = Purchase(
+					username=user,
+					product = product_obj,
+					purchase_id = random_with_N_digits(10),
+					pstatus=pstatus,
+					auto_renew_status=auto_renew_status,
+					is_in_billing_retry_period=is_in_billing_retry_period,
+					is_in_intro_offer_period=is_in_intro_offer_period,
+					is_trial_period=is_trial_period,
+					start_date=start_date,
+					end_date=end_date,
+					subscription_type=subscription_type
+				)
+				obj.save()
+				result["value"]=True
+				result["message"]="Data Added"
+				return Response(result, status=status.HTTP_200_OK)
 			except Exception as e:
 				result["value"]=False
 				result["message"]="User Not Exist!!!"

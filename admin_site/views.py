@@ -3,7 +3,7 @@ import copy
 from urllib import response
 from django.http import HttpResponseRedirect,HttpResponse
 from django.shortcuts import redirect, render
-from home.models import Product, Profile, Purchase, Tag, application_data, custom_user, user_preference
+from home.models import Product, Profile, Purchase, Tag, application_data, application_data_noauth, custom_user, user_preference
 from home.models import custom_user
 from django.apps import apps
 from rest_framework.response import Response
@@ -101,10 +101,11 @@ def all_table_data():
     total_profiles = Profile.objects.all().order_by('-created_at')
     total_details = user_preference.objects.all()
     total_app_datas = application_data.objects.all()
+    total_no_auth_app_datas = application_data_noauth.objects.all()
     total_purchases = Purchase.objects.all()
     total_tags = Tag.objects.all()
     total_products = Product.objects.all()
-    all_data = {'admins':admins, 'locals':locals, 'total_profiles':total_profiles, 'total_details':total_details, 'total_app_datas':total_app_datas, 'total_purchases':total_purchases, 'total_tags':total_tags, 'total_products':total_products}
+    all_data = {'admins':admins, 'locals':locals, 'total_profiles':total_profiles, 'total_details':total_details, 'total_app_datas':total_app_datas, 'total_no_auth_app_datas':total_no_auth_app_datas, 'total_purchases':total_purchases, 'total_tags':total_tags, 'total_products':total_products}
     return all_data
 
 # for index page of admin panel
@@ -116,6 +117,7 @@ def index(request):
                                                          'total_profiles': all_table_data()['total_profiles'],
                                                          'total_details': all_table_data()['total_details'],
                                                          'total_app_datas': all_table_data()['total_app_datas'],
+                                                         'total_no_auth_app_datas': all_table_data()['total_no_auth_app_datas'],
                                                          'total_purchases': all_table_data()['total_purchases'],
                                                          'total_tags': all_table_data()['total_tags'],
                                                          'total_products': all_table_data()['total_products'],
@@ -630,6 +632,36 @@ def app_data_model(request):
     else:
         return redirect("login")
 
+# no auth application model data
+def no_auth_app_data_model(request):
+    if request.user.is_authenticated:
+        total_no_auth_app_datas = application_data_noauth.objects.all().order_by('-created_at')
+
+        if 'search' in request.GET:
+            searchvalue = request.GET['search']
+            total_no_auth_app_datas = application_data_noauth.objects.filter(
+                                Q(inApp_Products__icontains=searchvalue) |
+                                Q(Purchased_product__icontains=searchvalue) |
+                                Q(Device_Model__icontains=searchvalue) |
+                                Q(operating_system__icontains=searchvalue) |
+                                Q(Device_Storage__icontains=searchvalue) |
+                                Q(Carrier__icontains=searchvalue) |
+                                Q(Grace_Period__icontains=searchvalue) |
+                                Q(Total_time_spent__icontains=searchvalue) |
+                                Q(Push_Notification_token__icontains=searchvalue)
+            )
+        if 'show' in request.GET:
+            showval = request.GET['show']
+            p = Paginator(total_no_auth_app_datas, showval)
+        else:
+            p = Paginator(total_no_auth_app_datas, 10)
+        page_number = request.GET.get('page')
+        page_obj = p.get_page(page_number)
+
+        return render(request, "admin_site/app_data_no_auth_model.html", {'total_no_auth_app_datas': page_obj})
+    else:
+        return redirect("login")
+
 # puchase model data
 def purchase_model(request):
     if request.user.is_authenticated:
@@ -720,11 +752,9 @@ def view_profile(request, info):
     else:
         return redirect("login")
 
-def view_purchase(request, info):
+def specific_purchase(request, info):
     if request.user.is_authenticated:
-        infolist = info.replace(" ", "").split('-')
-        user_obj = custom_user.objects.get(username=infolist[0])
-        obj = Purchase.objects.filter(username=user_obj.id, pstatus=infolist[1])
+        obj = Purchase.objects.filter(purchase_id=int(info))
         data = serializers.serialize("json", obj)
         data = json.loads(data[1:-1])
         return JsonResponse({"res": data})
@@ -803,6 +833,29 @@ def view_app_data(request, info):
     else:
         return redirect("login")
 
+# def view_app_data_no_auth(request, info):
+#     if request.user.is_authenticated:
+#         infolist = info.replace(" ", "").split('-')
+#         obj = application_data_noauth.objects.filter(UID=infolist[1])
+#         data = serializers.serialize("json", obj)
+#         data = json.loads(data[1:-1])
+#         return JsonResponse({"res": data})
+#     else:
+#         return redirect("login")    
+
+def view_app_data_without_auth(request, info):
+    if request.user.is_authenticated:
+        print(info)
+        infolist = info.replace(" ", "").split('-')
+        print(infolist)
+        obj = application_data_noauth.objects.filter(UID=infolist[1])
+        print(obj)
+        data = serializers.serialize("json", obj)
+        data = json.loads(data[1:-1])
+        return JsonResponse({"res": data})
+    else:
+        return redirect("login")        
+
 # View specific model data end---------/
 
 # delete specific model data start---------\
@@ -845,6 +898,15 @@ def delete_app_data(request, para=None):
         return redirect('application_data')
     else:
         return redirect("login")
+
+def delete_no_auth_app_data(request, para=None):
+    if request.user.is_authenticated:
+        modal_id = para.split(" ")
+        obj = application_data_noauth.objects.get(aid=int(modal_id[1]))
+        obj.delete()
+        return redirect('no_auth_app_data_model')
+    else:
+        return redirect("login")        
 
 
 def delete_purchase(request, para=None):
@@ -1277,6 +1339,125 @@ def app_data_edit(request, para):
         return redirect("login")
 
 
+def no_auth_app_data_edit(request, para):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            print(request.POST)
+            UID = request.POST['UID']
+            inApp_Products = request.POST['inApp_Products']
+            Purchase_date = request.POST['Purchase_date']
+            print("===>",Purchase_date)
+            # Purchase_date_change = request.POST['Purchase_date_change']
+            Purchased_product = request.POST['Purchased_product']
+            Device_Model = request.POST['Device_Model']
+            operating_system = request.POST['operating_system']
+            Device_Storage = request.POST['Device_Storage']
+            Lunch_count = request.POST['Lunch_count']
+            Push_Notification_Status = request.POST.get('Push_Notification_Status')
+            Library_permission_Status = request.POST.get(
+                'Library_permission_Status')
+            latitude = request.POST['latitude']
+            longitude = request.POST['longitude']
+            Carrier = request.POST['Carrier']
+            App_Last_Opened = request.POST.get('App_Last_Opened')
+            # App_Last_Opened_change = request.POST['App_Last_Opened_change']
+            Purchase_attempts = request.POST.get('Purchase_attempts')
+            print("<===",Lunch_count,"===>")
+            Grace_Period = request.POST['Grace_Period']
+            Remaining_grace_period_days = request.POST['Remaining_grace_period_days']
+            Number_of_projects = request.POST['Number_of_projects']
+            Total_time_spent = request.POST['Total_time_spent']
+            total_ads_served = request.POST['total_ads_served']
+            Registered_user = request.POST.get('Registered_user')
+            Push_Notification_token = request.POST['Push_Notification_token']
+
+            if Purchase_attempts != "":
+                Purchase_attempts = Purchase_attempts
+            else:
+                Purchase_attempts = None
+
+            if Lunch_count != '':
+                Lunch_count = Lunch_count
+            else:
+                Lunch_count = None
+
+            if Number_of_projects != '':
+                Number_of_projects = Number_of_projects
+            else:
+                Number_of_projects = None
+
+            if total_ads_served != '':
+                total_ads_served = total_ads_served
+            else:
+                total_ads_served = None
+
+            if Remaining_grace_period_days != '':
+                Remaining_grace_period_days = Remaining_grace_period_days
+            else:
+                Remaining_grace_period_days = None
+
+            obj = application_data_noauth.objects.get(UID=UID)
+            obj.inApp_Products = inApp_Products
+
+            obj.Purchase_attempts = Purchase_attempts
+
+            if Purchase_date != "None":
+                obj.Purchase_date = Purchase_date
+            # obj.Purchase_date_change = Purchase_date_change
+            obj.Purchased_product = Purchased_product
+            obj.Device_Model = Device_Model
+            obj.operating_system = operating_system
+            obj.Device_Storage = Device_Storage
+            obj.Lunch_count = Lunch_count
+
+            if Push_Notification_Status == "on":
+                obj.Push_Notification_Status = True
+            else:
+                obj.Push_Notification_Status = False
+
+            if Library_permission_Status == "on":
+                obj.Library_permission_Status = True
+            else:
+                obj.Library_permission_Status = False
+
+            if latitude != "":
+                obj.latitude = latitude
+            if longitude != "":
+                obj.longitude = longitude
+            obj.Carrier = Carrier
+            if App_Last_Opened != "None":
+                obj.App_Last_Opened = App_Last_Opened
+            # obj.App_Last_Opened_change = App_Last_Opened_change
+            obj.Grace_Period = Grace_Period
+            obj.Remaining_grace_period_days = Remaining_grace_period_days
+            obj.Number_of_projects = Number_of_projects
+            obj.Total_time_spent = Total_time_spent
+            obj.total_ads_served = total_ads_served
+
+            if Registered_user == "on":
+                obj.Registered_user = True
+            else:
+                obj.Registered_user = False
+
+            obj.Push_Notification_token = Push_Notification_token
+
+            obj.save()
+
+            return redirect('no_auth_app_data_model')
+
+        elif request.method == "GET":
+            modal_id = para.split(" ")
+            obj = application_data_noauth.objects.filter(aid=modal_id[1])
+            data = serializers.serialize("json", obj)
+            data = json.loads(data)
+            res = []
+            for i in data:
+                res.append(i['fields'])
+            return render(request, 'admin_site/no_auth_app_data_edit.html', {"result": res})
+    else:
+        return redirect("login")
+
+
 def purchase_edit(request, para):
     if request.user.is_authenticated:
         if request.method == "POST":
@@ -1589,6 +1770,9 @@ def filter(request):
 
         if 'city' in request.GET:
             val = request.GET['city']
+            print("CITY")
+            print(val)
+
             if val == 'All':
                 total_profiles = total_profiles.all()
             for i in city_list:
@@ -1622,6 +1806,7 @@ def filter(request):
 
 
         if 'fromtodate' in request.GET:
+            print("fromtodate")
             start_date = request.GET['start_date']
             end_date = request.GET['end_date']
 
