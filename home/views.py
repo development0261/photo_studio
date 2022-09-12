@@ -303,111 +303,42 @@ def register(request):
 # user registration using social media
 @api_view(['POST'])
 def social_media_registration(request):
-	try:
-		result = dict()
-		if request.method == "POST":
-			username = request.POST['username']
-			token = request.POST['token']
-			social_media_site = request.POST['social_media_site']
-			is_social = request.POST['is_social']
+	# try:
+	result = dict()
+	if request.method == "POST":
+		username = request.POST['username']
+		token = request.POST['token']
+		social_media_site = request.POST['social_media_site']
+		is_social = request.POST['is_social']
 
-			if 'profile_image' in request.FILES:
-				profile_image = request.FILES['profile_image']
+		if 'profile_image' in request.FILES:
+			profile_image = request.FILES['profile_image']
 
-			email = request.POST.get('email')
-			first_name = request.POST.get('first_name')
-			last_name = request.POST.get('last_name')
-			name = request.POST.get('name')
-			city = request.POST.get('city')
-			country = request.POST.get('country')
-			latitude = request.POST.get('latitude')
-			longitude = request.POST.get('longitude')
+		email = request.POST.get('email')
+		first_name = request.POST.get('first_name')
+		last_name = request.POST.get('last_name')
+		name = request.POST.get('name')
+		city = request.POST.get('city')
+		country = request.POST.get('country')
+		latitude = request.POST.get('latitude')
+		longitude = request.POST.get('longitude')
 
-			if latitude:
-				latitude = latitude
-			else:
-				latitude = None
+		if latitude:
+			latitude = latitude
+		else:
+			latitude = None
 
-			if longitude:
-				longitude = longitude
-			else:
-				longitude = None
+		if longitude:
+			longitude = longitude
+		else:
+			longitude = None
 
-			if token:
-				if social_media_site.lower()=="apple" or social_media_site.lower()=="snapchat":
-					if not User.objects.filter(token=token).exists():
-						user_obj = User.objects.create_user(
-							username=username, password=token, email=email,
-							token=token, social_media_site=social_media_site, first_name=first_name, last_name=last_name)
-						user_obj.save()
-
-						profile_obj = Profile(username=user_obj, is_social=is_social, name=name, city=city, country=country, lat=latitude, long=longitude)
-						if 'profile_image' in request.FILES:
-							profile_obj.profile_image = profile_image
-						profile_obj.save()
-						serializer_class = SocialSerializer(profile_obj)
-						result["value"] = True
-						result["data"] = serializer_class.data
-
-						if user_obj.auth_token:
-							if len(user_obj.auth_token)==3:
-								user_obj.auth_token[0] = (str(result['data']['token']))
-							else:
-								user_obj.auth_token.append(str(result['data']['token']))
-						else:
-							user_obj.auth_token = "{"+str(result['data']['token'])+"}"
-						user_obj.save()
-
-						return Response(result, status=status.HTTP_200_OK)
-					else:
-						user_obj = User.objects.get(token=token)
-						if not user_obj.is_active:
-							result["value"] = False
-							result["message"] = "Account with this username is not exists!"
-							return Response(result, status=status.HTTP_401_UNAUTHORIZED)
-						profile_obj = Profile.objects.get(username=user_obj)
-						serializer_class = SocialSerializer(profile_obj)
-						result["value"] = True
-						result["data"] = serializer_class.data
-
-						if user_obj.auth_token:
-							if len(user_obj.auth_token)==3:
-								user_obj.auth_token[0] = (str(result['data']['token']))
-							else:
-								user_obj.auth_token.append(str(result['data']['token']))
-						else:
-							user_obj.auth_token = "{"+str(result['data']['token'])+"}"
-						user_obj.save()
-
-						return Response(result, status=status.HTTP_200_OK)
-
-				elif social_media_site.lower()=="google":
-					url = f'https://oauth2.googleapis.com/tokeninfo?id_token={token}'
-					r = requests.get(url = url)
-					data = r.json()
-					if 'error' in data:
-						result["value"] = False
-						result["message"] = "Please check your token!"
-						return Response(result, status=status.HTTP_400_BAD_REQUEST)
-					social_id = data['sub']
-				elif social_media_site.lower()=="facebook":
-					url = f'https://graph.facebook.com/me?access_token={token}'
-					r = requests.get(url = url)
-					data = r.json()
-					if 'error' in data:
-						result["value"] = False
-						result["message"] = "Please check your tokenbad!"
-						return Response(result, status=status.HTTP_400_BAD_REQUEST)
-					social_id = data['id']
-				if not User.objects.filter(social_id=social_id).exists():
-					if User.objects.filter(username=username).exists():
-						result["value"] = False
-						result["message"] = "User already exists with this username!"
-						return Response(result, status=status.HTTP_401_UNAUTHORIZED)
-
+		if token:
+			if social_media_site.lower()=="apple" or social_media_site.lower()=="snapchat":
+				if not User.objects.filter(token=token).exists():
 					user_obj = User.objects.create_user(
 						username=username, password=token, email=email,
-						token=token, social_media_site=social_media_site, social_id=social_id, first_name=first_name, last_name=last_name)
+						token=token, social_media_site=social_media_site, first_name=first_name, last_name=last_name)
 					user_obj.save()
 
 					profile_obj = Profile(username=user_obj, is_social=is_social, name=name, city=city, country=country, lat=latitude, long=longitude)
@@ -429,7 +360,7 @@ def social_media_registration(request):
 
 					return Response(result, status=status.HTTP_200_OK)
 				else:
-					user_obj = User.objects.get(social_id=social_id)
+					user_obj = User.objects.get(token=token)
 					if not user_obj.is_active:
 						result["value"] = False
 						result["message"] = "Account with this username is not exists!"
@@ -450,15 +381,84 @@ def social_media_registration(request):
 
 					return Response(result, status=status.HTTP_200_OK)
 
-		else:
-			result["value"] = False
-			result["message"] = "Method not Allowed!"
-			return Response(result,status=status.HTTP_405_METHOD_NOT_ALLOWED)
-	except Exception as e:
-		print(e)
+			elif social_media_site.lower()=="google":
+				url = f'https://oauth2.googleapis.com/tokeninfo?id_token={token}'
+				r = requests.get(url = url)
+				data = r.json()
+				if 'error' in data:
+					result["value"] = False
+					result["message"] = "Please check your token!"
+					return Response(result, status=status.HTTP_400_BAD_REQUEST)
+				social_id = data['sub']
+			elif social_media_site.lower()=="facebook":
+				url = f'https://graph.facebook.com/me?access_token={token}'
+				r = requests.get(url = url)
+				data = r.json()
+				if 'error' in data:
+					result["value"] = False
+					result["message"] = "Please check your tokenbad!"
+					return Response(result, status=status.HTTP_400_BAD_REQUEST)
+				social_id = data['id']
+			if not User.objects.filter(social_id=social_id).exists():
+				if User.objects.filter(username=username).exists():
+					result["value"] = False
+					result["message"] = "User already exists with this username!"
+					return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+
+				user_obj = User.objects.create_user(
+					username=username, password=token, email=email,
+					token=token, social_media_site=social_media_site, social_id=social_id, first_name=first_name, last_name=last_name)
+				user_obj.save()
+
+				profile_obj = Profile(username=user_obj, is_social=is_social, name=name, city=city, country=country, lat=latitude, long=longitude)
+				if 'profile_image' in request.FILES:
+					profile_obj.profile_image = profile_image
+				profile_obj.save()
+				serializer_class = SocialSerializer(profile_obj)
+				result["value"] = True
+				result["data"] = serializer_class.data
+
+				if user_obj.auth_token:
+					if len(user_obj.auth_token)==3:
+						user_obj.auth_token[0] = (str(result['data']['token']))
+					else:
+						user_obj.auth_token.append(str(result['data']['token']))
+				else:
+					user_obj.auth_token = "{"+str(result['data']['token'])+"}"
+				user_obj.save()
+
+				return Response(result, status=status.HTTP_200_OK)
+			else:
+				user_obj = User.objects.get(social_id=social_id)
+				if not user_obj.is_active:
+					result["value"] = False
+					result["message"] = "Account with this username is not exists!"
+					return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+				profile_obj = Profile.objects.get(username=user_obj)
+				serializer_class = SocialSerializer(profile_obj)
+				result["value"] = True
+				result["data"] = serializer_class.data
+
+				if user_obj.auth_token:
+					if len(user_obj.auth_token)==3:
+						user_obj.auth_token[0] = (str(result['data']['token']))
+					else:
+						user_obj.auth_token.append(str(result['data']['token']))
+				else:
+					user_obj.auth_token = "{"+str(result['data']['token'])+"}"
+				user_obj.save()
+
+				return Response(result, status=status.HTTP_200_OK)
+
+	else:
 		result["value"] = False
-		result["message"] = "Something went wrong! Please contact to support team."
-		return Response(result,status=status.HTTP_200_OK)
+		result["message"] = "Method not Allowed!"
+		return Response(result,status=status.HTTP_405_METHOD_NOT_ALLOWED)
+	# except Exception as e:
+	# 	print(e)
+	# 	result["value"] = False
+	# 	result["message"] = "Something went wrong! Please contact to support team."
+	# 	return Response(result,status=status.HTTP_200_OK)
 	
 # send email for forgot password
 @api_view(['POST'])
