@@ -710,114 +710,115 @@ def profile(request):
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
 		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
-	try:
-		user_obj = User.objects.get(auth_token__contains = "{" + header_token + "}")
+	# try:
+	user_obj = User.objects.get(auth_token__contains = "{" + header_token + "}")
 
-		if request.method == "POST":
-			email = request.POST.get('email')
-			username = request.POST.get('username')
-			name = request.POST.get('name')
-			mobile = request.POST.get('mobile')
-			gender = request.POST.get('gender')
-			date_of_Birth = request.POST.get('dob')
-			city = request.POST.get('city')
-			country = request.POST.get('country')
-			user_Latitude = request.POST.get('lat')
-			user_Longitude = request.POST.get('long')
-			snapchat = request.POST.get('snap')
-			facebook = request.POST.get('fb')
-			instagram = request.POST.get('insta')
-			website = request.POST.get('website')
-			# country_code = request.POST.get('country_code')
-			# g = geocoder.osm([user_Latitude,user_Longitude], method='reverse')
-			country_code = None
-			if user_Latitude and user_Longitude:
-				location = geolocator.reverse(user_Latitude+","+user_Longitude)
-				address = location.raw['address']
-				country = address.get('country', '')
-				country_code = countries.get(name=country).alpha_2
-			try:
-				if date_of_Birth in request.POST:
-					datetime.strptime(date_of_Birth, '%Y-%m-%d')
-			except ValueError:
+	if request.method == "POST":
+		email = request.POST.get('email')
+		username = request.POST.get('username')
+		name = request.POST.get('name')
+		mobile = request.POST.get('mobile')
+		gender = request.POST.get('gender')
+		date_of_Birth = request.POST.get('dob')
+		city = request.POST.get('city')
+		country = request.POST.get('country')
+		user_Latitude = request.POST.get('lat')
+		user_Longitude = request.POST.get('long')
+		snapchat = request.POST.get('snap')
+		facebook = request.POST.get('fb')
+		instagram = request.POST.get('insta')
+		website = request.POST.get('website')
+		# country_code = request.POST.get('country_code')
+		# g = geocoder.osm([user_Latitude,user_Longitude], method='reverse')
+		country_code = None
+		if user_Latitude and user_Longitude:
+			location = geolocator.reverse(user_Latitude+","+user_Longitude)
+			address = location.raw['address']
+			country = address.get('country', '')
+			country_code = countries.get(name=country).alpha_2
+		try:
+			if date_of_Birth in request.POST:
+				datetime.strptime(date_of_Birth, '%Y-%m-%d')
+		except ValueError:
+			result["value"] = False
+			result["message"] = "date_of_Birth in incorrect date format. It should be YYYY-MM-DD"
+			return Response(result, status=status.HTTP_400_BAD_REQUEST)
+
+		if 'profile_image' in request.FILES:
+			profile_image = request.FILES['profile_image']
+		else:
+			profile_image = None
+
+		if 'avatar_image' in request.FILES:
+			avatar_image = request.FILES['avatar_image']
+		else:
+			avatar_image = None
+
+		if 'bitmoji' in request.FILES:
+			bitmoji = request.FILES['bitmoji']
+		else:
+			bitmoji = None
+
+		if user_obj.username != username:
+			if User.objects.filter(username=username).exists():
+				return Response({"Error": "username already taken!!!"}, status=status.HTTP_400_BAD_REQUEST)
+
+		if user_obj.email != email and email is not None:
+			if(re.fullmatch(for_email, str(email))):
+				if User.objects.filter(email=email).exists():
+					return Response({"Error": "Email already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
+			else:
 				result["value"] = False
-				result["message"] = "date_of_Birth in incorrect date format. It should be YYYY-MM-DD"
+				result["message"] = "Enter valid email address"
 				return Response(result, status=status.HTTP_400_BAD_REQUEST)
 
-			if 'profile_image' in request.FILES:
-				profile_image = request.FILES['profile_image']
-			else:
-				profile_image = None
-
-			if 'avatar_image' in request.FILES:
-				avatar_image = request.FILES['avatar_image']
-			else:
-				avatar_image = None
-
-			if 'bitmoji' in request.FILES:
-				bitmoji = request.FILES['bitmoji']
-			else:
-				bitmoji = None
-
-			if user_obj.username != username:
-				if User.objects.filter(username=username).exists():
-					return Response({"Error": "username already taken!!!"}, status=status.HTTP_400_BAD_REQUEST)
-
-			if user_obj.email != email:
-				if(re.fullmatch(for_email, email)):
-					if User.objects.filter(email=email).exists():
-						return Response({"Error": "Email already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
-				else:
-					result["value"] = False
-					result["message"] = "Enter valid email address"
-					return Response(result, status=status.HTTP_400_BAD_REQUEST)
-
-			if username:
-				user_obj.username = username
-				user_obj.save()
-			profile_obj = Profile.objects.get(username=user_obj.id)
-			profile_obj.name = name
-			if email:
-				user_obj.email = email
-			if mobile:
-				profile_obj.mobile = mobile
-			if gender:
-				profile_obj.gender = gender
-			profile_obj.profile_image = profile_image
-			if date_of_Birth !="":
-				profile_obj.dob = date_of_Birth
-			if city:
-				profile_obj.city = city
-			if country:
-				profile_obj.country = country
-			if user_Latitude != "":
-				profile_obj.lat = user_Latitude
-			if user_Longitude != "":
-				profile_obj.long = user_Longitude
-			if snapchat:
-				profile_obj.snap = snapchat
-			if facebook:
-				profile_obj.fb = facebook
-			if instagram:
-				profile_obj.insta = instagram
-			if website:
-				profile_obj.website = website
-			profile_obj.avatar = avatar_image
-			profile_obj.bitmoji = bitmoji
-			profile_obj.updated_at = datetime.now()
-			if country_code:
-				profile_obj.country_code = country_code
-			else:
-				profile_obj.country_code = None
-			profile_obj.save()
+		if username:
+			user_obj.username = username
 			user_obj.save()
-			result["value"] = True
-			result["message"] = "Profile Updated"
-			return Response(result, status=status.HTTP_200_OK)
-	except Exception as e:
-		result["value"] = False
-		result["message"] = "Something went wrong! Please contact to support team."
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+		profile_obj = Profile.objects.get(username=user_obj.id)
+		profile_obj.name = name
+		if email:
+			user_obj.email = email
+		if mobile:
+			profile_obj.mobile = mobile
+		if gender:
+			profile_obj.gender = gender
+		profile_obj.profile_image = profile_image
+		if date_of_Birth !="":
+			profile_obj.dob = date_of_Birth
+		if city:
+			profile_obj.city = city
+		if country:
+			profile_obj.country = country
+		if user_Latitude != "":
+			profile_obj.lat = user_Latitude
+		if user_Longitude != "":
+			profile_obj.long = user_Longitude
+		if snapchat:
+			profile_obj.snap = snapchat
+		if facebook:
+			profile_obj.fb = facebook
+		if instagram:
+			profile_obj.insta = instagram
+		if website:
+			profile_obj.website = website
+		profile_obj.avatar = avatar_image
+		profile_obj.bitmoji = bitmoji
+		profile_obj.updated_at = datetime.now()
+		if country_code:
+			profile_obj.country_code = country_code
+		else:
+			profile_obj.country_code = None
+		profile_obj.save()
+		user_obj.save()
+		result["value"] = True
+		result["message"] = "Profile Updated"
+		return Response(result, status=status.HTTP_200_OK)
+	# except Exception as e:
+	# 	print(e)
+	# 	result["value"] = False
+	# 	result["message"] = "Something went wrong! Please contact to support team."
+	# 	return Response(result, status=status.HTTP_401_UNAUTHORIZED)
 
 # get specific user
 @api_view(['GET'])
