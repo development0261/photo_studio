@@ -264,6 +264,12 @@ def register(request):
 								final_data = dict(serializer_class.data)
 								profile_serializer_class = ProfileSerializer(pro_obj, many=True)
 
+								# add profile data to response
+								for i,j in profile_serializer_class.data[0].items():
+									final_data[i]=j
+								result["value"] = True
+								result["data"] = final_data
+
 								if user.auth_token:
 									if len(user.auth_token)==3:
 										user.auth_token[0] = (str(result['data']['token']))
@@ -273,11 +279,6 @@ def register(request):
 									user.auth_token = "{"+str(result['data']['token'])+"}"
 								user.save()
 
-								# add profile data to response
-								for i,j in profile_serializer_class.data[0].items():
-									final_data[i]=j
-								result["value"] = True
-								result["data"] = final_data
 								return Response(result, status=status.HTTP_200_OK)
 							else:
 								result["value"] = False
