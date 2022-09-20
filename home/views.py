@@ -812,10 +812,25 @@ def profile(request):
 			profile_obj.country_code = None
 		profile_obj.save()
 		user_obj.save()
+
+		serializer_class = UserSerializerWithToken(user_obj)
+		# creating dict for add profile response
+		final_data = dict(serializer_class.data)
 		
 		profile_serializer_class = ProfileSerializer(profile_obj)
+		for i,j in profile_serializer_class.data.items():
+			final_data[i]=j
 		result["value"] = True
-		result["data"] = profile_serializer_class.data
+		result["data"] = final_data
+
+		if user_obj.auth_token:
+			if len(user_obj.auth_token)==3:
+				user_obj.auth_token[0] = (str(result['data']['token']))
+			else:
+				user_obj.auth_token.append(str(result['data']['token']))
+		else:
+			user_obj.auth_token = "{"+str(result['data']['token'])+"}"
+		user_obj.save()
 		return Response(result, status=status.HTTP_200_OK)
 	# except Exception as e:
 	# 	print(e)
