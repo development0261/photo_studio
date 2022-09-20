@@ -812,10 +812,11 @@ def profile(request):
 			profile_obj.country_code = None
 		profile_obj.save()
 		user_obj.save()
-		result["value"] = True
-		result["message"] = "Profile Updated"
+		
 		profile_serializer_class = ProfileSerializer(profile_obj)
-		return Response(profile_serializer_class.data, status=status.HTTP_200_OK)
+		result["value"] = True
+		result["data"] = profile_serializer_class.data
+		return Response(result, status=status.HTTP_200_OK)
 	# except Exception as e:
 	# 	print(e)
 	# 	result["value"] = False
