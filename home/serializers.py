@@ -45,6 +45,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
             "email":register.username.email,
             "username":register.username.username,
             "password":register.username.password,
+            "social_media_site":register.username.social_media_site,
+            "social_id":register.username.social_id
         }
     class Meta:
         model = Profile
@@ -65,6 +67,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "username":register.username.username,
             "social_media_site":register.username.social_media_site,
             "password":register.username.password,
+            "social_id":register.username.social_id
         }
     class Meta:
         model = Profile
@@ -90,7 +93,7 @@ class SocialSerializer(serializers.ModelSerializer):
             "email":register.username.email,
             "username":register.username.username,
             "social_media_site":register.username.social_media_site,
-            "email":register.username.email,
+            "social_id":register.username.social_id
         }
     class Meta:
         model = Profile
