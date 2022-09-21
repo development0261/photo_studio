@@ -10,7 +10,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 import random
 import string
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import pytz
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
@@ -656,31 +656,44 @@ def update_password(request):
 		password = request.POST['password']
 		new_pass = request.POST['new_pass']
 		confirm_pass = request.POST['confirm_pass']
-		if password == new_pass:
-			result["value"] = False
-			result["message"] = "Old Password and New Password must be diffrent"
-			return Response(result, status=status.HTTP_400_BAD_REQUEST)
+		
 		if User.objects.filter(username=request.user).exists():
 			user = authenticate(username=request.user, password=password)
 			if user:
+				if user.check_password(new_pass):
+					result["value"] = False
+					result["message"] = "Old Password and New Password must be diffrent"
+					return Response(result, status=status.HTTP_400_BAD_REQUEST)
+
 				pat = re.compile(reg)
 				mat = re.search(pat, new_pass)
 				if mat:
 					if new_pass == confirm_pass:
-						obj1 = User.objects.get(username=request.user)
-						obj1.set_password(new_pass)
+						user.set_password(new_pass)
 						obj2 = User.objects.get(
 							username=request.user).profile
-						obj2.pass_update = datetime.now()
-						obj1.save()
+						obj2.pass_update = date.today()
+						user.save()
 						obj2.save()
 						result["value"] = True
 
-						serializer_class = UserSerializerWithToken(obj1)
-						result["access-token"] = serializer_class.data
-						result["message"] = "Password updated Successfully."
+						serializer_class = UserSerializerWithToken(user)
+						# creating dict for add profile response
+						final_data = dict(serializer_class.data)
+						
+						profile_serializer_class = ProfileSerializer(obj2)
+						for i,j in profile_serializer_class.data.items():
+							final_data[i]=j
+						result["value"] = True
+						result["data"] = final_data
 
-						user.auth_token = "{"+str(result['access-token']['token'])+"}"
+						if user.auth_token:
+							if len(user.auth_token)==3:
+								user.auth_token[0] = (str(result['data']['token']))
+							else:
+								user.auth_token.append(str(result['data']['token']))
+						else:
+							user.auth_token = "{"+str(result['data']['token'])+"}"
 						user.save()
 						
 						return Response(result, status=status.HTTP_200_OK)
