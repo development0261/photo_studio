@@ -1355,31 +1355,31 @@ def delete_account(request):
 		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
 	if request.method == "POST":
 		try:
-			password = request.POST.get('password')
+			# password = request.POST.get('password')
 			user_obj = User.objects.get(auth_token__contains = "{" + header_token + "}")
-			if user_obj.profile.is_social:
-				user_obj.is_active = False
-				user_obj.delete_date = datetime.now()
-				user_obj.save()
-				result["value"] = True
-				result["message"] = "Your account is under deleting process and deleted in 30 days."
-				return Response(result, status=status.HTTP_200_OK)
+			# if user_obj.profile.is_social:
+			user_obj.is_active = False
+			user_obj.delete_date = datetime.now()
+			user_obj.save()
+			result["value"] = True
+			result["message"] = "Your account is under deleting process and deleted in 30 days."
+			return Response(result, status=status.HTTP_200_OK)
 
-			if not password:
-				result["value"] = False
-				result["message"] = "Password required for Delete Account!"
-				return Response(result, status=status.HTTP_400_BAD_REQUEST)
-			if user_obj.check_password(password):
-				user_obj.is_active = False
-				user_obj.delete_date = datetime.now()
-				user_obj.save()
-				result["value"] = True
-				result["message"] = "Your account is under deleting process and deleted in 30 days."
-				return Response(result, status=status.HTTP_200_OK)
-			else:
-				result["value"] = False
-				result["message"] = "Incorrect Password!"
-				return Response(result, status=status.HTTP_400_BAD_REQUEST)
+			# if not password:
+			# 	result["value"] = False
+			# 	result["message"] = "Password required for Delete Account!"
+			# 	return Response(result, status=status.HTTP_400_BAD_REQUEST)
+			# if user_obj.check_password(password):
+			# 	user_obj.is_active = False
+			# 	user_obj.delete_date = datetime.now()
+			# 	user_obj.save()
+			# 	result["value"] = True
+			# 	result["message"] = "Your account is under deleting process and deleted in 30 days."
+			# 	return Response(result, status=status.HTTP_200_OK)
+			# else:
+				# result["value"] = False
+				# result["message"] = "Incorrect Password!"
+				# return Response(result, status=status.HTTP_400_BAD_REQUEST)
 		except Exception as e:
 			print(e)
 			result["value"] = False
