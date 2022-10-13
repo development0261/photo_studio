@@ -14,6 +14,7 @@ class custom_user(AbstractUser):
     first_name = models.CharField(max_length=20, null=True, blank=True)
     last_name = models.CharField(max_length=20, null=True, blank=True)
     auth_token = ArrayField(models.CharField(max_length=255), blank=True, null=True)
+    country_code = models.CharField(max_length=30,null=True, blank=True,default=None)
 
     class Meta:
         verbose_name_plural = "custom_user"
@@ -53,7 +54,7 @@ class Profile(models.Model):
     count_for_forgot_pass = models.PositiveSmallIntegerField(default=0)
     time_for_forgot_pass = models.DateTimeField(null=True, blank=True)
     is_social = models.BooleanField(default=False)
-    country_code = models.CharField(max_length=30,null=True, blank=True,default=None)
+    
 
     def __str__(self):
         return f"{self.username} - {self.name}"

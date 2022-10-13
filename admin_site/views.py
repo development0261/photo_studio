@@ -186,7 +186,8 @@ def export_excel(request):
     if 'data' in request.GET:
         model_name = request.GET['data']
         Model = apps.get_model('home', model_name)
-
+        print("model_name",model_name)
+        
     smallest_age_record = ""
     biggest_age_record = ""
     filter_mobile_val = ""
@@ -194,7 +195,8 @@ def export_excel(request):
     longitude = ""
 
     result_queryset = Model.objects.all().order_by('-created_at')
-    if 'search' in request.GET:
+    print("result_queryset",request.GET)
+    if 'search' in request.GET:   
         if request.GET['search']:
             searchvalue = request.GET['search']
             if model_name == "Profile":
@@ -217,6 +219,35 @@ def export_excel(request):
                                 Q(monthlySub__icontains=searchvalue) |
                                 Q(localeId__icontains=searchvalue)
                 )
+            elif model_name =="application_data_noauth":
+                result_queryset = Model.objects.filter(
+                    Q(inApp_Products=searchvalue))
+                
+            elif model_name =="Purchase":
+                result_queryset = Model.objects.filter(
+                    Q(product=searchvalue)|
+                    Q(pstatus=searchvalue)|                   
+                    Q(subscription_type=searchvalue)                    
+                    )
+            elif model_name =="Tag":
+                result_queryset = Model.objects.filter(
+                    Q(username=searchvalue)|
+                    Q(tag=searchvalue)                    
+                    )
+            elif model_name =="application_data":
+                result_queryset = Model.objects.filter(
+                    Q(inApp_Products=searchvalue)|
+                    Q(Device_Model=searchvalue)|                    
+                    Q(operating_system=searchvalue)|                    
+                    Q(Device_Storage=searchvalue)|                    
+                    Q(Purchased_product=searchvalue)                 
+                    )
+            elif model_name =="user_preference":
+                result_queryset = Model.objects.filter(
+                    Q(export_quality=searchvalue)|
+                    Q(username=searchvalue)|                    
+                    Q(signature=searchvalue)              
+                    )
 
     if 'filter_mobile' in request.GET:
         if request.GET['filter_mobile']:
@@ -440,9 +471,12 @@ def profile_model(request):
         filter_mobile_val = ""
         latitude = ""
         longitude = ""
-
+        
+        # print("request.GET",request.GET)
         if 'search' in request.GET:
+            
             searchvalue = request.GET['search']
+            print("####",searchvalue)
             total_profiles = Profile.objects.filter(
                                 Q(name__icontains=searchvalue) |
                                 Q(mobile__icontains=searchvalue) |
@@ -514,7 +548,6 @@ def profile_model(request):
                 total_profiles = total_profiles.filter(pass_update__gte=datetime.now(
                 ) - timedelta(days=365), pass_update__lte=datetime.now())
 
-
         if 'fromtodate' in request.GET:
             start_date = request.GET['start_date']
             end_date = request.GET['end_date']
@@ -557,10 +590,10 @@ def profile_model(request):
         page_number = request.GET.get('page')
         page_obj = p.get_page(page_number)
 
-        print(total_profiles)
-        print(page_obj)
-        for i in page_obj:
-            print(i)
+        # print(total_profiles)
+        # print(page_obj)
+        # for i in page_obj:
+        #     print(i)
 
         return render(request, "admin_site/profile_model.html", {'total_profiles': page_obj, 'total_records':len(page_obj), 'country_list':country_list, 'city_list':city_list, "first_record": first_record, "last_record": last_record, "smallest_age_record":smallest_age_record, "biggest_age_record":biggest_age_record, "filter_mobile_val":filter_mobile_val, "searched_lat":latitude, "searched_long":longitude})
     else:
@@ -639,6 +672,7 @@ def no_auth_app_data_model(request):
 
         if 'search' in request.GET:
             searchvalue = request.GET['search']
+            
             total_no_auth_app_datas = application_data_noauth.objects.filter(
                                 Q(inApp_Products__icontains=searchvalue) |
                                 Q(Purchased_product__icontains=searchvalue) |
@@ -716,6 +750,7 @@ def product_model(request):
 
         if 'search' in request.GET:
             searchvalue = request.GET['search']
+            
             total_products = Product.objects.filter(
                                 Q(productID__icontains=searchvalue) |
                                 Q(product__icontains=searchvalue) |
@@ -1692,6 +1727,7 @@ def filter(request):
         countries = Profile.objects.values('country').distinct()
         country_list1 = []
         for i in countries:
+            
             if i != 'None' or i !='none':
                 country_list1.append(str(i['country']).upper())
         country_list1 = set(country_list1)
@@ -1840,7 +1876,6 @@ def filter(request):
             longitude = request.GET['longitude']
             total_profiles = total_profiles.filter(Q(lat__icontains = latitude) |  Q(long__icontains = longitude))
 
-        print(total_profiles)
         if 'show' in request.GET:
             showval = request.GET['show']
             p = Paginator(total_profiles, showval)
