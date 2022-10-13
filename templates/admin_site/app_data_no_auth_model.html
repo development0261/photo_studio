@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{% static 'assets/css/app_data_model.css' %}">
 {% endblock %}
 {% block content %}
+<a id="export_link" href="{% url 'export_excel' %}?&search={{request.GET.search}}&data=application_data_noauth" class="btn btn-secondary mt-2">Export</a>
 <div class="row">
     <div class="col-lg-12 col-sm-12">
         <div class="card">
@@ -16,6 +17,7 @@
             <div class="card-body pt-4">
                 <div class="grid-margin">
                     <div class="">
+                    <a>{{ request.GET.search}}</a>
                         <div class="panel panel-primary">
                             <div class="panel-body tabs-menu-body border-0 pt-0">
                                 <div class="tab-content">

@@ -384,8 +384,10 @@ def social_media_registration(request):
 
 			elif social_media_site.lower()=="google":
 				url = f'https://oauth2.googleapis.com/tokeninfo?id_token={token}'
+				print(url)
 				r = requests.get(url = url)
 				data = r.json()
+				print(data)
 				if 'error' in data:
 					result["value"] = False
 					result["message"] = "Please check your token!"
@@ -719,13 +721,22 @@ def update_password(request):
 def profile(request):
 	result = dict()
 	try:
+		print(request.META['HTTP_AUTHORIZATION'])
 		header_token = request.META['HTTP_AUTHORIZATION'].split(" ")[1]
 	except KeyError:
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
+		print("result###-----",result)
+        
 		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
 	# try:
+	
 	user_obj = User.objects.get(auth_token__contains = "{" + header_token + "}")
+	# user_obj=User.objects.get(auth_token__contains='{eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk2NTEyNDYwLCJpYXQiOjE2NjQ5NzY0NjAsImp0aSI6ImZjNmU1NGUzMGU5NjQ4Yjg4YjI2YmVkMDdlNjA5MjgxIiwidXNlcl9pZCI6MX0.JgUtNjph27vN0rj1bx_Cs0UpJtsPkj1nB_CcSe_8CGc}')
+	if user_obj:
+		print("hiiiii")
+	else:
+		print("HLooooo")
 
 	if request.method == "POST":
 		email = request.POST.get('email')
@@ -734,22 +745,33 @@ def profile(request):
 		mobile = request.POST.get('mobile')
 		gender = request.POST.get('gender')
 		date_of_Birth = request.POST.get('dob')
-		city = request.POST.get('city')
-		country = request.POST.get('country')
 		user_Latitude = request.POST.get('lat')
 		user_Longitude = request.POST.get('long')
 		snapchat = request.POST.get('snap')
 		facebook = request.POST.get('fb')
 		instagram = request.POST.get('insta')
 		website = request.POST.get('website')
+		city = ""
+		country = ""
 		# country_code = request.POST.get('country_code')
 		# g = geocoder.osm([user_Latitude,user_Longitude], method='reverse')
 		country_code = None
 		if user_Latitude and user_Longitude:
-			location = geolocator.reverse(user_Latitude+","+user_Longitude)
-			address = location.raw['address']
-			country = address.get('country', '')
-			country_code = countries.get(name=country).alpha_2
+			access_token="pk.eyJ1IjoiYXJhYmFwcCIsImEiOiJjbDh2YmtiODQwNXo4M29udTA0eWxldmIxIn0.tzc8bwS-5vvdE32_T0EY7A"
+			url="https://api.mapbox.com/geocoding/v5/mapbox.places/"+user_Latitude+","+user_Longitude+".json?types=poi&access_token="+access_token
+			print(url)
+			resp = requests.get(url)
+			if resp.status_code==200:
+				data = json.loads(resp.content.decode())
+				for i,j in data.items():
+					if i=="features":
+						for k in j:
+							city=k['context'][2]['text']
+							country=(k['context'][-1]['text'])
+			# location = geolocator.reverse(user_Latitude+","+user_Longitude)
+			# address = location.raw['address']
+			# country = address.get('country', '')
+			# country_code = countries.get(name=country).alpha_2
 		try:
 			if date_of_Birth in request.POST:
 				datetime.strptime(date_of_Birth, '%Y-%m-%d')
