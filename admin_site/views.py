@@ -651,7 +651,8 @@ def app_data_model(request):
                                 Q(Carrier__icontains=searchvalue) |
                                 Q(Grace_Period__icontains=searchvalue) |
                                 Q(Total_time_spent__icontains=searchvalue) |
-                                Q(Push_Notification_token__icontains=searchvalue)
+                                Q(Push_Notification_token__icontains=searchvalue)|
+                                Q(username__username__icontains=searchvalue)
             )
         if 'show' in request.GET:
             showval = request.GET['show']
@@ -696,7 +697,7 @@ def no_auth_app_data_model(request):
     else:
         return redirect("login")
 
-# puchase model data
+# purchase model data
 def purchase_model(request):
     if request.user.is_authenticated:
         total_purchases = Purchase.objects.all().order_by('-created_at')
@@ -705,7 +706,8 @@ def purchase_model(request):
             searchvalue = request.GET['search']
             total_purchases = Purchase.objects.filter(
                                 Q(pstatus__icontains=searchvalue) |
-                                Q(subscription_type__icontains=searchvalue)
+                                Q(subscription_type__icontains=searchvalue) |
+                                Q(username__username__icontains=searchvalue)
             )
 
         if 'show' in request.GET:
@@ -1080,7 +1082,7 @@ def profile_edit(request, para):
             if 'avatar_check' in request.POST:
                 avatar_check = request.POST['avatar_check']
             if 'bitmoji' in request.FILES:
-                bitmoji = request.POST['bitmoji']
+                bitmoji = request.FILES['bitmoji']
             if 'bitmoji_check' in request.POST:
                 bitmoji_check = request.POST['bitmoji_check']
 

@@ -459,6 +459,7 @@
             if(event.key === 'Enter') {
                 event.preventDefault()
                 window.location.href = "{% url 'Purchase' %}?search="+ele.value;  
+                console.log(window.location.href)
             }
         }
     </script>
