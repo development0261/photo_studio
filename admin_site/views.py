@@ -699,10 +699,12 @@ def no_auth_app_data_model(request):
 
 # purchase model data
 def purchase_model(request):
+    print("Purchase Model")
     if request.user.is_authenticated:
         total_purchases = Purchase.objects.all().order_by('-created_at')
 
         if 'search' in request.GET:
+            print("Search")
             searchvalue = request.GET['search']
             total_purchases = Purchase.objects.filter(
                                 Q(pstatus__icontains=searchvalue) |
