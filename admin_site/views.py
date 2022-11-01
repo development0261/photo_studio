@@ -195,7 +195,7 @@ def export_excel(request):
     longitude = ""
 
     result_queryset = Model.objects.all().order_by('-created_at')
-    print("result_queryset",request.GET)
+    
     if 'search' in request.GET:   
         if request.GET['search']:
             searchvalue = request.GET['search']
