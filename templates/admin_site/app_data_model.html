@@ -597,7 +597,14 @@
         function search(ele) {
             if(event.key === 'Enter') {
                 event.preventDefault()
-                window.location.href = "{% url 'application_data' %}?search="+ele.value;  
+                console.log("--------------->>>>>",ele.value)
+                if (ele.value=="" || ele.value ==null){
+                    window.location.href = "{% url 'Purchase' %}?search=apple_user" 
+                    console.log(window.location.href)
+                }else{
+
+                    window.location.href = "{% url 'application_data' %}?search="+ele.value;  
+                }
             }
         }
     </script>
