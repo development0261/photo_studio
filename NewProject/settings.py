@@ -136,26 +136,26 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'rabappco_photoedit',
-       'USER': 'rabappco_backend',
-       'PASSWORD': 'photoedit@123',
-       'HOST': '185.146.21.235',
-       'PORT': '5432',
-   }
-}
 # DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'photo_studiodb',
-#        'USER': 'admin',
-#        'PASSWORD': 'admin123',
-#        'HOST': 'localhost',
-#        'PORT': 5432,
-#    } 
+#        'NAME': 'rabappco_photoedit',
+#        'USER': 'rabappco_backend',
+#        'PASSWORD': 'photoedit@123',
+#        'HOST': '185.146.21.235',
+#        'PORT': '5432',
+#    }
 # }
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'photo_studiodb',
+       'USER': 'admin',
+       'PASSWORD': 'admin123',
+       'HOST': 'localhost',
+       'PORT': 5432,
+   } 
+}
 
 # DATABASES = {
 #     'default': {
@@ -205,10 +205,8 @@ STATIC_URL = 'static/'
 # STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, "static")
 # ]
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"), # your static/ files folder
-]
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
