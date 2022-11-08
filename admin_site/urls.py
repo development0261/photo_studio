@@ -1,5 +1,8 @@
 from django.urls import path, re_path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('', views.index, name="index"),
@@ -60,6 +63,4 @@ urlpatterns = [
     path('forgot_password/<str:token>', views.forgot_password, name="forgot_password"),
     path('export_excel',views.export_excel,name="export_excel"),
 
-
-
-]
+]+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
