@@ -13,6 +13,7 @@
                 <h3 class="card-title mb-0">Products</h3>
                 <div class="main-header-center ms-3 d-none d-lg-block">
                     <input id='searchbar' class="form-control" placeholder="Search for results..." type="search" {% if request.GET.search %} value="{{request.GET.search}}" {% endif %} onkeydown="search(this)"/>
+                    
                 </div>
             </div>
             <div class="card-body pt-4">
@@ -142,6 +143,7 @@
                                                         </td>
                                                         <td>
                                                             <div class="g-2">
+                                                                
                                                                 <a href="/admin-site/EditProduct/product {{row.PID}}" class="btn text-primary btn-sm"
                                                                     data-bs-toggle="tooltip"
                                                                     data-bs-original-title="Edit"><span
@@ -157,6 +159,7 @@
                                                 </tbody>
                                             </table>
                                         </div>
+                                        {% comment %} Pagination {% endcomment %}
                                         <div class="pagination_div">
                                             <div class="row align-items-center">
                                                 <!--show entries-->

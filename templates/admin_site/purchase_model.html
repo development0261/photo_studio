@@ -9,10 +9,16 @@
         <div class="col-lg-12 col-sm-12">
             <div class="card">
                 <div class="card-header">
+                    
                     <h3 class="card-title mb-0">Purchases</h3>
-                    <div class="main-header-center ms-3 d-none d-lg-block">
+                    <div class="main-header-center ms-6 d-none d-lg-block">
                         <input id='searchbar' class="form-control" placeholder="Search for results..." type="search"  {% if request.GET.search %} value="{{request.GET.search}}" {% endif %} onkeydown="search(this)"/>
                     </div>
+                    
+                    <button type="button" id="searchbar" class="btn btn-secondary" data-dismiss="modal" class="btn btn-secondary mt-2" onclick="search()">
+                        Search
+                    </button>
+                    
                 </div>
                 <div class="card-body pt-4">
                     <div class="grid-margin">
@@ -83,7 +89,9 @@
                                                     </thead>
                                                     <tbody id="table_body">
                                                         {% for row in total_purchases %}
+                                                            
                                                             <tr class="border-bottom">
+                                                               
                                                                 <td>
                                                                     <div class="d-flex">
                                                                         <div class="ms-3 mt-0 mt-sm-2 d-block">
@@ -157,16 +165,18 @@
                                                                     <div class="d-flex">
                                                                         <div class="mt-0 mt-sm-2 d-block">
                                                                             <h6 class="mb-0 fs-14 fw-semibold">{{ row.subscription_type }}</h6>
+                                                                            
                                                                         </div>
                                                                     </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="g-2">
-                                                                        <a href="/admin-site/EditPurchase/Purchase {{ row.pid }}" class="btn text-primary btn-sm"                                                                           data-bs-toggle="tooltip"
+                                                                        
+                                                                        <a href="/admin-site/EditPurchase/Purchase {{ row.purchase_id }}" class="btn text-primary btn-sm"                                                                           data-bs-toggle="tooltip"
                                                                            data-bs-original-title="Edit"><span class="fe fe-edit fs-14"></span></a>
                                                                         <a class="btn text-danger btn-sm"
                                                                            data-bs-toggle="tooltip"
-                                                                           data-bs-original-title="Delete"><span id="Purchase {{ row.pid }}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                                                           data-bs-original-title="Delete"><span id="Purchase {{ row.purchase_id }}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -456,9 +466,20 @@
     {% comment %} searchbar backend {% endcomment %}
     <script>
         function search(ele) {
-            if(event.key === 'Enter') {
+           var value = $('#searchbar').val();
+
+            if (value=="" || value ==null){
+                window.location.href = "{% url 'Purchase' %}?search=apple_user" 
+                console.log(window.location.href)
+            }
+            else{
+                window.location.href = "{% url 'Purchase' %}?search="+value;  
+                console.log(window.location.href)
+            }
+           /*if(event.key === 'Enter') {
                 event.preventDefault()
                 console.log("--------------->>>>>",ele.value)
+                alert(ele.value)
                 if (ele.value=="" || ele.value ==null){
                     window.location.href = "{% url 'Purchase' %}?search=apple_user" 
                     console.log(window.location.href)
@@ -468,7 +489,7 @@
                     console.log(window.location.href)
                 }
               
-            }
+            }*/
         }
     </script>
 

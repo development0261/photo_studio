@@ -24,7 +24,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 import csv
 from django.apps import apps
-
+import requests, json
 
 
 punctuation = "!#$%&()*+, -./:;<=>?@[\]^_`{|}~"
@@ -472,11 +472,9 @@ def profile_model(request):
         latitude = ""
         longitude = ""
         
-        # print("request.GET",request.GET)
         if 'search' in request.GET:
             
             searchvalue = request.GET['search']
-            print("####",searchvalue)
             total_profiles = Profile.objects.filter(
                                 Q(name__icontains=searchvalue) |
                                 Q(mobile__icontains=searchvalue) |
@@ -675,6 +673,7 @@ def no_auth_app_data_model(request):
             searchvalue = request.GET['search']
             
             total_no_auth_app_datas = application_data_noauth.objects.filter(
+                                Q(UID=searchvalue) |
                                 Q(inApp_Products__icontains=searchvalue) |
                                 Q(Purchased_product__icontains=searchvalue) |
                                 Q(Device_Model__icontains=searchvalue) |
@@ -702,7 +701,7 @@ def purchase_model(request):
     print("Purchase Model")
     if request.user.is_authenticated:
         total_purchases = Purchase.objects.all().order_by('-created_at')
-
+        
         if 'search' in request.GET:
             print("Search")
             searchvalue = request.GET['search']
@@ -719,7 +718,7 @@ def purchase_model(request):
             p = Paginator(total_purchases, 10)
         page_number = request.GET.get('page')
         page_obj = p.get_page(page_number)
-
+        
         return render(request, "admin_site/purchase_model.html", {'total_purchases': page_obj})
     else:
         return redirect("login")
@@ -792,6 +791,7 @@ def view_profile(request, info):
         return redirect("login")
 
 def specific_purchase(request, info):
+    print("Specific Purchase")
     if request.user.is_authenticated:
         obj = Purchase.objects.filter(purchase_id=int(info))
         data = serializers.serialize("json", obj)
@@ -801,6 +801,8 @@ def specific_purchase(request, info):
         return redirect("login")
 
 def view_purchases(request, info):
+    
+    print("View Purchase")
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split('-')
         user_obj = custom_user.objects.get(username=infolist[1])
@@ -1047,6 +1049,7 @@ def admin_edit(request, para):
 
         elif request.method == "GET":
             modal_id = para.split(" ")
+            print("->",modal_id)
             obj = custom_user.objects.filter(username=modal_id[0])
             data = serializers.serialize("json", obj)
             data = json.loads(data)
@@ -1071,8 +1074,8 @@ def profile_edit(request, para):
                 profile_image_check = request.POST['profile_image_check']
             gender = request.POST['gender']
             dob = request.POST['dob']
-            city = request.POST['city']
-            country = request.POST['country']
+            # city = request.POST['city']
+            # country = request.POST['country']
             lat = request.POST['lat']
             long = request.POST['long']
             snap = request.POST['snap']
@@ -1087,6 +1090,18 @@ def profile_edit(request, para):
                 bitmoji = request.FILES['bitmoji']
             if 'bitmoji_check' in request.POST:
                 bitmoji_check = request.POST['bitmoji_check']
+           
+        #   Getting City and country based on latitude and longitude
+            url ="https://api.mapbox.com/geocoding/v5/mapbox.places/"+lat+","+long+".json?types=poi&access_token=pk.eyJ1IjoiYXJhYmFwcCIsImEiOiJjbDh2YmtiODQwNXo4M29udTA0eWxldmIxIn0.tzc8bwS-5vvdE32_T0EY7A" 
+            resp = requests.get(url) 
+            data = json.loads(resp.content.decode()) 
+            for i,j in data.items():
+                if i=="features": 
+                    for k in j: 
+                        print(k)
+                        country=k['context'][-1]['text']
+                        state=k['context'][-2]['text']
+                        city=k['context'][-3]['text']
 
             obj = Profile.objects.get(username=int(username))
             obj.name = name
@@ -1379,9 +1394,10 @@ def app_data_edit(request, para):
 
 
 def no_auth_app_data_edit(request, para):
+   
     if request.user.is_authenticated:
         if request.method == "POST":
-            print(request.POST)
+            
             UID = request.POST['UID']
             inApp_Products = request.POST['inApp_Products']
             Purchase_date = request.POST['Purchase_date']
@@ -1498,6 +1514,7 @@ def no_auth_app_data_edit(request, para):
 
 
 def purchase_edit(request, para):
+    
     if request.user.is_authenticated:
         if request.method == "POST":
             pk = request.POST['username']
@@ -1523,8 +1540,8 @@ def purchase_edit(request, para):
             except ValueError:
                 messages.error(request, 'End date in incorrect date format. It should be YYYY-MM-DD.')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-            obj = Purchase.objects.get(pid=pk)
+            obj = Purchase.objects.get(purchase_id=para.split(" ")[1])
+            
             obj.pstatus = pstatus
             if auto_renew_status == "on":
                 obj.auto_renew_status = True
@@ -1560,7 +1577,7 @@ def purchase_edit(request, para):
 
         elif request.method == "GET":
             modal_id = para.split(" ")
-            obj = Purchase.objects.filter(pid=modal_id[1])
+            obj = Purchase.objects.filter(purchase_id=modal_id[1])
             data = serializers.serialize("json", obj)
             data = json.loads(data)
             return render(request, 'admin_site/purchase_edit.html', {"result": data})

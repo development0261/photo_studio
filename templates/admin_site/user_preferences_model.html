@@ -13,6 +13,9 @@
                 <div class="main-header-center ms-3 d-none d-lg-block">
                     <input id='searchbar' class="form-control" placeholder="Search for results..." type="search" {% if request.GET.search %} value="{{request.GET.search}}" {% endif %} onkeydown="search(this)"/>
                 </div>
+                <button type="button" id="searchbar" class="btn btn-secondary" data-dismiss="modal" class="btn btn-secondary mt-2" onclick="search()">
+                    Search
+                </button>
             </div>
             <div class="card-body pt-4">
                 <div class="grid-margin">
@@ -766,10 +769,13 @@
     {% comment %} searchbar backend {% endcomment %}
     <script>
         function search(ele) {
-            if(event.key === 'Enter') {
+            //event.preventDefault()
+            var value = $('#searchbar').val();
+            window.location.href = "{% url 'user_preference' %}?search="+value;
+           /* if(event.key === 'Enter') {
                 event.preventDefault()
                 window.location.href = "{% url 'user_preference' %}?search="+ele.value;  
-            }
+            }*/
         }
     </script>
 
