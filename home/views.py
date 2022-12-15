@@ -35,10 +35,10 @@ def protected_serve(request, path, document_root=None, show_indexes=False):
 # end------------
 
 #check time after user request for delete account
-users_obj = custom_user.objects.filter(is_active=False)
-for row in users_obj:
-    if row.delete_date + timedelta(days=30):
-        users_obj.delete()
+#users_obj = custom_user.objects.filter(is_active=False)
+#for row in users_obj:
+#    if row.delete_date + timedelta(days=30):
+#        users_obj.delete()
 
 # for login
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
