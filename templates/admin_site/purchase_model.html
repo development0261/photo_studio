@@ -12,7 +12,7 @@
                     
                     <h3 class="card-title mb-0">Purchases</h3>
                     <div class="main-header-center ms-6 d-none d-lg-block">
-                        <input id='searchbar' class="form-control" placeholder="Search for results..." type="search"  {% if request.GET.search %} value="{{request.GET.search}}" {% endif %} onkeydown="search(this)"/>
+                        <input id='searchbar' class="form-control" placeholder="Search for results..." type="search"  {% if request.GET.search %} value="{{request.GET.search}}" {% endif %}/>
                     </div>
                     
                     <button type="button" id="searchbar" class="btn btn-secondary" data-dismiss="modal" class="btn btn-secondary mt-2" onclick="search()">
@@ -467,27 +467,15 @@
     <script>
         function search(ele) {
            var value = $('#searchbar').val();
-
-            if (value=="" || value ==null){
-                window.location.href = "{% url 'Purchase' %}?search=apple_user" 
-                console.log(window.location.href)
-            }
-            else{
                 window.location.href = "{% url 'Purchase' %}?search="+value;  
                 console.log(window.location.href)
-            }
+            
            /*if(event.key === 'Enter') {
                 event.preventDefault()
                 console.log("--------------->>>>>",ele.value)
-                alert(ele.value)
-                if (ele.value=="" || ele.value ==null){
-                    window.location.href = "{% url 'Purchase' %}?search=apple_user" 
-                    console.log(window.location.href)
-                }
-                else{
-                    window.location.href = "{% url 'Purchase' %}?search="+ele.value;  
-                    console.log(window.location.href)
-                }
+                window.location.href = "{% url 'Purchase' %}?search="+ele.value;  
+                console.log(window.location.href)
+                
               
             }*/
         }

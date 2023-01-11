@@ -113,6 +113,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
 	serializer_class = MyTokenObtainPairSerializer
+	print(serializer_class)
 
 # for logout
 @api_view(['GET'])
@@ -758,7 +759,7 @@ def profile(request):
 		country_code = None
 		if user_Latitude and user_Longitude:
 			access_token="pk.eyJ1IjoiYXJhYmFwcCIsImEiOiJjbDh2YmtiODQwNXo4M29udTA0eWxldmIxIn0.tzc8bwS-5vvdE32_T0EY7A"
-			url="https://api.mapbox.com/geocoding/v5/mapbox.places/"+user_Latitude+","+user_Longitude+".json?types=poi&access_token="+access_token
+			url="https://api.mapbox.com/geocoding/v5/mapbox.places/"+user_Longitude+","+user_Latitude+".json?types=poi&access_token="+access_token
 			print(url)
 			resp = requests.get(url)
 			if resp.status_code==200:
@@ -766,7 +767,7 @@ def profile(request):
 				for i,j in data.items():
 					if i=="features":
 						for k in j:
-							city=k['context'][2]['text']
+							city=k['context'][-3]['text']
 							country=(k['context'][-1]['text'])
 			# location = geolocator.reverse(user_Latitude+","+user_Longitude)
 			# address = location.raw['address']

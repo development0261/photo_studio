@@ -11,7 +11,7 @@
             <div class="card-header">
                 <h3 class="card-title mb-0">Application data</h3>
                 <div class="main-header-center ms-3 d-none d-lg-block">
-                    <input id='searchbar' class="form-control" placeholder="Search for results..." type="search" {% if request.GET.search %} value="{{request.GET.search}}" {% endif %} onkeydown="search(this)"/>
+                    <input id='searchbar' class="form-control" placeholder="Search for results..." type="search" {% if request.GET.search %} value="{{request.GET.search}}" {% endif %} />
                 </div>
                 <button type="button" id="searchbar" class="btn btn-secondary" data-dismiss="modal" class="btn btn-secondary mt-2" onclick="search()">
                     Search

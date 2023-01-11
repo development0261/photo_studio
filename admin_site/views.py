@@ -1100,8 +1100,8 @@ def profile_edit(request, para):
                     for k in j: 
                         print(k)
                         country=k['context'][-1]['text']
-                        state=k['context'][-2]['text']
-                        city=k['context'][-3]['text']
+                        state=k['context'][-3]['text']
+                        city=k['context'][-2]['text']
 
             obj = Profile.objects.get(username=int(username))
             obj.name = name
