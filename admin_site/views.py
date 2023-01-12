@@ -347,6 +347,7 @@ def export_excel(request):
         if request.GET['fromtodate']:
             start_date = request.GET['start_date']
             end_date = request.GET['end_date']
+            print(start_date)
 
             format_data = "%Y-%m-%d %H:%M:%S"
             if start_date:
@@ -359,6 +360,7 @@ def export_excel(request):
 
     if 'agefilter' in request.GET:
         if request.GET['agefilter']:
+            print("agefilter")
             start_age = request.GET['start_age']
             end_age = request.GET['end_age']
 
@@ -1090,7 +1092,7 @@ def profile_edit(request, para):
                 bitmoji = request.FILES['bitmoji']
             if 'bitmoji_check' in request.POST:
                 bitmoji_check = request.POST['bitmoji_check']
-           
+            city=country=state=""
         #   Getting City and country based on latitude and longitude
             url ="https://api.mapbox.com/geocoding/v5/mapbox.places/"+lat+","+long+".json?types=poi&access_token=pk.eyJ1IjoiYXJhYmFwcCIsImEiOiJjbDh2YmtiODQwNXo4M29udTA0eWxldmIxIn0.tzc8bwS-5vvdE32_T0EY7A" 
             resp = requests.get(url) 
@@ -1098,14 +1100,12 @@ def profile_edit(request, para):
             for i,j in data.items():
                 if i=="features": 
                     for k in j: 
-                        print(k)
                         country=k['context'][-1]['text']
                         state=k['context'][-3]['text']
                         city=k['context'][-2]['text']
 
             obj = Profile.objects.get(username=int(username))
             obj.name = name
-            # obj.email = email
             obj.mobile = mobile
             if 'profile_image_check' in request.POST:
                 if profile_image_check:
@@ -1828,8 +1828,6 @@ def filter(request):
         if 'city' in request.GET:
             val = request.GET['city']
             print("CITY")
-            print(val)
-
             if val == 'All':
                 total_profiles = total_profiles.all()
             for i in city_list:
@@ -1862,21 +1860,22 @@ def filter(request):
                 ) - timedelta(days=365), pass_update__lte=datetime.now())
 
 
-        if 'fromtodate' in request.GET:
-            print("fromtodate")
-            start_date = request.GET['start_date']
-            end_date = request.GET['end_date']
+        # if 'fromtodate' in request.GET:
+        #     print("fromtodate")
+        #     start_date = request.GET['start_date']
+        #     end_date = request.GET['end_date']
 
-            format_data = "%Y-%m-%d %H:%M:%S"
-            start_date = datetime.strptime(start_date+" 00:00:00", format_data)
-            end_date = datetime.strptime(end_date+" 23:59:59", format_data)
+        #     format_data = "%Y-%m-%d %H:%M:%S"
+        #     start_date = datetime.strptime(start_date+" 00:00:00", format_data)
+        #     end_date = datetime.strptime(end_date+" 23:59:59", format_data)
 
-            total_profiles = total_profiles.filter(created_at__gte = start_date, created_at__lte = end_date)
+        #     total_profiles = total_profiles.filter(created_at__gte = start_date, created_at__lte = end_date)
 
-            last_record = start_date.strftime("%Y-%m-%d")
-            first_record = end_date.strftime("%Y-%m-%d")
+        #     last_record = start_date.strftime("%Y-%m-%d")
+        #     first_record = end_date.strftime("%Y-%m-%d")
 
         if 'agefilter' in request.GET:
+            print('agefilter')
             start_age = request.GET['start_age']
             end_age = request.GET['end_age']
 
@@ -1892,6 +1891,23 @@ def filter(request):
             smallest_age_record = start_age
             biggest_age_record = end_age
 
+        if 'fromtodate' in request.GET:
+            print('fromtodate')
+            
+            start_date = request.GET['start_date_filter']
+            end_date = request.GET['end_date_filter']
+           
+            from datetime import datetime, timedelta
+           
+            format_data = "%Y-%m-%d %H:%M:%S"
+            data=Profile.objects.all()
+            for i in data:
+                print(i.created_at)
+            start_date = datetime.strptime(start_date+" 00:00:00", format_data)
+            end_date = datetime.strptime(end_date+" 23:59:59", format_data)
+            total_profiles=Profile.objects.filter(created_at__startswith=start_date,created_at__endswith=end_date)
+            
+
         if 'radius' in request.GET:
             latitude = request.GET['latitude']
             longitude = request.GET['longitude']
@@ -1905,7 +1921,7 @@ def filter(request):
         page_number = request.GET.get('page')
         page_obj = p.get_page(page_number)
 
-        print(page_obj, type(page_obj))
+        # print(page_obj, type(page_obj))
         for i in page_obj:
             print(i)
         # from django.http import JsonResponse

@@ -359,21 +359,7 @@
                                 {% endfor %}
                             </ul>
                         </div>
-                     {% comment %} <div class="filter_data_list">
-                            <h5 class="filter_title">
-                                By country
-                            </h5>
-                            <ul class="filter_class">
-                                <li>
-                                    <a title="All" filter-type="country" {% if request.GET.country == 'All' or request.GET.country == None %} class="active" {% endif %}>All</a>
-                                </li>
-                                {% for row in country_list %}
-                                    <li>
-                                        <a title="{{row}}" filter-type="country" {% if request.GET.country == row %} class="active" {% endif %}>{{row}}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div> {% endcomment %}
+
                         <div class="filter_data_list">
                             <h5 class="filter_title">
                                 By country
@@ -389,25 +375,7 @@
                                 {% endfor %}
                             </ul>
                         </div>
-                    {% comment %} <div class="filter_data_list">
-                            <h5 class="filter_title">
-                                By age
-                            </h5>
-                            <ul class="filter_class">
-                                <li>
-                                    <a title="All" filter-type="age" {% if request.GET.age == 'All' or request.GET.age == None %} class="active" {% endif %}>All</a>
-                                </li>
-                                <li>
-                                    <a title="twenty" filter-type="age" {% if request.GET.age == 'twenty' %} class="active" {% endif %}>20 - 30</a>
-                                </li>
-                                <li>
-                                    <a title="thirty" filter-type="age" {% if request.GET.age == 'thirty' %} class="active" {% endif %}>30 - 40</a>
-                                </li>
-                                <li>
-                                    <a title="greater" filter-type="age" {% if request.GET.age == 'greater' %} class="active" {% endif %}>Greater than 40</a>
-                                </li>
-                            </ul>
-                        </div> {% endcomment %}
+                  
                         <div class="filter_data_list">
                             <h5 class="filter_title">
                                 By age
@@ -474,7 +442,7 @@
                             </ul>
                         </div>
 
-                        <div class="filter_data_list">
+                        {% comment %} <div class="filter_data_list">
                             <h5 class="filter_title">
                                 By Created Date
                             </h5>
@@ -495,26 +463,7 @@
                                     
                                 </li>
                             </ul>
-                        </div>
-
-                        <div class="filter_data_list">
-                            <h5 class="filter_title">
-                                By Mobile
-                            </h5>
-                            <ul>
-                                <li>
-                                    
-                                        Mobile no.:<input class="form-control mb-3" type="text" id="filter_mobile" name="filter_mobile" value="{{filter_mobile_val}}">
-                                        {% for key,val in request.GET.items %}
-                                            {% if key != "filter_mobile" %}
-                                                <input type="hidden" value="{{val}}" name="{{key}}" />
-                                            {% endif %}
-                                        {% endfor %}
-                                        <input class="btn btn-primary mt-2" id="filter_mobile_btn" value="Submit" name="mobile">
-                                    
-                                </li>
-                            </ul>
-                        </div>
+                        </div> {% endcomment %}
 
                         <div class="filter_data_list">
                             <h5 class="filter_title">
@@ -840,16 +789,6 @@
         });
     </script>
 
-    {% comment %} searchbar backend {% endcomment %}
-    {% comment %} <script>
-        function search(ele) {
-            if(event.key === 'Enter') {
-                window.location.href = "{% url 'Profile' %}?search="+ele.value;  
-            }
-        }
-    </script> {% endcomment %}
-
-    {% comment %} export column {% endcomment %}
     <script>
         selectedCol = new Array();
         $(document).on('change','.export_data',function(){
@@ -1117,28 +1056,28 @@
        })
 
         $(document).on('click','#dateRangeFilter',function(){
-            var startdate = $("#start_date").val()
-         
+            
+            var startdate = $("#start_date").val()         
             var enddate = $("#end_date").val()
+            
            urlTocall = `/admin-site/Profile/filter`
         
-            queryDict[filter_type] = title
+            queryDict['fromtodate'] = 1
+            queryDict['start_date_filter'] = startdate
+            queryDict['end_date_filter'] = enddate
 
-            if(title == "All"){
-                console.log(filter_type)
-                delete queryDict[filter_type]
-            }
               if(Object.keys(queryDict).length > 0){
                 urlTocall = "/admin-site/Profile/filter"
                 counter = 0
+                
                 for(const property in queryDict) {
+
                     counter = counter + 1
-                    if(counter == 1){
-                        urlTocall = urlTocall + `?${property}=${queryDict[property]}` 
-                    }else{
-                        urlTocall = urlTocall + `&${property}=${queryDict[property]}` 
-                    }
                     
+                    if(counter == 1){
+                        urlTocall = urlTocall + `?${property}=${queryDict[property]}`                         
+                    }else{
+                        urlTocall = urlTocall + `&${property}=${queryDict[property]}`                     }
                 }
             }
             $.ajax({url: urlTocall, success: function(result){
@@ -1218,112 +1157,15 @@
                 }
             }});
        })
-       $(document).on('click','#filter_mobile_btn',function(){
-            
-            var filter_mobile = $("#filter_mobile").val()
-            urlTocall = `/admin-site/Profile/filter`
-            queryDict[filter_mobile] = filter_mobile
-           if(Object.keys(queryDict).length > 0){
-                urlTocall = "/admin-site/Profile/filter"
-                counter = 0
-                for(const property in queryDict) {
-                    counter = counter + 1
-                    if(counter == 1){
-                        urlTocall = urlTocall + `?${property}=${queryDict[property]}` 
-                    }else{
-                        urlTocall = urlTocall + `&${property}=${queryDict[property]}` 
-                    }
-                    
-                }
-            }
-            $.ajax({url: urlTocall, success: function(result){
-                console.log("after success");
-                console.log(result, typeof result);
-                const data = JSON.parse(result);
-                console.log(data);
-                $("#table_body").empty()
-                if(data.length != 0){
-                    $("#table_body").html(`
-                    ${data.map((item,index)=>{
-                        return `
-                            <tr class="border-bottom"> 
-                                <td class="text-center">
-                                    <div class="d-flex">
-                                        <div class="mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-0 fs-14 fw-semibold">
-                                                {% comment %} <input type="checkbox" class="export_data_row" id="{{row.pk}}"> {% endcomment %}
-                                             ${item.fields.profile_image ? `<img src="/media/${item.fields.profile_image}" style="width: 45px;">`:'None'}
-                                            </h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.name}">
-                                        <div class="mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-0 fs-14 fw-semibold">
-                                                ${item.fields.name}
-                                            </h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex">
-                                        <div class="mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-0 fs-14 fw-semibold">
-                                                <span style="display:none">${toTimestamp(item.fields.created_at)}</span>${moment(new Date(item.fields.created_at)).format("MMM. D, 	YYYY, hh:mm a")}
-                                            </h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex">
-                                        <div class="mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-0 fs-14 fw-semibold">
-                                                ${item.fields.city}
-                                            </h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex">
-                                        <div class="mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-0 fs-14 fw-semibold">
-                                                ${item.fields.country}
-                                            </h6>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <div class="g-2">
-                                        <a href="/admin-site/ProfileEdit/Profile ${item.fields.uid}"
-                                            class="btn text-primary btn-sm"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-original-title="Edit">
-                                            <span class="fe fe-edit fs-14">
-                                            </span>
-                                        </a>
-                                        <a class="btn text-danger btn-sm"
-                                        data-bs-toggle="tooltip"
-                                        data-bs-original-title="Delete"><span id="Profile ${item.fields.uid}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
-                                    </div>
-                                </td>
-                            </tr>`
-                        }).join('')}
-                    `)
-                }
-            }});
-       })
+      
 
        $(document).on('click','#radiusFilter',function(){
          var latitude = $("#latitude").val()
-         
-            var longitude = $("#longitude").val()
-            urlTocall = `/admin-site/Profile/filter`
-        
-            queryDict[longitude] = longitude
-            queryDict[latitude] = latitude
-
-           if(Object.keys(queryDict).length > 0){
+         var longitude = $("#longitude").val()
+         urlTocall = `/admin-site/Profile/filter`
+         queryDict['longitude'] = longitude
+         queryDict['latitude'] = latitude
+         if(Object.keys(queryDict).length > 0){
                 urlTocall = "/admin-site/Profile/filter"
                 counter = 0
                 for(const property in queryDict) {
@@ -1332,8 +1174,7 @@
                         urlTocall = urlTocall + `?${property}=${queryDict[property]}` 
                     }else{
                         urlTocall = urlTocall + `&${property}=${queryDict[property]}` 
-                    }
-                    
+                    } 
                 }
             }
             $.ajax({url: urlTocall, success: function(result){
@@ -1510,28 +1351,5 @@
             }});
        })
     </script>
-
-    {% comment %} uncheck {% endcomment %}
-    {% comment %} <script>
-        $(document).ready(function(){
-            $('.export_data').click(function(){
-                if($(this).prop("checked") == true){
-                    $('.export_data_row').prop('checked', false);
-                    selectedrow = new Array();
-                    selectedCol = new Array();
-                }
-            });
-        });
-
-        $(document).ready(function(){
-            $('.export_data_row').click(function(){
-                if($(this).prop("checked") == true){
-                    $('.export_data').prop('checked', false);
-                    selectedCol = new Array();
-                    selectedrow = new Array();
-                }
-            });
-        });
-    </script> {% endcomment %}
 
 {% endblock scripts %}
