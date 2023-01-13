@@ -1187,6 +1187,7 @@ def app_data(request):
 							app_data_obj.total_ads_served = total_ads_served
 							app_data_obj.Registered_user = Registered_user
 							app_data_obj.Push_Notification_token = Push_Notification_token
+							app_data_obj.no_auth=F
 							app_data_obj.save()
 							return Response({"Success": "Details Updated."}, status=status.HTTP_200_OK)
 						except Exception as e:
@@ -1573,6 +1574,7 @@ def AppDataNoAuth(request):
 		total_ads_served = request.POST.get('total_ads_served')
 		Registered_user = request.POST.get('Registered_user')
 		Push_Notification_token = request.POST.get('Push_Notification_token')
+		
 		try:
 			if Purchase_date:
 				datetime.strptime(Purchase_date, '%Y-%m-%d')
@@ -1589,8 +1591,8 @@ def AppDataNoAuth(request):
 			result["message"] = "App_Last_Opened in incorrect date format. It should be YYYY-MM-DD"
 			return Response(result, status=status.HTTP_400_BAD_REQUEST)
 
-		if application_data_noauth.objects.filter(UID = UID).exists():
-			app_data_obj = application_data_noauth.objects.get(UID=UID)
+		if application_data.objects.filter(UID = UID).exists():
+			app_data_obj = application_data.objects.get(UID=UID)
 			app_data_obj.UID = UID
 			app_data_obj.inApp_Products = inApp_Products
 			app_data_obj.Purchase_date = Purchase_date
@@ -1613,13 +1615,14 @@ def AppDataNoAuth(request):
 			app_data_obj.total_ads_served = total_ads_served
 			app_data_obj.Registered_user = Registered_user
 			app_data_obj.Push_Notification_token = Push_Notification_token
+			app_data_obj.no_auth=True
 			app_data_obj.save()
 			result["value"] = True
 			result["message"] = "Details Updated."
 			return Response(result, status=status.HTTP_200_OK)
 
 		else:
-			data = application_data_noauth(
+			data = application_data(
 									UID=UID,
 									inApp_Products=inApp_Products,
 									Purchase_date=Purchase_date,

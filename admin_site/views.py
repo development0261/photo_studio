@@ -638,7 +638,7 @@ def user_preference_model(request):
 # application model data
 def app_data_model(request):
     if request.user.is_authenticated:
-        total_app_datas = application_data.objects.all().order_by('-created_at')
+        total_app_datas = application_data.objects.filter(no_auth=False).order_by('-created_at')
 
         if 'search' in request.GET:
             searchvalue = request.GET['search']
@@ -669,7 +669,7 @@ def app_data_model(request):
 # no auth application model data
 def no_auth_app_data_model(request):
     if request.user.is_authenticated:
-        total_no_auth_app_datas = application_data_noauth.objects.all().order_by('-created_at')
+        total_no_auth_app_datas = application_data.objects.filter(no_auth=True).order_by('-created_at')
 
         if 'search' in request.GET:
             searchvalue = request.GET['search']
@@ -891,7 +891,7 @@ def view_app_data_without_auth(request, info):
         print(info)
         infolist = info.replace(" ", "").split('-')
         print(infolist)
-        obj = application_data_noauth.objects.filter(UID=infolist[1])
+        obj = application_data.objects.filter(UID=infolist[1])
         print(obj)
         data = serializers.serialize("json", obj)
         data = json.loads(data[1:-1])
@@ -1401,8 +1401,6 @@ def no_auth_app_data_edit(request, para):
             UID = request.POST['UID']
             inApp_Products = request.POST['inApp_Products']
             Purchase_date = request.POST['Purchase_date']
-            print("===>",Purchase_date)
-            # Purchase_date_change = request.POST['Purchase_date_change']
             Purchased_product = request.POST['Purchased_product']
             Device_Model = request.POST['Device_Model']
             operating_system = request.POST['operating_system']
@@ -1502,7 +1500,7 @@ def no_auth_app_data_edit(request, para):
 
         elif request.method == "GET":
             modal_id = para.split(" ")
-            obj = application_data_noauth.objects.filter(aid=modal_id[1])
+            obj = application_data.objects.filter(aid=modal_id[1])
             data = serializers.serialize("json", obj)
             data = json.loads(data)
             res = []
