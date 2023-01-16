@@ -154,7 +154,7 @@ class application_data(models.Model):
     Push_Notification_token = models.CharField(
         max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    no_auth = models.BooleanField(null=True, blank=True,default=False)
+    no_auth = models.CharField(null=True, blank=True,default=False)
 
     def __str__(self):
         return f"{self.username} - {self.UID}"

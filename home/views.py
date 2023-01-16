@@ -1187,7 +1187,7 @@ def app_data(request):
 							app_data_obj.total_ads_served = total_ads_served
 							app_data_obj.Registered_user = Registered_user
 							app_data_obj.Push_Notification_token = Push_Notification_token
-							app_data_obj.no_auth=F
+							app_data_obj.no_auth='False'
 							app_data_obj.save()
 							return Response({"Success": "Details Updated."}, status=status.HTTP_200_OK)
 						except Exception as e:
@@ -1615,7 +1615,7 @@ def AppDataNoAuth(request):
 			app_data_obj.total_ads_served = total_ads_served
 			app_data_obj.Registered_user = Registered_user
 			app_data_obj.Push_Notification_token = Push_Notification_token
-			app_data_obj.no_auth=True
+			app_data_obj.no_auth='True'
 			app_data_obj.save()
 			result["value"] = True
 			result["message"] = "Details Updated."

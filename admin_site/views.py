@@ -738,7 +738,7 @@ def user_preference_model(request):
 # application model data
 def app_data_model(request):
     if request.user.is_authenticated:
-        total_app_datas = application_data.objects.filter(no_auth=False).order_by(
+        total_app_datas = application_data.objects.filter(no_auth='False').order_by(
             "-created_at"
         )
 
@@ -775,13 +775,13 @@ def app_data_model(request):
 def no_auth_app_data_model(request):
     if request.user.is_authenticated:
         total_no_auth_app_datas = application_data.objects.filter(
-            no_auth=True
+            no_auth='True'
         ).order_by("-created_at")
 
         if "search" in request.GET:
             searchvalue = request.GET["search"]
 
-            total_no_auth_app_datas = application_data_noauth.objects.filter(
+            total_no_auth_app_datas = application_data.objects.filter(
                 Q(UID=searchvalue)
                 | Q(inApp_Products__icontains=searchvalue)
                 | Q(Purchased_product__icontains=searchvalue)
@@ -1069,7 +1069,7 @@ def delete_app_data(request, para=None):
 def delete_no_auth_app_data(request, para=None):
     if request.user.is_authenticated:
         modal_id = para.split(" ")
-        obj = application_data_noauth.objects.get(aid=int(modal_id[1]))
+        obj = application_data.objects.get(aid=int(modal_id[1]))
         obj.delete()
         return redirect("no_auth_app_data_model")
     else:
