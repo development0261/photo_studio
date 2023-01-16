@@ -1163,6 +1163,9 @@
          var latitude = $("#latitude").val()
          var longitude = $("#longitude").val()
          urlTocall = `/admin-site/Profile/filter`
+         
+         queryDict['radius'] = 1
+         queryDict['show'] = 1
          queryDict['longitude'] = longitude
          queryDict['latitude'] = latitude
          if(Object.keys(queryDict).length > 0){
@@ -1178,9 +1181,12 @@
                 }
             }
             $.ajax({url: urlTocall, success: function(result){
-              
+                
+                console.log("after success");
+                console.log(result, typeof result);
                 const data = JSON.parse(result);
-                console.log(urlTocall);
+                
+                console.log(data);
                 $("#table_body").empty()
                 if(data.length != 0){
                     $("#table_body").html(`
