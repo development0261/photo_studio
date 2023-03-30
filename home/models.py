@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
+
 # Create your models here.
 
 
 class custom_user(AbstractUser):
-    email = models.EmailField(max_length=70, blank=True, null= True, unique= False)
+    email = models.EmailField(max_length=70, blank=True, null=True, unique=True)
     delete_date = models.DateTimeField(null=True, blank=True)
     confirm_token = models.CharField(null=True, blank=True, max_length=50)
     token = models.TextField(null=True, blank=True)
@@ -14,7 +15,7 @@ class custom_user(AbstractUser):
     first_name = models.CharField(max_length=20, null=True, blank=True)
     last_name = models.CharField(max_length=20, null=True, blank=True)
     auth_token = ArrayField(models.CharField(max_length=255), blank=True, null=True)
-    country_code = models.CharField(max_length=30,null=True, blank=True,default=None)
+    country_code = models.CharField(max_length=30, null=True, blank=True, default=None)
 
     class Meta:
         verbose_name_plural = "custom_user"
@@ -27,13 +28,14 @@ class Profile(models.Model):
     # email = models.CharField(max_length=50, null=True, blank=True, unique=True)
     mobile = models.CharField(max_length=20, null=True, blank=True)
     GENDER_CHOICES = (
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-        ('Other', 'Other'),
+        ("Male", "Male"),
+        ("Female", "Female"),
+        ("Other", "Other"),
     )
     gender = models.CharField(
-        max_length=7, choices=GENDER_CHOICES, null=True, blank=True)
-    profile_image = models.ImageField(null=True, blank=True, upload_to='')
+        max_length=7, choices=GENDER_CHOICES, null=True, blank=True
+    )
+    profile_image = models.ImageField(null=True, blank=True, upload_to="")
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     pass_update = models.DateField(blank=True, null=True)
     pass_forgot = models.DateField(blank=True, null=True)
@@ -54,7 +56,6 @@ class Profile(models.Model):
     count_for_forgot_pass = models.PositiveSmallIntegerField(default=0)
     time_for_forgot_pass = models.DateTimeField(null=True, blank=True)
     is_social = models.BooleanField(default=False)
-    
 
     def __str__(self):
         return f"{self.username} - {self.name}"
@@ -68,53 +69,63 @@ class user_preference(models.Model):
     username = models.OneToOneField(custom_user, on_delete=models.CASCADE)
     signature = models.ImageField(null=True)
     quality_choices = (
-        ('Low', 'Low'),
-        ('Medium', 'Medium'),
-        ('High', 'High'),
+        ("Low", "Low"),
+        ("Medium", "Medium"),
+        ("High", "High"),
     )
     export_quality = models.CharField(
-        max_length=7, choices=quality_choices)  # (list) high, medium, low
+        max_length=7, choices=quality_choices
+    )  # (list) high, medium, low
     Language = models.CharField(max_length=20, null=True, blank=True)  # (string)
     user_stared_templates = ArrayField(
-        models.CharField(max_length=50), blank=True, null=True)  # (array)
+        models.CharField(max_length=50), blank=True, null=True
+    )  # (array)
     user_stared_backgrounds = ArrayField(
-        models.CharField(max_length=50), blank=True, null=True)  # (array)
+        models.CharField(max_length=50), blank=True, null=True
+    )  # (array)
     user_stared_stickers = ArrayField(
-        models.CharField(max_length=50), blank=True, null=True)  # (array)
+        models.CharField(max_length=50), blank=True, null=True
+    )  # (array)
     user_stared_Textart = ArrayField(
-        models.CharField(max_length=50), blank=True, null=True)  # (array)
+        models.CharField(max_length=50), blank=True, null=True
+    )  # (array)
     user_stared_colors = ArrayField(
-        models.CharField(max_length=50), blank=True, null=True)  # (array)
-    user_stared_fonts = ArrayField(models.CharField(
-        max_length=50), blank=True, null=True)  # (array)
-    most_used_fonts = ArrayField(models.CharField(
-        max_length=50), blank=True, null=True)  # (array)
+        models.CharField(max_length=50), blank=True, null=True
+    )  # (array)
+    user_stared_fonts = ArrayField(
+        models.CharField(max_length=50), blank=True, null=True
+    )  # (array)
+    most_used_fonts = ArrayField(
+        models.CharField(max_length=50), blank=True, null=True
+    )  # (array)
     user_custom_colors = ArrayField(
-        models.CharField(max_length=50), blank=True, null=True)  # (array)
+        models.CharField(max_length=50), blank=True, null=True
+    )  # (array)
     instagram_follower = models.BooleanField(default=False)  # (boolean)
     grid_snapping = models.BooleanField(default=False)  # (boolean)
-    user_recent_text = models.CharField(max_length=255, null=True, blank=True)  # (string)
+    user_recent_text = models.CharField(
+        max_length=255, null=True, blank=True
+    )  # (string)
     appearance_choices = (
-        ('Light', 'Light'),
-        ('Dark', 'Dark'),
-        ('Auto', 'Auto'),
+        ("Light", "Light"),
+        ("Dark", "Dark"),
+        ("Auto", "Auto"),
     )
     appearance_mode = models.CharField(
-        max_length=7, choices=appearance_choices)  # (list): dark, light, auto
+        max_length=7, choices=appearance_choices
+    )  # (list): dark, light, auto
     enable_iCloud_backup = models.BooleanField(default=False)  # (boolean)
-    save_projects_automatically = models.BooleanField(
-        default=False)  # (boolean)
+    save_projects_automatically = models.BooleanField(default=False)  # (boolean)
     save_projects_on_export = models.BooleanField(default=False)  # (boolean)
     notifications_permission = models.BooleanField(default=False)  # (boolean)
-    inApp_notifications_permission = models.BooleanField(
-        default=False)  # (boolean)
+    inApp_notifications_permission = models.BooleanField(default=False)  # (boolean)
     photo_library_permission = models.BooleanField(default=False)  # (boolean)
     digital_riyals_rewards = models.IntegerField(null=True, blank=True)  # (Number)
     enable_touch = models.BooleanField(default=False)  # (boolean)
     app_choices = (
-        ('Option1', 'Option1'),
-        ('Option2', 'Option2'),
-        ('Option3', 'Option3'),
+        ("Option1", "Option1"),
+        ("Option2", "Option2"),
+        ("Option3", "Option3"),
     )
     app_theme = models.CharField(max_length=7, choices=app_choices)  # (list)
     always_crop = models.BooleanField(default=False)  # (boolean)
@@ -139,7 +150,9 @@ class application_data(models.Model):
     Device_Storage = models.CharField(max_length=10, blank=True, null=True)
     Lunch_count = models.IntegerField(null=True, blank=True)
     Push_Notification_Status = models.BooleanField(default=False, blank=True, null=True)
-    Library_permission_Status = models.BooleanField(default=False, blank=True, null=True)
+    Library_permission_Status = models.BooleanField(
+        default=False, blank=True, null=True
+    )
     latitude = models.FloatField(blank=True, null=True, max_length=30)
     longitude = models.FloatField(blank=True, null=True, max_length=30)
     Carrier = models.CharField(max_length=100, null=True, blank=True)
@@ -151,10 +164,9 @@ class application_data(models.Model):
     Total_time_spent = models.CharField(max_length=10, blank=True, null=True)
     total_ads_served = models.IntegerField(null=True, blank=True)
     Registered_user = models.BooleanField(default=False, blank=True, null=True)
-    Push_Notification_token = models.CharField(
-        max_length=255, null=True, blank=True)
+    Push_Notification_token = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    no_auth = models.CharField(null=True, blank=True,default=False)
+    no_auth = models.CharField(null=True, max_length=10, blank=True, default=False)
 
     def __str__(self):
         return f"{self.username} - {self.UID}"
@@ -227,7 +239,9 @@ class application_data_noauth(models.Model):
     Device_Storage = models.CharField(max_length=10, blank=True, null=True)
     Lunch_count = models.IntegerField(null=True, blank=True)
     Push_Notification_Status = models.BooleanField(default=False, blank=True, null=True)
-    Library_permission_Status = models.BooleanField(default=False, blank=True, null=True)
+    Library_permission_Status = models.BooleanField(
+        default=False, blank=True, null=True
+    )
     latitude = models.FloatField(blank=True, null=True, max_length=30)
     longitude = models.FloatField(blank=True, null=True, max_length=30)
     Carrier = models.CharField(max_length=100, null=True, blank=True)
@@ -239,8 +253,7 @@ class application_data_noauth(models.Model):
     Total_time_spent = models.CharField(max_length=10, blank=True, null=True)
     total_ads_served = models.IntegerField(null=True, blank=True)
     Registered_user = models.BooleanField(default=False, blank=True, null=True)
-    Push_Notification_token = models.CharField(
-        max_length=255, null=True, blank=True)
+    Push_Notification_token = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
@@ -248,4 +261,3 @@ class application_data_noauth(models.Model):
 
     class Meta:
         verbose_name_plural = "Application data no auth"
-

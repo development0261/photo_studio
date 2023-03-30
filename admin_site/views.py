@@ -166,6 +166,12 @@ def admin_user(request):
 def app_user(request):
     if request.user.is_authenticated:
         locals = custom_user.objects.filter(is_superuser=False).order_by("-date_joined")
+        # for l in locals:
+        #     local = application_data.objects.filter(username=l.id)  # type: ignore
+        #     if local.count != 0:
+        #         for i in local:
+
+        #             print(i.UID)
 
         if "search" in request.GET:
             searchvalue = request.GET["search"]
@@ -206,6 +212,7 @@ def app_user(request):
         if "show" in request.GET:
             showval = request.GET["show"]
             p = Paginator(locals, showval)
+
         else:
             p = Paginator(locals, 10)
 
@@ -738,7 +745,7 @@ def user_preference_model(request):
 # application model data
 def app_data_model(request):
     if request.user.is_authenticated:
-        total_app_datas = application_data.objects.filter(no_auth='False').order_by(
+        total_app_datas = application_data.objects.filter(no_auth="False").order_by(
             "-created_at"
         )
 
@@ -775,7 +782,7 @@ def app_data_model(request):
 def no_auth_app_data_model(request):
     if request.user.is_authenticated:
         total_no_auth_app_datas = application_data.objects.filter(
-            no_auth='True'
+            no_auth="True"
         ).order_by("-created_at")
 
         if "search" in request.GET:
@@ -1233,7 +1240,8 @@ def profile_edit(request, para):
                     for k in j:
                         country = k["context"][-1]["text"]
                         state = k["context"][-3]["text"]
-                        city = k["context"][-2]["text"]
+                        # city = k["context"][-2]["text"]
+                        city = k["context"][1]["text"]
 
             obj = Profile.objects.get(username=int(username))
             obj.name = name
@@ -1585,7 +1593,7 @@ def no_auth_app_data_edit(request, para):
             else:
                 Remaining_grace_period_days = None
 
-            obj = application_data_noauth.objects.get(UID=UID)
+            obj = application_data7.objects.get(UID=UID)
             obj.inApp_Products = inApp_Products
 
             obj.Purchase_attempts = Purchase_attempts
@@ -2004,7 +2012,8 @@ def filter(request):
             for i in country_list:
                 if i == val:
                     total_profiles = total_profiles.filter(country__iexact=val)
-        from datetime import datetime,timedelta
+        from datetime import datetime, timedelta
+
         if "password_update" in request.GET:
             val = request.GET["password_update"]
             if val == "All":

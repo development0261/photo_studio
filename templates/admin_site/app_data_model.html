@@ -360,7 +360,8 @@
                 type: "GET",
                 url: `/admin-site/application_data/${id}`,
                 success: function (profileresult) {
-                    var data = profileresult.res.fields;
+                    var data = profileresult.res;
+                    alert(data)
                     $("#largeModalLabel").append(`Application Data`)
                     $(".modalbody").append(`
                             <div class="row">

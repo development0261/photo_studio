@@ -136,27 +136,27 @@ WSGI_APPLICATION = 'NewProject.wsgi.application'
 #     }
 # }
 # LOCALLLLLL DATABASE
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'rabappco_photoedit',
-#        'USER': 'rabappco_backend',
-#        'PASSWORD': 'photoedit@123',
-#        'HOST': '185.146.21.235',
-#        'PORT': '5432',
-#    }
-# }
-# SERVER DATABASE
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'photo_studiodb',
-       'USER': 'admin',
-       'PASSWORD': 'admin123',
-       'HOST': 'localhost',
-       'PORT': 5432,
-   } 
+       'NAME': 'rabappco_photoedit',
+       'USER': 'rabappco_backend',
+       'PASSWORD': 'photoedit@123',
+       'HOST': '185.146.21.235',
+       'PORT': '5432',
+   }
 }
+# SERVER DATABASE
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'photo_studiodb',
+#        'USER': 'admin',
+#        'PASSWORD': 'admin123',
+#        'HOST': 'localhost',
+#        'PORT': 5432,
+#    } 
+# }
 
 # DATABASES = {
 #     'default': {
@@ -237,3 +237,13 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'no-reply@3rabapp.com'
 EMAIL_HOST_PASSWORD = 'Dqho?7Fa.+Ik'
+
+# REST_FRAMEWORK = {
+#     'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler'
+# }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}

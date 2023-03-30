@@ -113,8 +113,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
 	serializer_class = MyTokenObtainPairSerializer
-	print(serializer_class)
-
 # for logout
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
@@ -201,6 +199,7 @@ def register(request):
 									for i,j in profile_serializer_class.data[0].items():
 										final_data[i]=j
 									result["value"] = True
+         
 									result["data"] = final_data
 
 									headers = {
@@ -878,6 +877,7 @@ def profile(request):
 @api_view(['GET'])
 def specific_user(request):
 	result = dict()
+	print(request.data)
 	try:
 		header_token = request.META['HTTP_AUTHORIZATION'].split(" ")[1]
 	except KeyError:
@@ -885,10 +885,11 @@ def specific_user(request):
 		result["message"] = "Please enter auth token!"
 		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
 	if request.method == "GET":
+		request.user="Testing"
 		queryset = Profile.objects.filter(username__username=request.user)
 		serializer_class = ProfileSerializer(queryset, many=True)
 		result['value']= True
-		result['data'] = serializer_class.data[0]
+		result['data'] = serializer_class.data
 		return Response(result, status=status.HTTP_200_OK)
 
 # get total user
@@ -1102,6 +1103,7 @@ def preferences(request):
 @api_view(['POST'])
 def app_data(request):
 	result = dict()
+	print(request.META)
 	try:
 		header_token = request.META['HTTP_AUTHORIZATION'].split(" ")[1]
 
@@ -1650,3 +1652,4 @@ def AppDataNoAuth(request):
 			result["value"] = True
 			result["message"] = "Details Added."
 			return Response(result, status=status.HTTP_200_OK)
+

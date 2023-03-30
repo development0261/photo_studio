@@ -89,7 +89,6 @@
                                                             Token</th> {% endcomment %}
                                                         <th class="bg-transparent border-bottom-0">app_datas</th>
                                                         <th class="bg-transparent border-bottom-0">Preferences</th>
-                                                        {% comment %} <th class="bg-transparent border-bottom-0">products</th> {% endcomment %}
                                                         <th class="bg-transparent border-bottom-0">profiles</th>
                                                         <th class="bg-transparent border-bottom-0">purchases</th>
                                                         <th class="bg-transparent border-bottom-0">tags</th>
@@ -109,18 +108,11 @@
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="ms-3 mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">{{ i.username }}
+                                                                    <h6 class="mb-0 fs-14 fw-semibold">{{ i.username }} - {{i.UID}}
                                                                     </h6>
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <!-- <td>
-                                                                                        <div class="d-flex">
-                                                                                            <div class="mt-0 mt-sm-2 d-block">
-                                                                                                <h6 class="mb-0 fs-14 fw-semibold">{{i.password}}</h6>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </td> -->
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
@@ -174,19 +166,12 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        {% comment %} <td>
-                                                            <div class="d-flex">
-                                                                <div class="mt-0 mt-sm-2 d-block">
-                                                                    <h6 class="mb-0 fs-14 fw-semibold">
-                                                                        {{i.confirm_token}}</h6>
-                                                                </div>
-                                                            </div>
-                                                        </td> {% endcomment %}
+
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="mt-0 mt-sm-2 d-block">
                                                                     <h6 class="mb-0 fs-14 fw-semibold view"
-                                                                        id="application_data - {% if not i.application_data %}False{% else %} {{ i.application_data }} {% endif %}">
+                                                                        id="application_data - True {{ i.username }}">
                                                                         <i class="fa fa-eye" id="{{ i.username }}"
                                                                             aria-hidden="true"></i>
                                                                     </h6>
@@ -1036,6 +1021,7 @@
                 else if (id.substring(0, 3) == 'app') {
                     $.ajax({
                         type: "GET",
+                        alert(id)
                         url: `/admin-site/application_data/${id}`,
                         success: function (profileresult) {
                             var data = profileresult.res.fields;
