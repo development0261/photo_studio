@@ -21,11 +21,12 @@
                         </div>
                         <div class="main-header-center ms-3 d-none d-lg-block">
                              <form method="get" class="search-form"> 
-                                <input id='searchbar' title="All" class="form-control" placeholder="Search for results..." name="search" type="search"/>
+                                <input id='searchbar' title="All" class="form-control" placeholder="Search for results..." name="search" type="search" /> 
                                 {% for key,val in request.GET.items %}
+                                   
                                     {% if key != "search" %}
-                                        <input type="hidden" value="{{val}}" name="{{key}}" />
-                                       
+                                        <input type="hidden" value="{{val}}" name="{{key}}" id='searchbar' />
+                                        <h2>{{val}}</h2>
                                     {% endif %}
                                 {% endfor %}
                                 {% comment %} <input class="btn btn-primary form-submit" type="button" id="searchSubmit" value="Submit"> {% endcomment %}
@@ -49,7 +50,18 @@
                                                     <table id="data-table" class="table table-bordered text-nowrap mb-0">
                                                         <thead class="border-top">
                                                             <tr>
+                                                                    
                                                                 <th class="bg-transparent border-bottom-0">profile image <input type="checkbox" class="export_data" id="profile_image"></i></th>
+                                                                <th class="bg-transparent border-bottom-0 sortit">
+                                                                    <span style="display:flex">username
+                                                                    <div class="sort-order ml-2">
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                    </div>
+                                                                </span>
+                                                                <input type="checkbox" class="export_data" id="username">
+                                                                </th>
+
                                                                 <th class="bg-transparent border-bottom-0 sortit">
                                                                     <span style="display:flex">name
                                                                     <div class="sort-order ml-2">
@@ -111,6 +123,15 @@
                                                                                     {% else %}
                                                                                         None
                                                                                     {% endif %}
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <div class="d-flex profile_name" id="Profile - {{row.username}} - {{ row.username }}">
+                                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                    {{ row.username }}
                                                                                 </h6>
                                                                             </div>
                                                                         </div>
@@ -1259,31 +1280,35 @@
                 }
             }});
        })
-
-       $(document).on('click','#searchSubmit',function(){
-            var searchbar = $("#searchbar").val()
-            urlTocall = `/admin-site/Profile/filter`
-        
-            queryDict['search'] = searchbar
-            if(Object.keys(queryDict).length > 0){
-                urlTocall = "/admin-site/Profile/filter"
-                counter = 0
-                for(const property in queryDict) {
-                    counter = counter + 1
-                    if(counter == 1){
-                        urlTocall = urlTocall + `?${property}=${queryDict[property]}` 
-                    }else{
-                        urlTocall = urlTocall + `&${property}=${queryDict[property]}` 
+  
+       $('#searchbar').keydown(function (e){
+            if (e.keyCode == 13) {
+                var searchbar = $("#searchbar").val().trim()
+                urlTocall = `/admin-site/Profile/filter`
+                
+                queryDict['search'] = searchbar
+                if(Object.keys(queryDict).length > 0){
+                    urlTocall = "/admin-site/Profile/filter"
+                    counter = 0
+                    for(const property in queryDict) {
+                        counter = counter + 1
+                        if(counter == 1){
+                            
+                            urlTocall = urlTocall + `?${property}=${queryDict[property]}` 
+                        }else{
+                            
+                            urlTocall = urlTocall + `&${property}=${queryDict[property]}` 
+                        }
+                        
                     }
-                    
                 }
-            }
-        
-            $.ajax({url: urlTocall, success: function(result){
+            
+                 $.ajax({url: urlTocall, success: function(result){
+                
                 console.log("after success");
                 console.log(result, typeof result);
                 const data = JSON.parse(result);
-                console.log(data);
+
                 $("#table_body").empty()
                 if(data.length != 0){
                     $("#table_body").html(`
@@ -1355,6 +1380,8 @@
                     `)
                 }
             }});
+            }
+            
        })
     </script>
 

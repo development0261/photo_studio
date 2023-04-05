@@ -34,6 +34,7 @@ class UserSerializerWithToken(UserSerializer):
 
     def get_token(self, obj):
         token = RefreshToken.for_user(obj)
+        print(token.access_token)
         return str(token.access_token)
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -81,7 +82,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         if latest_purchase:
             response['InAppPurchaseHistory'] = PurchaseSerializer(latest_purchase,many=False).data
         else:
-            response['InAppPurchaseHistory'] = "Didn't purchase anything yet."
+            response['InAppPurchaseHistory'] = None
         return response    
 
 class SocialSerializer(serializers.ModelSerializer):

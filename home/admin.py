@@ -171,5 +171,5 @@ admin.site.register(application_data, CustomApps)
 admin.site.register(Purchase, CustomPurchase)
 admin.site.register(Tag, CustomTag)
 admin.site.register(Product, CustomProduct)
-admin.site.register(application_data_noauth, CustomApps2)
+#admin.site.register(application_data_noauth, CustomApps2)
 

@@ -69,9 +69,11 @@ def main_index(request):
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 	def validate(self, attrs):
 		result = dict()
+	
 		if User.objects.filter(username=attrs['username']).exists():
 			if not check_password(attrs['password'], User.objects.get(username=attrs['username']).password):
 				result["value"] = False
+				result['data']=None
 				result["message"] = "Invalid Password"
 				return result
 			else:
@@ -88,12 +90,14 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 					profile = Profile.objects.filter(username = user_obj)
 				
 				serializer_class = ProfileSerializer(profile, many=True)
+				   			
 				for i,j in serializer_class.data[0].items():
 					data[i]=j
-
+				# data['country_code']=None
 				del data['refresh']
 				del data['access']
 				result["value"] = True
+				result['message']='success'
 				result["data"] = data
 
 				if user_obj.auth_token:
@@ -109,15 +113,16 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 		else:
 			result["value"] = False
 			result["message"] = "Account with this username is not exists"
+			result["data"]=None
 			return result
 
 class MyTokenObtainPairView(TokenObtainPairView):
 	serializer_class = MyTokenObtainPairSerializer
-	print(serializer_class)
+	
 
 # for logout
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+
 def logoutProcess(request):
 	result = dict()
 	try:
@@ -125,7 +130,8 @@ def logoutProcess(request):
 	except KeyError:
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+		result['data']=None
+		return Response(result, status=status.HTTP_200_OK)
 
 	user_obj = User.objects.get(auth_token__contains = "{" + header_token + "}")
 	for i in user_obj.auth_token:
@@ -134,7 +140,7 @@ def logoutProcess(request):
 
 	user_obj.save()
 	result["value"] = True
-	result["data"] = "Successfully Logged Out"
+	result["message"] = "Successfully Logged Out"
 	return Response(result, status=status.HTTP_200_OK)
 
 # user registration
@@ -201,6 +207,7 @@ def register(request):
 									for i,j in profile_serializer_class.data[0].items():
 										final_data[i]=j
 									result["value"] = True
+									result['message']="success"
 									result["data"] = final_data
 
 									headers = {
@@ -220,15 +227,19 @@ def register(request):
 								else:
 									result["value"] = False
 									result["message"] = "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."
-									return Response(result, status=status.HTTP_400_BAD_REQUEST)
+									result["data"]=None
+									return Response(result, status=status.HTTP_200_OK)
 							else:
 								result["value"] = False
 								result["message"] = "Enter valid email address"
-								return Response(result, status=status.HTTP_400_BAD_REQUEST)
+								result["data"]=None
+								return Response(result, status=status.HTTP_200_OK)
 						else:
 							result["value"] = False
 							result["message"] = "Phone number already registered"
-							return Response(result, status=status.HTTP_400_BAD_REQUEST)
+							result["data"]=None
+       
+							return Response(result, status=status.HTTP_200_OK)
 					else:
 						if(re.fullmatch(for_email, email)):
 							pat = re.compile(reg)
@@ -268,7 +279,9 @@ def register(request):
 								# add profile data to response
 								for i,j in profile_serializer_class.data[0].items():
 									final_data[i]=j
+								final_data['country_code']=None
 								result["value"] = True
+								result["message"]='sucess'
 								result["data"] = final_data
 
 								if user.auth_token:
@@ -284,23 +297,27 @@ def register(request):
 							else:
 								result["value"] = False
 								result["message"] = "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."
-								return Response(result, status=status.HTTP_400_BAD_REQUEST)
+								result["data"]=None
+								return Response(result, status=status.HTTP_200_OK)
 						else:
 							result["value"] = False
 							result["message"] = "Enter valid email address!!!"
-							return Response(result, status=status.HTTP_400_BAD_REQUEST)
+							return Response(result, status=status.HTTP_200_OK)
 				else:
 					result["value"] = False
 					result["message"] = "User Already Exist with this email address!!!"
-					return Response(result, status=status.HTTP_400_BAD_REQUEST)
+					result["data"]=None
+					return Response(result, status=status.HTTP_200_OK)
 			else:
 				result["value"] = False
 				result["message"] = "Username length must be greater than 6!!!"
-				return Response(result, status=status.HTTP_400_BAD_REQUEST)
+				result["data"]=None
+				return Response(result, status=status.HTTP_200_OK)
 		else:
 			result["value"] = False
 			result["message"] = "User Already Exists!!!"
-			return Response(result, status=status.HTTP_400_BAD_REQUEST)
+			result["data"]=None
+			return Response(result, status=status.HTTP_200_OK)
 
 # user registration using social media
 @api_view(['POST'])
@@ -349,6 +366,7 @@ def social_media_registration(request):
 					profile_obj.save()
 					serializer_class = SocialSerializer(profile_obj)
 					result["value"] = True
+					result['message']='success'
 					result["data"] = serializer_class.data
 
 					if user_obj.auth_token:
@@ -365,11 +383,13 @@ def social_media_registration(request):
 					user_obj = User.objects.get(token=token)
 					if not user_obj.is_active:
 						result["value"] = False
+						result["data"]=None
 						result["message"] = "Account with this username is not exists!"
-						return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+						return Response(result, status=status.HTTP_200_OK)
 					profile_obj = Profile.objects.get(username=user_obj)
 					serializer_class = SocialSerializer(profile_obj)
 					result["value"] = True
+					result['message']='success'
 					result["data"] = serializer_class.data
 
 					if user_obj.auth_token:
@@ -392,7 +412,9 @@ def social_media_registration(request):
 				if 'error' in data:
 					result["value"] = False
 					result["message"] = "Please check your token!"
-					return Response(result, status=status.HTTP_400_BAD_REQUEST)
+					result["data"]=None
+     
+					return Response(result, status=status.HTTP_200_OK)
 				social_id = data['sub']
 			elif social_media_site.lower()=="facebook":
 				url = f'https://graph.facebook.com/me?access_token={token}'
@@ -401,13 +423,15 @@ def social_media_registration(request):
 				if 'error' in data:
 					result["value"] = False
 					result["message"] = "Please check your tokenbad!"
-					return Response(result, status=status.HTTP_400_BAD_REQUEST)
+					result["data"]=None
+					return Response(result, status=status.HTTP_200_OK)
 				social_id = data['id']
 			if not User.objects.filter(social_id=social_id).exists():
 				if User.objects.filter(username=username).exists():
 					result["value"] = False
 					result["message"] = "User already exists with this username!"
-					return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+					result["data"]=None
+					return Response(result, status=status.HTTP_200_OK)
 
 				user_obj = User.objects.create_user(
 					username=username, password=token, email=email,
@@ -420,6 +444,7 @@ def social_media_registration(request):
 				profile_obj.save()
 				serializer_class = SocialSerializer(profile_obj)
 				result["value"] = True
+				result["message"]='success'
 				result["data"] = serializer_class.data
 
 				if user_obj.auth_token:
@@ -437,10 +462,12 @@ def social_media_registration(request):
 				if not user_obj.is_active:
 					result["value"] = False
 					result["message"] = "Account with this username is not exists!"
-					return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+					result["data"]=None
+					return Response(result, status=status.HTTP_200_OK)
 				profile_obj = Profile.objects.get(username=user_obj)
 				serializer_class = SocialSerializer(profile_obj)
 				result["value"] = True
+				result["message"]='success'
 				result["data"] = serializer_class.data
 
 				if user_obj.auth_token:
@@ -457,6 +484,7 @@ def social_media_registration(request):
 	else:
 		result["value"] = False
 		result["message"] = "Method not Allowed!"
+		result["data"]=None
 		return Response(result,status=status.HTTP_405_METHOD_NOT_ALLOWED)
 	# except Exception as e:
 	# 	print(e)
@@ -519,6 +547,7 @@ def send_link(request):
 				data = {"Success": "Check Your email for Forgot Password", "count": u_obj.count_for_forgot_pass}
 
 				result["value"] = True
+				result["message"]='success'
 				result["data"] = data
 				return Response(result, status=status.HTTP_200_OK)
 			elif u_obj.count_for_forgot_pass >= 5:
@@ -554,20 +583,24 @@ def send_link(request):
 
 					data = {"Success": "Check Your email for Forgot Password", "count": u_obj.count_for_forgot_pass}
 					result["value"] = True
+					result["message"]='success'
 					result["data"] = data
-					return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+					return Response(result, status=status.HTTP_200_OK)
 				else:
 					result["value"] = False
 					result["message"] = "You have too many attempts in an Hour!!!You can try after an Hour."
+					result["data"]=None
 					return Response(result)
 		else:
 			result["value"] = False
 			result["message"] = "User Not Exist with this email address"
-			return Response(result,status=status.HTTP_401_UNAUTHORIZED)
+			result["data"]=None
+			return Response(result,status=status.HTTP_200_OK)
 
 # reset-password 
 @api_view(['GET'])
 def reset_password(request):
+	print("hiiiiiiiii")
 	result = dict()
 	token = request.GET.get('token')
 	if request.method == "GET":
@@ -602,47 +635,58 @@ def reset_password(request):
 											obj1.confirm_token="token_expired"
 											obj1.save()
 											result["value"] = True
+											result["message"]='success'
 											result["message"] =  "Password updated Successfully."
 											return Response(result, status=status.HTTP_200_OK)
 										else:
 											result["value"] = False
 											result["message"] = "New password and confirm password doesnot matched."
-											return Response(result, status=status.HTTP_400_BAD_REQUEST)
+											result["data"]=None
+											return Response(result, status=status.HTTP_200_OK)
 									else:
 										result["value"] = False
 										result["message"] = "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."
-										return Response(result, status=status.HTTP_400_BAD_REQUEST)
+										result["data"]=None
+										return Response(result, status=status.HTTP_200_OK)
 								else:
 									result["value"] = False
 									result["message"] = "Oops!! Please check your Token"
-									return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+									result["data"]=None
+									return Response(result, status=status.HTTP_200_OK)
 							else:
 								result["value"] = False
 								result["message"] = "User Not Exist with this email address"
-								return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+								result["data"]=None
+								return Response(result, status=status.HTTP_200_OK)
 						else:
 							result["value"] = False
 							result["message"] = "Oops! Your Token is Expired!!!"
-							return Response(result, status=status.HTTP_400_BAD_REQUEST)
+							result["data"]=None
+							return Response(result, status=status.HTTP_200_OK)
 					else:
 						result["value"] = False
 						result["message"] = "Please check your Token!!!"
-						return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+						result["data"]=None
+						return Response(result, status=status.HTTP_200_OK)
 				else:
 					result["value"] = False
 					result["message"] = "You have changed your password once through your this token!"
-					return Response(result, status=status.HTTP_400_BAD_REQUEST)
+					result["data"]=None
+					return Response(result, status=status.HTTP_200_OK)
 			else:
 				result["value"] = False
 				result["message"] = "Please check your Token!!!"
-				return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+				result["data"]=None
+				return Response(result, status=status.HTTP_200_OK)
 		except:
 			result["value"] = False
 			result["message"] = "User Not Exist with this email address"
-			return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+			result["data"]=None
+			return Response(result, status=status.HTTP_200_OK)
 	else:
 		result["value"] = False
 		result["message"] = "Method Not Allowed!!!"
+		result["data"]=None
 		return Response(result, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 				
 # update-password
@@ -654,7 +698,8 @@ def update_password(request):
 	except KeyError:
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+		result["data"]=None
+		return Response(result, status=status.HTTP_200_OK)
 	if request.method == "POST":
 		password = request.POST['password']
 		new_pass = request.POST['new_pass']
@@ -666,7 +711,8 @@ def update_password(request):
 				if user.check_password(new_pass):
 					result["value"] = False
 					result["message"] = "Old Password and New Password must be diffrent"
-					return Response(result, status=status.HTTP_400_BAD_REQUEST)
+					result["data"]=None
+					return Response(result, status=status.HTTP_200_OK)
 
 				pat = re.compile(reg)
 				mat = re.search(pat, new_pass)
@@ -678,8 +724,8 @@ def update_password(request):
 						obj2.pass_update = date.today()
 						user.save()
 						obj2.save()
-						result["value"] = True
-
+						# result["value"] = True
+						# result["message"]='success'
 						serializer_class = UserSerializerWithToken(user)
 						# creating dict for add profile response
 						final_data = dict(serializer_class.data)
@@ -688,6 +734,7 @@ def update_password(request):
 						for i,j in profile_serializer_class.data.items():
 							final_data[i]=j
 						result["value"] = True
+						result["message"]='success'
 						result["data"] = final_data
 
 						if user.auth_token:
@@ -703,19 +750,23 @@ def update_password(request):
 					else:
 						result["value"] = False
 						result["message"] = "New password and confirm password doesnot matched."
-						return Response(result, status=status.HTTP_400_BAD_REQUEST)
+						result["data"]=None
+						return Response(result, status=status.HTTP_200_OK)
 				else:
 					result["value"] = False
 					result["message"] = "Password must be include atleast one special character,number,small and capital letter and length between 6 to 20."
-					return Response(result, status=status.HTTP_400_BAD_REQUEST)
+					result["data"]=None
+					return Response(result, status=status.HTTP_200_OK)
 			else:
 				result["value"] = False
 				result["message"] = "Password Not matched!!!"
-				return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+				result["data"]=None
+				return Response(result, status=status.HTTP_200_OK)
 		else:
 			result["value"] = False
 			result["message"] = "User Not Exist with this username"
-			return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+			result["data"]=None
+			return Response(result, status=status.HTTP_200_OK)
 
 # edit profile
 @api_view(['POST'])
@@ -727,17 +778,13 @@ def profile(request):
 	except KeyError:
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
+		result['data']=None
+     	# result['data']=None
 		print("result###-----",result)
-        
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+		return Response(result, status=status.HTTP_200_OK)
 	# try:
 	
 	user_obj = User.objects.get(auth_token__contains = "{" + header_token + "}")
-	# user_obj=User.objects.get(auth_token__contains='{eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk2NTEyNDYwLCJpYXQiOjE2NjQ5NzY0NjAsImp0aSI6ImZjNmU1NGUzMGU5NjQ4Yjg4YjI2YmVkMDdlNjA5MjgxIiwidXNlcl9pZCI6MX0.JgUtNjph27vN0rj1bx_Cs0UpJtsPkj1nB_CcSe_8CGc}')
-	if user_obj:
-		print("hiiiii")
-	else:
-		print("HLooooo")
 
 	if request.method == "POST":
 		email = request.POST.get('email')
@@ -754,13 +801,13 @@ def profile(request):
 		website = request.POST.get('website')
 		city = ""
 		country = ""
-		# country_code = request.POST.get('country_code')
+		country_code = request.POST.get('country_code')
 		# g = geocoder.osm([user_Latitude,user_Longitude], method='reverse')
-		country_code = None
+		
 		if user_Latitude and user_Longitude:
 			access_token="pk.eyJ1IjoiYXJhYmFwcCIsImEiOiJjbDh2YmtiODQwNXo4M29udTA0eWxldmIxIn0.tzc8bwS-5vvdE32_T0EY7A"
 			url="https://api.mapbox.com/geocoding/v5/mapbox.places/"+user_Longitude+","+user_Latitude+".json?types=poi&access_token="+access_token
-			print(url)
+
 			resp = requests.get(url)
 			if resp.status_code==200:
 				data = json.loads(resp.content.decode())
@@ -779,7 +826,8 @@ def profile(request):
 		except ValueError:
 			result["value"] = False
 			result["message"] = "date_of_Birth in incorrect date format. It should be YYYY-MM-DD"
-			return Response(result, status=status.HTTP_400_BAD_REQUEST)
+			# result["data"]=None
+			return Response(result, status=status.HTTP_200_OK)
 
 		if 'profile_image' in request.FILES:
 			profile_image = request.FILES['profile_image']
@@ -798,16 +846,22 @@ def profile(request):
 
 		if user_obj.username != username:
 			if User.objects.filter(username=username).exists():
-				return Response({"Error": "username already taken!!!"}, status=status.HTTP_400_BAD_REQUEST)
+				return Response({"Error": "username already taken!!!"}, status=status.HTTP_200_OK)
 
 		if user_obj.email != email and email is not None:
 			if(re.fullmatch(for_email, str(email))):
 				if User.objects.filter(email=email).exists():
-					return Response({"Error": "Email already in use!!!"}, status=status.HTTP_400_BAD_REQUEST)
+					result["value"] = False
+					result["message"] = "Email already in use!!!"
+					result['data']=None
+     				
+					return Response(result, status=status.HTTP_200_OK)
 			else:
 				result["value"] = False
 				result["message"] = "Enter valid email address"
-				return Response(result, status=status.HTTP_400_BAD_REQUEST)
+				result['data']=None
+
+				return Response(result, status=status.HTTP_200_OK)
 
 		if username:
 			user_obj.username = username
@@ -842,6 +896,7 @@ def profile(request):
 		profile_obj.avatar = avatar_image
 		profile_obj.bitmoji = bitmoji
 		profile_obj.updated_at = datetime.now()
+		print(country_code)
 		if country_code:
 			profile_obj.country_code = country_code
 		else:
@@ -856,6 +911,7 @@ def profile(request):
 		profile_serializer_class = ProfileSerializer(profile_obj)
 		for i,j in profile_serializer_class.data.items():
 			final_data[i]=j
+		final_data['country_code']=country_code
 		result["value"] = True
 		result["data"] = final_data
 
@@ -872,24 +928,51 @@ def profile(request):
 	# 	print(e)
 	# 	result["value"] = False
 	# 	result["message"] = "Something went wrong! Please contact to support team."
-	# 	return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+	# 	return Response(result, status=status.HTTP_200_OK)
 
 # get specific user
+
 @api_view(['GET'])
 def specific_user(request):
 	result = dict()
 	try:
 		header_token = request.META['HTTP_AUTHORIZATION'].split(" ")[1]
 	except KeyError:
+		print("inside except====>")
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
-	if request.method == "GET":
-		queryset = Profile.objects.filter(username__username=request.user)
-		serializer_class = ProfileSerializer(queryset, many=True)
-		result['value']= True
-		result['data'] = serializer_class.data[0]
+		result['data']=None
 		return Response(result, status=status.HTTP_200_OK)
+	
+	# request.user="Testing"
+	queryset = Profile.objects.filter(username__username=request.user)
+	print("queryset:",queryset)
+	serializer_class = ProfileSerializer(queryset, many=True)
+
+	if serializer_class.data==[]:
+			result["value"] = False
+			result["message"] = "No Data Found!"
+			result['data']=None
+	else:
+			print(serializer_class.data)
+			result['value']= True
+			result['message']='success'
+			result['data'] = serializer_class.data[0]
+	return Response(result, status=status.HTTP_200_OK)
+		# queryset = Profile.objects.filter(username__username=request.user)
+		# print("queryset:",queryset)
+		# serializer_class = ProfileSerializer(queryset, many=True)
+
+		# if serializer_class.data==[]:
+		# 	result["value"] = False
+		# 	result["message"] = "No Data Found!"
+		# 	result['data']=None
+		# else:
+		# 	print(serializer_class.data)
+		# 	result['value']= True
+		# 	result['message']='success'
+		# 	result['data'] = serializer_class.data[0]
+		# return Response(result, status=status.HTTP_200_OK)
 
 # get total user
 @api_view(['POST'])
@@ -898,12 +981,24 @@ def user_count(request):
 	try:
 		header_token = request.META['HTTP_AUTHORIZATION'].split(" ")[1]
 	except KeyError:
+		result['data']=None
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+		return Response(result, status=status.HTTP_200_OK)
 	queryset = Profile.objects.all()
 	serializer_class = ProfileSerializer(queryset, many=True)
-	return Response({'Total users': len(serializer_class.data)}, status=status.HTTP_200_OK)
+	
+	if serializer_class.data==[]:
+			result["value"] = False
+			result["message"] = "Please enter auth token!"
+			result['data']=None
+	else:
+			print(serializer_class.data)
+			result['value']= True
+			result['message']='success'
+			result['data'] = f'Total users '+str(len(serializer_class.data))
+	
+	return Response(result, status=status.HTTP_200_OK)
 
 # total user with specific gender
 @api_view(['GET'])
@@ -914,11 +1009,13 @@ def genderwise(request):
 	except KeyError:
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+		result["data"]=None
+		return Response(result, status=status.HTTP_200_OK)
 	gen = request.GET['gender']
 	obj1 = Profile.objects.filter(gender__iexact=gen)
 	serializer_class = ProfileSerializer(obj1, many=True)
-	return Response({f'Total users with {gen} gender': len(serializer_class.data)}, status=status.HTTP_200_OK)
+	data=f'Total users with {gen} gender '+str(len(serializer_class.data))
+	return Response({'value':True,'message':'success',"data": data}, status=status.HTTP_200_OK)
 
 # total user with specific country
 @api_view(['GET'])
@@ -929,11 +1026,13 @@ def countrywise(request):
 	except KeyError:
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+		result['data']=None
+		return Response(result, status=status.HTTP_200_OK)
 	con = request.GET['country']
 	obj1 = Profile.objects.filter(country__iexact=con)
 	serializer_class = ProfileSerializer(obj1, many=True)
-	return Response({f'Users with {con} country': serializer_class.data}, status=status.HTTP_200_OK)
+	data=f'Users with {con} country '+str(serializer_class.data)
+	return Response({'value':True,'message':'success','data': data}, status=status.HTTP_200_OK)
 
 # add and edit user preferences
 @api_view(['POST'])
@@ -942,7 +1041,6 @@ def preferences(request):
 	try:
 		header_token = request.META['HTTP_AUTHORIZATION'].split(" ")[1]
 
-		print(header_token)
 		if request.method == "POST":
 			export_quality = request.POST['export_quality']
 			Language = request.POST.get('Language')
@@ -1088,23 +1186,26 @@ def preferences(request):
 				preferences_obj.save()
 				result["value"] = False
 				result["message"] = "User preferences updated."
+				result['data'] = None
 				return Response(result, status=status.HTTP_200_OK)
 		except Exception as e:
 			result["value"] = False
 			result["message"] = "User not Found!!!"
-			return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+			result['data']=None
+			return Response(result, status=status.HTTP_200_OK)
 	except KeyError:
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+		result['data'	]=None
+		return Response(result, status=status.HTTP_200_OK)
 
 # add and edit application data
 @api_view(['POST'])
 def app_data(request):
 	result = dict()
 	try:
+     	
 		header_token = request.META['HTTP_AUTHORIZATION'].split(" ")[1]
-
 		if request.method == "POST":
 			UID = request.POST['UID']
 			inApp_Products = request.POST.get('inApp_Products')
@@ -1150,7 +1251,8 @@ def app_data(request):
 			except ValueError:
 				result["value"] = False
 				result["message"] = "Purchase_date in incorrect date format. It should be YYYY-MM-DD"
-				return Response(result, status=status.HTTP_400_BAD_REQUEST)
+				result['data']=None
+				return Response(result, status=status.HTTP_200_OK)
 
 			try:
 				if App_Last_Opened:
@@ -1158,14 +1260,14 @@ def app_data(request):
 			except ValueError:
 				result["value"] = False
 				result["message"] = "App_Last_Opened in incorrect date format. It should be YYYY-MM-DD"
-				return Response(result, status=status.HTTP_400_BAD_REQUEST)
+				result['data']=None
+				return Response(result, status=status.HTTP_200_OK)
 			try:
 				user = User.objects.get(auth_token__contains = "{" + header_token + "}")
 				if application_data.objects.filter(username=user).exists():
 					if application_data.objects.filter(UID = UID).exists():
 						try:
 							app_data_obj = application_data.objects.get(username =user, UID = UID)
-							# app_data_obj.UID = UID
 							app_data_obj.inApp_Products = inApp_Products
 							app_data_obj.Purchase_date = Purchase_date
 							app_data_obj.Purchased_product = Purchased_product
@@ -1189,9 +1291,9 @@ def app_data(request):
 							app_data_obj.Push_Notification_token = Push_Notification_token
 							app_data_obj.no_auth='False'
 							app_data_obj.save()
-							return Response({"Success": "Details Updated."}, status=status.HTTP_200_OK)
+							return Response({"value":True,"message": "Details Updated."}, status=status.HTTP_200_OK)
 						except Exception as e:
-							return Response({"Error": "UID Exists!!!"}, status=status.HTTP_409_CONFLICT)
+							return Response({"value":False,"message": "UID Exists!!!",'data':None}, status=status.HTTP_409_CONFLICT)
 					else:
 						data = application_data(username=user,
 											UID=UID,
@@ -1217,7 +1319,7 @@ def app_data(request):
 											Registered_user=Registered_user,
 											Push_Notification_token=Push_Notification_token)
 						data.save()
-						return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
+						return Response({"value":True,'message':'success',"message": "Details Added."}, status=status.HTTP_200_OK)
 
 
 				data = application_data(username=user,
@@ -1244,13 +1346,14 @@ def app_data(request):
 										Registered_user=Registered_user,
 										Push_Notification_token=Push_Notification_token)
 				data.save()
-				return Response({"Success": "Details Added."}, status=status.HTTP_200_OK)
+				return Response({"value":True,"message": "Details Added."}, status=status.HTTP_200_OK)
 			except Exception as e:
-				return Response({"Error": "User not Found!!!"}, status=status.HTTP_401_UNAUTHORIZED)
+				return Response({"value":False,"message": "User not Found!!!",'data':None}, status=status.HTTP_200_OK)
 	except KeyError:
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+		result['data']=None
+		return Response(result, status=status.HTTP_200_OK)
 			
 # check whether email is available or not
 @api_view(['GET'])
@@ -1262,10 +1365,12 @@ def email_verification(request):
 			user = User.objects.get(email=email)
 			result["value"] = False
 			result["message"] = "Email is already registered!"
-			return Response(result, status=status.HTTP_400_BAD_REQUEST)
+			result['data']=None
+			return Response(result, status=status.HTTP_200_OK)
 		except:
 			result["value"] = True
 			result["message"]= "Email is available."
+			result['data']=None
 			return Response(result, status=status.HTTP_200_OK)
 
 # check whether username is available or not
@@ -1278,10 +1383,13 @@ def username_verification(request):
 			user = User.objects.get(username=username)
 			result["value"]=False
 			result["message"]="Username already in use!!!"
-			return Response(result, status=status.HTTP_400_BAD_REQUEST)
+			result['data']=None
+   			# result['data']=None
+			return Response(result, status=status.HTTP_200_OK)
 		except:
 			result["value"]=True
 			result["message"]="Username is available."
+			result['data']=None
 			return Response(result, status=status.HTTP_200_OK)
 
 # add and update purchase history
@@ -1306,22 +1414,25 @@ def purchase_history(request):
 					datetime.strptime(start_date, '%Y-%m-%d')
 			except ValueError:
 				result["value"]=False
+				result['data']=None
 				result["message"]="start_date in incorrect date format. It should be YYYY-MM-DD"
-				return Response(result, status=status.HTTP_400_BAD_REQUEST)		
+				return Response(result, status=status.HTTP_200_OK)		
 			try:
 				if end_date:
 					datetime.strptime(end_date, '%Y-%m-%d')
 			except ValueError:
 				result["value"]=False
+				result['data']=False
 				result["message"]="end_date in incorrect date format. It should be YYYY-MM-DD"
-				return Response(result, status=status.HTTP_400_BAD_REQUEST)
+				return Response(result, status=status.HTTP_200_OK)
 
 			try:
 				product_obj = Product.objects.get(product=product)
 			except ObjectDoesNotExist:
 				result["value"]=False
+				result['data']=None
 				result["message"]="Product does not exists!"
-				return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+				return Response(result, status=status.HTTP_200_OK)
 
 			try:
 				user = User.objects.get(auth_token__contains = "{" + header_token + "}")
@@ -1357,30 +1468,36 @@ def purchase_history(request):
 				obj.save()
 				result["value"]=True
 				result["message"]="Data Added"
+				result['data']=obj
 				return Response(result, status=status.HTTP_200_OK)
 			except Exception as e:
 				result["value"]=False
 				result["message"]="User Not Exist!!!"
-				return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+				result['data']=None
+				return Response(result, status=status.HTTP_200_OK)
 	except KeyError:
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)			
+		result['data']=None
+		return Response(result, status=status.HTTP_200_OK)			
 
 # delete account
 @api_view(['POST'])
 def delete_account(request):
+   
 	result = dict()
 	try:
 		header_token = request.META['HTTP_AUTHORIZATION'].split(" ")[1]
 	except KeyError:
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+		result['data']= None
+		return Response(result, status=status.HTTP_200_OK)
 	if request.method == "POST":
 		try:
 			# password = request.POST.get('password')
 			user_obj = User.objects.get(auth_token__contains = "{" + header_token + "}")
+			
 			# if user_obj.profile.is_social:
 			user_obj.is_active = False
 			user_obj.delete_date = datetime.now()
@@ -1392,7 +1509,7 @@ def delete_account(request):
 			# if not password:
 			# 	result["value"] = False
 			# 	result["message"] = "Password required for Delete Account!"
-			# 	return Response(result, status=status.HTTP_400_BAD_REQUEST)
+			# 	return Response(result, status=status.HTTP_200_OK)
 			# if user_obj.check_password(password):
 			# 	user_obj.is_active = False
 			# 	user_obj.delete_date = datetime.now()
@@ -1403,12 +1520,13 @@ def delete_account(request):
 			# else:
 				# result["value"] = False
 				# result["message"] = "Incorrect Password!"
-				# return Response(result, status=status.HTTP_400_BAD_REQUEST)
+				# return Response(result, status=status.HTTP_200_OK)
 		except Exception as e:
 			print(e)
 			result["value"] = False
 			result["message"] = "User not found"
-			return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+			result['data']=None
+			return Response(result, status=status.HTTP_200_OK)
 
 # add and update products
 @api_view(['POST'])
@@ -1445,7 +1563,7 @@ def product(request):
 				if Product.objects.filter(productID=productID).exists() or Product.objects.filter(product=product).exists():
 					result["value"] = False
 					result["message"] = "Product or ProductID already exists!"
-					return Response(result, status=status.HTTP_400_BAD_REQUEST)
+					return Response(result, status=status.HTTP_200_OK)
 
 				product1 = Product.objects.create(
 					productID=productID,
@@ -1464,7 +1582,8 @@ def product(request):
 	except KeyError:
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+		result['data']=None
+		return Response(result, status=status.HTTP_200_OK)
 
 # load script
 @api_view(['POST'])
@@ -1492,28 +1611,35 @@ def load_script(request):
 							pro_obj = Profile.objects.get(username=temp_obj)
 							serializer_class = RegistrationSerializer(pro_obj)
 							result["value"] = True
-							result["message"] = serializer_class.data
+							result["message"]='success'
+							result["data"] = serializer_class.data
 							return Response(result, status=status.HTTP_200_OK)
 						else:
 							result["value"] = False
 							result["message"] = "password must be include atleast one special character,number,small and capital letter and length between 6 to 20."
-							return Response(result, status=status.HTTP_400_BAD_REQUEST)
+							result['data']=None
+							return Response(result, status=status.HTTP_200_OK)
 					else:
 						result["value"] = False
+						result['data']=None
 						result["message"] = "Enter valid email address"
-						return Response(result, status=status.HTTP_400_BAD_REQUEST)
+      					# result['data']=None
+						return Response(result, status=status.HTTP_200_OK)
 				else:
 					result["value"] = False
 					result["message"] = "User Already Exist with this email address"
-					return Response(result, status=status.HTTP_400_BAD_REQUEST)
+					result['data']=None
+					return Response(result, status=status.HTTP_200_OK)
 			else:
 				result["value"] = False
 				result["message"] = "Username length must be greater than 6"
-				return Response(result, status=status.HTTP_400_BAD_REQUEST)
+				result['data']=None
+				return Response(result, status=status.HTTP_200_OK)
 		else:
 			result["value"] = False
+			result['data']=None
 			result["message"] = "User Already Exists!!!"
-			return Response(result, status=status.HTTP_400_BAD_REQUEST)
+			return Response(result, status=status.HTTP_200_OK)
 
 # add tag
 @api_view(['POST'])
@@ -1532,20 +1658,24 @@ def tag(request):
 					tag_obj.save()
 					result["value"] = True
 					result["message"] = "Tag/Tags Updated."
+					result['data']=None
 					return Response(result, status=status.HTTP_200_OK)
 				except:
 					tag_obj = Tag.objects.create(username=request.user, tag=tag)
+					result['data']=None
 					result["value"] = True
 					result["message"] = "Tag/Tags Added."
 					return Response(result, status=status.HTTP_200_OK)
 			except Exception as e:
 				result["value"] = False
 				result["message"] = "User not found"
-				return Response(result, status=status.HTTP_401_UNAUTHORIZED)
+				result['data']=None
+				return Response(result, status=status.HTTP_200_OK)
 	except KeyError:
 		result["value"] = False
 		result["message"] = "Please enter auth token!"
-		return Response(result, status=status.HTTP_401_UNAUTHORIZED)				
+		result['data']=None
+		return Response(result, status=status.HTTP_200_OK)				
 
 # application data no auth api
 @api_view(['POST'])
@@ -1581,7 +1711,8 @@ def AppDataNoAuth(request):
 		except ValueError:
 			result["value"] = False
 			result["message"] = "Purchase_date in incorrect date format. It should be YYYY-MM-DD"
-			return Response(result, status=status.HTTP_400_BAD_REQUEST)
+			result['data']=None
+			return Response(result, status=status.HTTP_200_OK)
 
 		try:
 			if App_Last_Opened:
@@ -1589,7 +1720,8 @@ def AppDataNoAuth(request):
 		except ValueError:
 			result["value"] = False
 			result["message"] = "App_Last_Opened in incorrect date format. It should be YYYY-MM-DD"
-			return Response(result, status=status.HTTP_400_BAD_REQUEST)
+			result['data']=None
+			return Response(result, status=status.HTTP_200_OK)
 
 		if application_data.objects.filter(UID = UID).exists():
 			app_data_obj = application_data.objects.get(UID=UID)
@@ -1619,6 +1751,7 @@ def AppDataNoAuth(request):
 			app_data_obj.save()
 			result["value"] = True
 			result["message"] = "Details Updated."
+   
 			return Response(result, status=status.HTTP_200_OK)
 
 		else:
@@ -1646,7 +1779,8 @@ def AppDataNoAuth(request):
 									Registered_user=Registered_user,
 									Push_Notification_token=Push_Notification_token
 									)
-			data.save()
+			# data.save()
 			result["value"] = True
-			result["message"] = "Details Added."
+			result["message"] = "success"
+			result['data']=None
 			return Response(result, status=status.HTTP_200_OK)

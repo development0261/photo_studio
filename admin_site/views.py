@@ -88,7 +88,6 @@ def loginprocess(request):
 
     return render(request, "admin_site/login.html")
 
-
 # get models data for home page
 def models(request):
     app_models = apps.get_app_config("home").get_models()
@@ -103,7 +102,6 @@ def models(request):
         else:
             home_models.append(i.__name__)
     return {"home_models": home_models}
-
 
 # get all models data
 def all_table_data():
@@ -129,7 +127,6 @@ def all_table_data():
     }
     return all_data
 
-
 # for index page of admin panel
 def index(request):
     if request.user.is_authenticated:
@@ -152,7 +149,6 @@ def index(request):
     else:
         return redirect("login")
 
-
 # admin users
 def admin_user(request):
     if request.user.is_authenticated:
@@ -160,7 +156,6 @@ def admin_user(request):
         return render(request, "admin_site/admin_user.html", {"admins": admins})
     else:
         return redirect("login")
-
 
 # app users
 def app_user(request):
@@ -215,7 +210,6 @@ def app_user(request):
         return render(request, "admin_site/user_model.html", {"locals": page_obj})
     else:
         return redirect("login")
-
 
 # export data
 def export_excel(request):
@@ -490,9 +484,9 @@ def export_excel(request):
         writer.writerow(temp_list)
     return response
 
-
 # profile model data
 def profile_model(request):
+    print("profile_model")
     if request.user.is_authenticated:
         countries = Profile.objects.values("country").distinct()
         country_list1 = []
@@ -694,7 +688,6 @@ def profile_model(request):
     else:
         return redirect("login")
 
-
 # preferences model data
 def user_preference_model(request):
     if request.user.is_authenticated:
@@ -770,7 +763,6 @@ def app_data_model(request):
     else:
         return redirect("login")
 
-
 # no auth application model data
 def no_auth_app_data_model(request):
     if request.user.is_authenticated:
@@ -809,7 +801,6 @@ def no_auth_app_data_model(request):
     else:
         return redirect("login")
 
-
 # purchase model data
 def purchase_model(request):
     print("Purchase Model")
@@ -838,7 +829,6 @@ def purchase_model(request):
         )
     else:
         return redirect("login")
-
 
 # tag model data
 def tag_model(request):
@@ -896,9 +886,10 @@ def product_model(request):
     else:
         return redirect("login")
 
-
 # View specific model data start---------\
 def view_profile(request, info):
+    print("Hello")
+    print("view_profile")
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split("-")
         user_obj = custom_user.objects.get(username=infolist[1])
@@ -948,7 +939,6 @@ def specific_product(request, info):
     else:
         return redirect("login")
 
-
 def view_tag(request, info):
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split("-")
@@ -963,7 +953,6 @@ def view_tag(request, info):
     else:
         return redirect("login")
 
-
 def view_user_preference(request, info):
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split("-")
@@ -974,7 +963,6 @@ def view_user_preference(request, info):
     else:
         return redirect("login")
 
-
 def view_product(request, info):
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split("-")
@@ -984,7 +972,6 @@ def view_product(request, info):
         return JsonResponse({"res": data})
     else:
         return redirect("login")
-
 
 def view_app_data(request, info):
     if request.user.is_authenticated:
@@ -1006,7 +993,6 @@ def view_app_data(request, info):
 #         return JsonResponse({"res": data})
 #     else:
 #         return redirect("login")
-
 
 def view_app_data_without_auth(request, info):
     if request.user.is_authenticated:
@@ -1035,7 +1021,6 @@ def delete_user(request, para=None):
     else:
         return redirect("login")
 
-
 def delete_profile(request, para=None):
     if request.user.is_authenticated:
         modal_id = para.split(" ")
@@ -1044,7 +1029,6 @@ def delete_profile(request, para=None):
         return redirect("Profile")
     else:
         return redirect("login")
-
 
 def delete_details(request, para=None):
     if request.user.is_authenticated:
@@ -1055,7 +1039,6 @@ def delete_details(request, para=None):
     else:
         return redirect("login")
 
-
 def delete_app_data(request, para=None):
     if request.user.is_authenticated:
         modal_id = para.split(" ")
@@ -1064,7 +1047,6 @@ def delete_app_data(request, para=None):
         return redirect("application_data")
     else:
         return redirect("login")
-
 
 def delete_no_auth_app_data(request, para=None):
     if request.user.is_authenticated:
@@ -1075,7 +1057,6 @@ def delete_no_auth_app_data(request, para=None):
     else:
         return redirect("login")
 
-
 def delete_purchase(request, para=None):
     if request.user.is_authenticated:
         modal_id = para.split(" ")
@@ -1085,7 +1066,6 @@ def delete_purchase(request, para=None):
     else:
         return redirect("login")
 
-
 def delete_tag(request, para=None):
     if request.user.is_authenticated:
         modal_id = para.split(" ")
@@ -1094,7 +1074,6 @@ def delete_tag(request, para=None):
         return redirect("Tag")
     else:
         return redirect("login")
-
 
 def delete_product(request, para=None):
     if request.user.is_authenticated:
@@ -1154,7 +1133,6 @@ def user_edit(request, para):
     else:
         return redirect("login")
 
-
 def admin_edit(request, para):
     if request.user.is_authenticated:
         if request.method == "POST":
@@ -1186,7 +1164,6 @@ def admin_edit(request, para):
             return render(request, "admin_site/admin_edit.html", {"result": res})
     else:
         return redirect("login")
-
 
 def profile_edit(request, para):
     if request.user.is_authenticated:
@@ -1233,7 +1210,7 @@ def profile_edit(request, para):
                     for k in j:
                         country = k["context"][-1]["text"]
                         state = k["context"][-3]["text"]
-                        city = k["context"][-2]["text"]
+                        city = k["context"][1]["text"]
 
             obj = Profile.objects.get(username=int(username))
             obj.name = name
@@ -1285,7 +1262,6 @@ def profile_edit(request, para):
             return render(request, "admin_site/profile_edit.html", {"result": res})
     else:
         return redirect("login")
-
 
 def preferences_edit(request, para):
     if request.user.is_authenticated:
@@ -1438,7 +1414,6 @@ def preferences_edit(request, para):
     else:
         return redirect("login")
 
-
 def app_data_edit(request, para):
     if request.user.is_authenticated:
         if request.method == "POST":
@@ -1528,7 +1503,6 @@ def app_data_edit(request, para):
             return render(request, "admin_site/app_data_edit.html", {"result": res})
     else:
         return redirect("login")
-
 
 def no_auth_app_data_edit(request, para):
 
@@ -1648,7 +1622,6 @@ def no_auth_app_data_edit(request, para):
     else:
         return redirect("login")
 
-
 def purchase_edit(request, para):
 
     if request.user.is_authenticated:
@@ -1724,7 +1697,6 @@ def purchase_edit(request, para):
     else:
         return redirect("login")
 
-
 def tag_edit(request, para):
     if request.user.is_authenticated:
         if request.method == "POST":
@@ -1748,7 +1720,6 @@ def tag_edit(request, para):
             return render(request, "admin_site/tag_edit.html", {"result": res})
     else:
         return redirect("login")
-
 
 def product_edit(request, para):
     if request.user.is_authenticated:
@@ -1792,7 +1763,6 @@ def product_edit(request, para):
     else:
         return redirect("login")
 
-
 def change_password(request):
     if request.user.is_authenticated:
         if request.method == "POST":
@@ -1822,7 +1792,6 @@ def change_password(request):
         return render(request, "admin_site/change_password.html")
     else:
         return redirect("login")
-
 
 # edit specific model data end---------/
 
@@ -1857,7 +1826,6 @@ def send_link(request):
             messages.error(request, "Entered email is not matched with any user!!!")
     return render(request, "admin_site/forgot_password.html")
 
-
 # for forgot password
 def forgot_password(request, token):
     if request.method == "POST":
@@ -1888,14 +1856,13 @@ def forgot_password(request, token):
             messages.error(request, "Check your link!!!")
     return render(request, "admin_site/reset.html")
 
-
 # logout
 def logoutprocess(request):
     logout(request)
     return redirect("login")
 
-
 def filter(request):
+    print("filter module")
     if request.user.is_authenticated:
         countries = Profile.objects.values("country").distinct()
         country_list1 = []
@@ -1939,7 +1906,7 @@ def filter(request):
 
         if "search" in request.GET:
             searchvalue = request.GET["search"]
-            print("-" * 10)
+            print("="*10)
             print(searchvalue)
             total_profiles = Profile.objects.filter(
                 Q(name__icontains=searchvalue)
@@ -1950,6 +1917,7 @@ def filter(request):
                 | Q(lat__icontains=searchvalue)
                 | Q(long__icontains=searchvalue)
                 | Q(dob__icontains=searchvalue)
+                | Q(username__username__icontains=searchvalue)
             )
 
         if "filter_mobile" in request.GET:
@@ -1990,7 +1958,6 @@ def filter(request):
 
         if "city" in request.GET:
             val = request.GET["city"]
-            print("CITY")
             if val == "All":
                 total_profiles = total_profiles.all()
             for i in city_list:
@@ -2070,7 +2037,6 @@ def filter(request):
 
         if "fromtodate" in request.GET:
             print("fromtodate")
-
             start_date = request.GET["start_date_filter"]
             end_date = request.GET["end_date_filter"]
 
@@ -2087,7 +2053,6 @@ def filter(request):
             )
 
         if "radius" in request.GET:
-
             print("radius")
             latitude = request.GET["latitude"]
             longitude = request.GET["longitude"]
@@ -2103,10 +2068,11 @@ def filter(request):
         page_obj = p.get_page(page_number)
 
         # print(page_obj, type(page_obj))
-        for i in page_obj:
-            print(i)
+        # for i in page_obj:
+        #     print(i)
         # from django.http import JsonResponse
         from django.core import serializers
+        print(serializers.serialize(queryset=page_obj, format="json"))
 
         return HttpResponse(serializers.serialize(queryset=page_obj, format="json"))
         # return JsonResponse({"total_profiles": page_obj})

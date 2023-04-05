@@ -5,7 +5,7 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class custom_user(AbstractUser):
-    email = models.EmailField(max_length=70, blank=True, null= True, unique= False)
+    email = models.EmailField(max_length=70, blank=True, null= True, unique= True)
     delete_date = models.DateTimeField(null=True, blank=True)
     confirm_token = models.CharField(null=True, blank=True, max_length=50)
     token = models.TextField(null=True, blank=True)
@@ -40,6 +40,7 @@ class Profile(models.Model):
     updated_at = models.DateTimeField(blank=True, null=True)
     dob = models.DateField(null=True, blank=True)
     city = models.CharField(max_length=20, null=True, blank=True)
+    country_code = models.CharField(max_length=20, null=True, blank=True)
     country = models.CharField(max_length=20, null=True, blank=True)
     lat = models.FloatField(max_length=30, null=True, blank=True)
     long = models.FloatField(max_length=30, null=True, blank=True)
@@ -154,7 +155,7 @@ class application_data(models.Model):
     Push_Notification_token = models.CharField(
         max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    no_auth = models.CharField(null=True, blank=True,default=False)
+    no_auth = models.CharField(null=True, max_length=10,blank=True,default=False)
 
     def __str__(self):
         return f"{self.username} - {self.UID}"
