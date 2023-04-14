@@ -36,6 +36,7 @@
                                                                 </div>
                                                             </span>
                                                         </th>
+                                                        
                                                         <th class="bg-transparent border-bottom-0 sortit">
                                                             <span style="display:flex">inApp Products
                                                                 <div class="sort-order ml-2">
@@ -106,6 +107,7 @@
                                                 </thead>
                                                 <tbody id="table_body">
                                                     {% for row in total_app_datas %}
+                                                        
                                                     <tr class="border-bottom">
                                                         <td class="text-center">
                                                             <div class="mt-0 mt-sm-2 d-block app_view" id="application_data - {{row.username}} - {{row.UID}}">
@@ -114,6 +116,7 @@
                                                                 </h6>
                                                             </div>
                                                         </td>
+                                                        
                                                         <td class="text-center">
                                                             <div class="mt-0 mt-sm-2 d-block">
                                                                 <h6 class="mb-0 fs-14 fw-semibold">
@@ -187,7 +190,7 @@
                                                         </td>
                                                         <td>
                                                             <div class="g-2">
-                                                                <a href="/admin-site/EditAppData/application_data {{row.aid}}" class="btn text-primary btn-sm"
+                                                                <a href="/admin-site/EditAppData/application_data {{row.aid}} {{row.username}}" class="btn text-primary btn-sm"
                                                                     data-bs-toggle="tooltip"
                                                                     data-bs-original-title="Edit"><span
                                                                         class="fe fe-edit fs-14"></span></a>
@@ -356,6 +359,7 @@
     <script>
         $('.app_view').on('click', function () {
             id = $(this).attr('id');
+            username=id.split("-")
             $.ajax({
                 type: "GET",
                 url: `/admin-site/application_data/${id}`,
@@ -369,6 +373,14 @@
                                         <strong>UID</strong>
                                         <label>
                                             ${data.UID}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="profile-field">
+                                        <strong>Username</strong>
+                                        <label>
+                                            ${username[1]}
                                         </label>
                                     </div>
                                 </div>

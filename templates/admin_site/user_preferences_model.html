@@ -770,7 +770,7 @@
     <script>
         function search(ele) {
             //event.preventDefault()
-            var value = $('#searchbar').val();
+            var value = $('#searchbar').val().trim();
             window.location.href = "{% url 'user_preference' %}?search="+value;
            /* if(event.key === 'Enter') {
                 event.preventDefault()

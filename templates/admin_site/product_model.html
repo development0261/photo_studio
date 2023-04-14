@@ -451,7 +451,7 @@
         function search(ele) {
             if(event.key === 'Enter') {
                 event.preventDefault()
-                window.location.href = "{% url 'Product' %}?search="+ele.value;
+                window.location.href = "{% url 'Product' %}?search="+ele.value.trim();
             }
         }
     </script>
