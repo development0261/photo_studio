@@ -359,7 +359,6 @@ def social_media_registration(request):
 						username=username, password=token, email=email,
 						token=token, social_media_site=social_media_site, first_name=first_name, last_name=last_name)
 					user_obj.save()
-
 					profile_obj = Profile(username=user_obj, is_social=is_social, name=name, city=city, country=country, lat=latitude, long=longitude)
 					if 'profile_image' in request.FILES:
 						profile_obj.profile_image = profile_image
@@ -408,7 +407,7 @@ def social_media_registration(request):
 				print(url)
 				r = requests.get(url = url)
 				data = r.json()
-				print(data)
+
 				if 'error' in data:
 					result["value"] = False
 					result["message"] = "Please check your token!"
@@ -478,7 +477,7 @@ def social_media_registration(request):
 				else:
 					user_obj.auth_token = "{"+str(result['data']['token'])+"}"
 				user_obj.save()
-
+				print(result)
 				return Response(result, status=status.HTTP_200_OK)
 
 	else:
@@ -773,7 +772,6 @@ def update_password(request):
 def profile(request):
 	result = dict()
 	try:
-		print(request.META['HTTP_AUTHORIZATION'])
 		header_token = request.META['HTTP_AUTHORIZATION'].split(" ")[1]
 	except KeyError:
 		result["value"] = False
@@ -946,7 +944,6 @@ def specific_user(request):
 	
 	# request.user="Testing"
 	queryset = Profile.objects.filter(username__username=request.user)
-	print("queryset:",queryset)
 	serializer_class = ProfileSerializer(queryset, many=True)
 
 	if serializer_class.data==[]:
@@ -954,7 +951,6 @@ def specific_user(request):
 			result["message"] = "No Data Found!"
 			result['data']=None
 	else:
-			print(serializer_class.data)
 			result['value']= True
 			result['message']='success'
 			result['data'] = serializer_class.data[0]
@@ -993,7 +989,6 @@ def user_count(request):
 			result["message"] = "Please enter auth token!"
 			result['data']=None
 	else:
-			print(serializer_class.data)
 			result['value']= True
 			result['message']='success'
 			result['data'] = f'Total users '+str(len(serializer_class.data))
@@ -1522,7 +1517,6 @@ def delete_account(request):
 				# result["message"] = "Incorrect Password!"
 				# return Response(result, status=status.HTTP_200_OK)
 		except Exception as e:
-			print(e)
 			result["value"] = False
 			result["message"] = "User not found"
 			result['data']=None

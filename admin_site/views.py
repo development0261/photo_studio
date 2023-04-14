@@ -387,8 +387,6 @@ def export_excel(request):
         if request.GET["fromtodate"]:
             start_date = request.GET["start_date"]
             end_date = request.GET["end_date"]
-            print(start_date)
-
             format_data = "%Y-%m-%d %H:%M:%S"
             if start_date:
                 start_date = datetime.strptime(start_date + " 00:00:00", format_data)
@@ -756,7 +754,6 @@ def app_data_model(request):
             p = Paginator(total_app_datas, 10)
         page_number = request.GET.get("page")
         page_obj = p.get_page(page_number)
-
         return render(
             request, "admin_site/app_data_model.html", {"total_app_datas": page_obj}
         )
@@ -888,7 +885,6 @@ def product_model(request):
 
 # View specific model data start---------\
 def view_profile(request, info):
-    print("Hello")
     print("view_profile")
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split("-")
@@ -979,6 +975,7 @@ def view_app_data(request, info):
         obj = application_data.objects.filter(UID=infolist[2])
         data = serializers.serialize("json", obj)
         data = json.loads(data[1:-1])
+        print(data)
         return JsonResponse({"res": data})
     else:
         return redirect("login")
@@ -996,11 +993,8 @@ def view_app_data(request, info):
 
 def view_app_data_without_auth(request, info):
     if request.user.is_authenticated:
-        print(info)
         infolist = info.replace(" ", "").split("-")
-        print(infolist)
         obj = application_data.objects.filter(UID=infolist[1])
-        print(obj)
         data = serializers.serialize("json", obj)
         data = json.loads(data[1:-1])
         return JsonResponse({"res": data})
@@ -1416,6 +1410,7 @@ def preferences_edit(request, para):
 
 def app_data_edit(request, para):
     if request.user.is_authenticated:
+
         if request.method == "POST":
             username = request.POST["username"]
             UID = request.POST["UID"]
@@ -1494,6 +1489,7 @@ def app_data_edit(request, para):
 
         elif request.method == "GET":
             modal_id = para.split(" ")
+            print(modal_id)
             obj = application_data.objects.filter(aid=modal_id[1])
             data = serializers.serialize("json", obj)
             data = json.loads(data)
@@ -1862,7 +1858,6 @@ def logoutprocess(request):
     return redirect("login")
 
 def filter(request):
-    print("filter module")
     if request.user.is_authenticated:
         countries = Profile.objects.values("country").distinct()
         country_list1 = []
@@ -1903,12 +1898,11 @@ def filter(request):
         filter_mobile_val = ""
         latitude = ""
         longitude = ""
-
         if "search" in request.GET:
             searchvalue = request.GET["search"]
-            print("="*10)
             print(searchvalue)
             total_profiles = Profile.objects.filter(
+                Q(username__username__icontains=searchvalue)|
                 Q(name__icontains=searchvalue)
                 | Q(mobile__icontains=searchvalue)
                 | Q(gender__icontains=searchvalue)
@@ -1917,9 +1911,10 @@ def filter(request):
                 | Q(lat__icontains=searchvalue)
                 | Q(long__icontains=searchvalue)
                 | Q(dob__icontains=searchvalue)
-                | Q(username__username__icontains=searchvalue)
             )
-
+            print(total_profiles)
+        
+        
         if "filter_mobile" in request.GET:
             searchvalue = request.GET["filter_mobile"]
             filter_mobile_val = searchvalue
@@ -1971,6 +1966,7 @@ def filter(request):
             for i in country_list:
                 if i == val:
                     total_profiles = total_profiles.filter(country__iexact=val)
+        
         from datetime import datetime,timedelta
         if "password_update" in request.GET:
             val = request.GET["password_update"]
@@ -2013,8 +2009,6 @@ def filter(request):
         from datetime import datetime, timedelta
 
         if "agefilter" in request.GET:
-            print("agefilter")
-            print(request.GET)
             start_age = request.GET["start_age"]
             end_age = request.GET["end_age"]
 
@@ -2066,12 +2060,7 @@ def filter(request):
             p = Paginator(total_profiles, 10)
         page_number = request.GET.get("page")
         page_obj = p.get_page(page_number)
-
-        # print(page_obj, type(page_obj))
-        # for i in page_obj:
-        #     print(i)
-        # from django.http import JsonResponse
-        from django.core import serializers
+        print(page_obj)
         print(serializers.serialize(queryset=page_obj, format="json"))
 
         return HttpResponse(serializers.serialize(queryset=page_obj, format="json"))

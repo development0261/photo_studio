@@ -1039,7 +1039,6 @@
                         url: `/admin-site/application_data/${id}`,
                         success: function (profileresult) {
                             var data = profileresult.res.fields;
-                            alert(data)
                             $("#largeModalLabel").append(`Application Data`)
                             $(".modalbody").append(`
                                     <div class="row">
@@ -1424,7 +1423,7 @@
         function search(ele) {
             if(event.key === 'Enter') {
                 event.preventDefault()
-                var searchval = ele.value
+                var searchval = ele.value.trim()
                 window.location.href = "{% url 'custom_user' %}?search="+searchval;
             }
         }

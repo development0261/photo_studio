@@ -26,7 +26,6 @@
                                    
                                     {% if key != "search" %}
                                         <input type="hidden" value="{{val}}" name="{{key}}" id='searchbar' />
-                                        <h2>{{val}}</h2>
                                     {% endif %}
                                 {% endfor %}
                                 {% comment %} <input class="btn btn-primary form-submit" type="button" id="searchSubmit" value="Submit"> {% endcomment %}
@@ -61,7 +60,15 @@
                                                                 </span>
                                                                 <input type="checkbox" class="export_data" id="username">
                                                                 </th>
-
+                                                                <th class="bg-transparent border-bottom-0 sortit">
+                                                                    <span style="display:flex">email
+                                                                    <div class="sort-order ml-2">
+                                                                    <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                    </div>
+                                                                </span>
+                                                                <input type="checkbox" class="export_data" id="username">
+                                                                </th>
                                                                 <th class="bg-transparent border-bottom-0 sortit">
                                                                     <span style="display:flex">name
                                                                     <div class="sort-order ml-2">
@@ -136,6 +143,17 @@
                                                                             </div>
                                                                         </div>
                                                                     </td>
+
+                                                                    <td class="text-center">
+                                                                        <div class="d-flex profile_name" id="Profile - {{row.username}} - {{ row.email }}">
+                                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                                                    {{ row.email }}
+                                                                                </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    
                                                                     <td class="text-center">
                                                                         <div class="d-flex profile_name" id="Profile - {{row.username}} - {{ row.name }}">
                                                                             <div class="mt-0 mt-sm-2 d-block">
@@ -924,6 +942,15 @@
                                         </div>
                                     </div>
                                 </td>
+                                 <td class="text-center">
+                                    <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.username}">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.username}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td class="text-center">
                                     <div class="d-flex">
                                         <div class="mt-0 mt-sm-2 d-block">
@@ -1024,6 +1051,15 @@
                                         <div class="mt-0 mt-sm-2 d-block">
                                             <h6 class="mb-0 fs-14 fw-semibold">
                                                 ${item.fields.name}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.username}">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.username}
                                             </h6>
                                         </div>
                                     </div>
@@ -1132,6 +1168,15 @@
                                     </div>
                                 </td>
                                 <td class="text-center">
+                                    <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.username}">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.username}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
                                     <div class="d-flex">
                                         <div class="mt-0 mt-sm-2 d-block">
                                             <h6 class="mb-0 fs-14 fw-semibold">
@@ -1233,6 +1278,16 @@
                                         </div>
                                     </div>
                                 </td>
+
+                                <td class="text-center">
+                                    <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.username}">
+                                        <div class="mt-0 mt-sm-2 d-block">
+                                            <h6 class="mb-0 fs-14 fw-semibold">
+                                                ${item.fields.username}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td class="text-center">
                                     <div class="d-flex">
                                         <div class="mt-0 mt-sm-2 d-block">
@@ -1280,106 +1335,110 @@
                 }
             }});
        })
-  
-       $('#searchbar').keydown(function (e){
-            if (e.keyCode == 13) {
-                var searchbar = $("#searchbar").val().trim()
-                urlTocall = `/admin-site/Profile/filter`
-                
-                queryDict['search'] = searchbar
-                if(Object.keys(queryDict).length > 0){
-                    urlTocall = "/admin-site/Profile/filter"
-                    counter = 0
-                    for(const property in queryDict) {
-                        counter = counter + 1
-                        if(counter == 1){
-                            
-                            urlTocall = urlTocall + `?${property}=${queryDict[property]}` 
-                        }else{
-                            
-                            urlTocall = urlTocall + `&${property}=${queryDict[property]}` 
-                        }
-                        
-                    }
+        {% comment %} Search Functionality {% endcomment %}
+       $('#searchbar').keydown(function (e) {
+        if (e.keyCode == 13) {
+        var searchbar = $("#searchbar").val().trim();
+        var queryDict = {};
+        var urlTocall = `/admin-site/Profile/filter`;
+        queryDict['search'] = searchbar;
+        if (Object.keys(queryDict).length > 0) {
+            urlTocall = "/admin-site/Profile/filter";
+            var counter = 0;
+            for (const property in queryDict) {
+                counter = counter + 1;
+                if (counter == 1) {
+                    urlTocall = urlTocall + `?${property}=${queryDict[property]}`;
+                } else {
+                    urlTocall = urlTocall + `&${property}=${queryDict[property]}`;
                 }
-            
-                 $.ajax({url: urlTocall, success: function(result){
-                
-                console.log("after success");
-                console.log(result, typeof result);
+            }
+        }
+        $.ajax({
+            url: urlTocall,
+            success: function (result) {
                 const data = JSON.parse(result);
-
-                $("#table_body").empty()
-                if(data.length != 0){
-                    $("#table_body").html(`
-                    ${data.map((item,index)=>{
+                $("#table_body").empty();
+                if (data.length != 0) {
+                    $("#table_body").html(`${data.map((item, index) => {
                         return `
-                            <tr class="border-bottom"> 
-                                <td class="text-center">
-                                    <div class="d-flex">
-                                        <div class="mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-0 fs-14 fw-semibold">
-                                                {% comment %} <input type="checkbox" class="export_data_row" id="{{row.pk}}"> {% endcomment %}
-                                           ${item.fields.profile_image ? `<img src="/media/${item.fields.profile_image}" style="width: 45px;">`:'None'}
-                                            </h6>
+                                <tr class="border-bottom"> 
+                                    <td class="text-center">
+                                        <div class="d-flex">
+                                            <div class="mt-0 mt-sm-2 d-block">
+                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                    {% comment %} <input type="checkbox" class="export_data_row" id="{{row.pk}}"> {% endcomment %}
+                                            ${item.fields.profile_image ? `<img src="/media/${item.fields.profile_image}" style="width: 45px;">` : 'None'}
+                                                </h6>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.name}">
-                                        <div class="mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-0 fs-14 fw-semibold">
-                                                ${item.fields.name}
-                                            </h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.name}">
+                                            <div class="mt-0 mt-sm-2 d-block">
+                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                    ${item.fields.name}
+                                                </h6>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex">
-                                        <div class="mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-0 fs-14 fw-semibold">
-                                                <span style="display:none">${toTimestamp(item.fields.created_at)}</span>${moment(new Date(item.fields.created_at)).format("MMM. D, 	YYYY, hh:mm a")}
-                                            </h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex profile_name" id="Profile - ${item.fields.username} - ${item.fields.username}">
+                                            <div class="mt-0 mt-sm-2 d-block">
+                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                    ${item.fields.username}
+                                                </h6>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex">
-                                        <div class="mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-0 fs-14 fw-semibold">
-                                                ${item.fields.city}
-                                            </h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex">
+                                            <div class="mt-0 mt-sm-2 d-block">
+                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                    <span style="display:none">${toTimestamp(item.fields.created_at)}</span>${moment(new Date(item.fields.created_at)).format("MMM. D, 	YYYY, hh:mm a")}
+                                                </h6>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex">
-                                        <div class="mt-0 mt-sm-2 d-block">
-                                            <h6 class="mb-0 fs-14 fw-semibold">
-                                                ${item.fields.country}
-                                            </h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex">
+                                            <div class="mt-0 mt-sm-2 d-block">
+                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                    ${item.fields.city}
+                                                </h6>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <div class="g-2">
-                                        <a href="/admin-site/ProfileEdit/Profile ${item.fields.uid}"
-                                            class="btn text-primary btn-sm"
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex">
+                                            <div class="mt-0 mt-sm-2 d-block">
+                                                <h6 class="mb-0 fs-14 fw-semibold">
+                                                    ${item.fields.country}
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="g-2">
+                                            <a href="/admin-site/ProfileEdit/Profile ${item.fields.uid}"
+                                                class="btn text-primary btn-sm"
+                                                data-bs-toggle="tooltip"
+                                                data-bs-original-title="Edit">
+                                                <span class="fe fe-edit fs-14">
+                                                </span>
+                                            </a>
+                                            <a class="btn text-danger btn-sm"
                                             data-bs-toggle="tooltip"
-                                            data-bs-original-title="Edit">
-                                            <span class="fe fe-edit fs-14">
-                                            </span>
-                                        </a>
-                                        <a class="btn text-danger btn-sm"
-                                        data-bs-toggle="tooltip"
-                                        data-bs-original-title="Delete"><span id="Profile ${item.fields.uid}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
-                                    </div>
-                                </td>
-                            </tr>`
-                        }).join('')}
-                    `)
-                }
-            }});
+                                            data-bs-original-title="Delete"><span id="Profile ${item.fields.uid}" class="fe fe-trash-2 fs-14 delete_class"></span></a>
+                                        </div>
+                                    </td>
+                                </tr>`
+                            }).join('')}
+                        }`)                        
+                    }
+                },error:function(){
+                    alert("Error")
+                }});
             }
             
        })
