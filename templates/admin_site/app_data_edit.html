@@ -8,13 +8,14 @@
     <div class="edit_form_title">
         <h3>Edit Form</h3>
     </div>
+    {% comment %} ON EDIT CLICK {% endcomment %}
     <div class="form_body">
         <form method="post" onsubmit="return validateForm()">
             {% csrf_token %}
             <div class="row">
                 <div class="col-lg-12 col-sm-12">
                     {% for row in result %}
-                    <p>{{row}}</p>
+                    {% comment %} <p>{{result}}</p> {% endcomment %}
                     <input type="hidden" id="username" name="username" value="{{ row.username }}">
                     <div class="col-lg-6">
                         <div class="profile_field">
@@ -27,11 +28,9 @@
                     <div class="col-lg-6">
                         <div class="profile_field">
                             <strong>Username</strong>
-                            
                             <div class="name">
                                 <input type="text" name="UID" value="{{ row.username }}" disabled>
                             </div>
-                           
                         </div>
                     </div>
                     <div class="col-lg-6">

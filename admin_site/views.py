@@ -211,6 +211,278 @@ def app_user(request):
     else:
         return redirect("login")
 
+# # export data
+# def export_excel(request):
+#     if "data" in request.GET:
+#         model_name = request.GET["data"]
+#         Model = apps.get_model("home", model_name)
+#         print("model_name", model_name)
+
+#     smallest_age_record = ""
+#     biggest_age_record = ""
+#     filter_mobile_val = ""
+#     latitude = ""
+#     longitude = ""
+
+#     result_queryset = Model.objects.all().order_by("-created_at")
+
+#     if "search" in request.GET:
+#         if request.GET["search"]:
+#             searchvalue = request.GET["search"]
+#             if model_name == "Profile":
+#                 result_queryset = Model.objects.filter(
+#                     Q(name__icontains=searchvalue)
+#                     | Q(mobile__icontains=searchvalue)
+#                     | Q(gender__icontains=searchvalue)
+#                     | Q(city__icontains=searchvalue)
+#                     | Q(country__icontains=searchvalue)
+#                 )
+#             elif model_name == "Product":
+#                 result_queryset = Model.objects.filter(
+#                     Q(productID__icontains=searchvalue)
+#                     | Q(product__icontains=searchvalue)
+#                     | Q(productPromo__icontains=searchvalue)
+#                     | Q(promoPrice__icontains=searchvalue)
+#                     | Q(annaulSubProd__icontains=searchvalue)
+#                     | Q(annaulSub__icontains=searchvalue)
+#                     | Q(monthlySubProd__icontains=searchvalue)
+#                     | Q(monthlySub__icontains=searchvalue)
+#                     | Q(localeId__icontains=searchvalue)
+#                 )
+#             elif model_name == "application_data_noauth":
+#                 result_queryset = Model.objects.filter(Q(inApp_Products=searchvalue))
+
+#             elif model_name == "Purchase":
+#                 result_queryset = Model.objects.filter(
+#                     Q(product=searchvalue)
+#                     | Q(pstatus=searchvalue)
+#                     | Q(subscription_type=searchvalue)
+#                 )
+#             elif model_name == "Tag":
+#                 result_queryset = Model.objects.filter(
+#                     Q(username=searchvalue) | Q(tag=searchvalue)
+#                 )
+#             elif model_name == "application_data":
+#                 result_queryset = Model.objects.filter(
+#                     Q(inApp_Products=searchvalue)
+#                     | Q(Device_Model=searchvalue)
+#                     | Q(operating_system=searchvalue)
+#                     | Q(Device_Storage=searchvalue)
+#                     | Q(Purchased_product=searchvalue)
+#                 )
+#             elif model_name == "user_preference":
+#                 result_queryset = Model.objects.filter(
+#                     Q(export_quality=searchvalue)
+#                     | Q(username=searchvalue)
+#                     | Q(signature=searchvalue)
+#                 )
+
+#     if "filter_mobile" in request.GET:
+#         if request.GET["filter_mobile"]:
+#             searchvalue = request.GET["filter_mobile"]
+#             filter_mobile_val = searchvalue
+#             result_queryset = result_queryset.filter(Q(mobile__icontains=searchvalue))
+
+#     if "gender" in request.GET:
+#         if request.GET["gender"]:
+#             val = request.GET["gender"]
+#             if val == "All":
+#                 result_queryset = result_queryset.all()
+#             if val == "Male":
+#                 result_queryset = result_queryset.filter(gender__iexact="Male")
+#             if val == "Female":
+#                 result_queryset = result_queryset.filter(gender__iexact="Female")
+#             if val == "Other":
+#                 result_queryset = result_queryset.filter(gender__iexact="Other")
+
+#     if "age" in request.GET:
+#         if request.GET["age"]:
+#             val = request.GET["age"]
+#             if val == "All":
+#                 result_queryset = result_queryset.all()
+#             if val == "twenty":
+#                 result_queryset = result_queryset.filter(
+#                     dob__gte=datetime.now() - timedelta(days=(365 * 30)),
+#                     dob__lt=datetime.now() - timedelta(days=(365 * 20)),
+#                 )
+#             if val == "thirty":
+#                 result_queryset = result_queryset.filter(
+#                     dob__gte=datetime.now() - timedelta(days=(365 * 40)),
+#                     dob__lt=datetime.now() - timedelta(days=(365 * 30)),
+#                 )
+#             if val == "greater":
+#                 result_queryset = result_queryset.filter(
+#                     dob__lte=datetime.now() - timedelta(days=(365 * 40))
+#                 )
+
+#     if "city" in request.GET:
+#         if request.GET["city"]:
+#             val = request.GET["city"]
+#             cities = Profile.objects.values("city").distinct()
+#             city_list1 = []
+#             for i in cities:
+#                 if i != "None" or i != "none":
+#                     city_list1.append(str(i["city"]).upper())
+#             city_list1 = set(city_list1)
+#             city_list = []
+#             for i in city_list1:
+#                 if i == "NONE":
+#                     pass
+#                 else:
+#                     city_list.append(i)
+
+#             if val == "All":
+#                 result_queryset = result_queryset.all()
+#             for i in city_list:
+#                 if i == val:
+#                     result_queryset = result_queryset.filter(city__iexact=val)
+
+#     if "country" in request.GET:
+#         if request.GET["country"]:
+#             val = request.GET["country"]
+#             countries = Profile.objects.values("country").distinct()
+#             country_list1 = []
+#             for i in countries:
+#                 if i != "None" or i != "none":
+#                     country_list1.append(str(i["country"]).upper())
+#             country_list1 = set(country_list1)
+#             country_list = []
+#             for i in country_list1:
+#                 if i == "NONE":
+#                     pass
+#                 else:
+#                     country_list.append(i)
+#             if val == "All":
+#                 result_queryset = result_queryset.all()
+#             for i in country_list:
+#                 if i == val:
+#                     result_queryset = result_queryset.filter(country__iexact=val)
+
+#     if "password_update" in request.GET:
+#         if request.GET["password_update"]:
+#             val = request.GET["password_update"]
+#             if val == "All":
+#                 result_queryset = result_queryset.all()
+#             if val == "today":
+#                 result_queryset = result_queryset.filter(
+#                     pass_update__exact=datetime.now()
+#                 )
+#             if val == "seven":
+#                 result_queryset = result_queryset.filter(
+#                     pass_update__gte=datetime.now() - timedelta(days=7),
+#                     pass_update__lte=datetime.now(),
+#                 )
+#             if val == "month":
+#                 result_queryset = result_queryset.filter(
+#                     pass_update__gte=datetime.now() - timedelta(days=30),
+#                     pass_update__lte=datetime.now(),
+#                 )
+#             if val == "year":
+#                 result_queryset = result_queryset.filter(
+#                     pass_update__gte=datetime.now() - timedelta(days=365),
+#                     pass_update__lte=datetime.now(),
+#                 )
+
+#     if "fromtodate" in request.GET:
+#         if request.GET["fromtodate"]:
+#             start_date = request.GET["start_date"]
+#             end_date = request.GET["end_date"]
+#             format_data = "%Y-%m-%d %H:%M:%S"
+#             if start_date:
+#                 start_date = datetime.strptime(start_date + " 00:00:00", format_data)
+#             if end_date:
+#                 end_date = datetime.strptime(end_date + " 23:59:59", format_data)
+
+#             if start_date or end_date:
+#                 result_queryset = result_queryset.filter(
+#                     created_at__gte=start_date, created_at__lte=end_date
+#                 )
+
+#     if "agefilter" in request.GET:
+#         if request.GET["agefilter"]:
+#             print("agefilter")
+#             start_age = request.GET["start_age"]
+#             end_age = request.GET["end_age"]
+
+#             if not start_age:
+#                 start_age = 0
+
+#             if len(end_age) == 0:
+#                 result_queryset = result_queryset.filter(
+#                     dob__lt=datetime.now() - timedelta(days=(365 * int(start_age)))
+#                 )
+#             else:
+#                 result_queryset = result_queryset.filter(
+#                     dob__gte=datetime.now() - timedelta(days=(365 * int(end_age))),
+#                     dob__lt=datetime.now() - timedelta(days=(365 * int(start_age))),
+#                 )
+
+#     if "radius" in request.GET:
+#         if request.GET["radius"]:
+#             latitude = request.GET["latitude"]
+#             longitude = request.GET["longitude"]
+#             result_queryset = result_queryset.filter(
+#                 Q(lat__icontains=latitude) | Q(long__icontains=longitude)
+#             )
+
+#     response = HttpResponse(content_type="application/ms-excel")
+#     response = HttpResponse()
+#     response["Content-Disposition"] = f"attachment;filename={model_name}.csv"
+#     writer = csv.writer(response)
+
+#     if "cols" in request.GET:
+#         cols = request.GET["cols"]
+#         cols_list = cols.split(",")
+
+#         all = {}
+#         for i in cols_list:
+#             info = Model.objects.only(i)
+#             all[i] = info
+
+#         writer.writerow(cols_list)
+#         for i, j in all.items():
+#             for obj in j:
+#                 columns_dict = {}
+#                 for field in cols_list:
+
+#                     if field == "profile_image":
+#                         if getattr(obj, field):
+#                             columns_dict[field] = "http://127.0.0.1:8001/media/" + str(
+#                                 getattr(obj, field)
+#                             )
+#                         else:
+#                             columns_dict[field] = getattr(obj, field)
+#                     else:
+#                         columns_dict[field] = getattr(obj, field)
+#                 writer.writerow(list(columns_dict.values()))
+#             break
+#         print(response)
+#         return response
+
+#     # if 'users' in request.GET:
+#     #     users = request.GET['users']
+#     #     users_list = users.split(",")
+#     #     res = [int(i) for i in users_list]
+#     #     result_queryset = Profile.objects.filter(pk__in = res)
+
+#     opts = result_queryset.model._meta
+#     field_names = [field.name for field in opts.fields]
+#     writer.writerow(field_names)
+#     for obj in result_queryset:
+#         temp_list = []
+#         for field in field_names:
+#             if field == "profile_image":
+#                 if getattr(obj, field):
+#                     temp_list.append(
+#                         "http://127.0.0.1:8001/media/" + str(getattr(obj, field))
+#                     )
+#                 else:
+#                     temp_list.append(getattr(obj, field))
+#             else:
+#                 temp_list.append(getattr(obj, field))
+#         writer.writerow(temp_list)
+#     return response
+
 # export data
 def export_excel(request):
     if "data" in request.GET:
@@ -225,7 +497,6 @@ def export_excel(request):
     longitude = ""
 
     result_queryset = Model.objects.all().order_by("-created_at")
-
     if "search" in request.GET:
         if request.GET["search"]:
             searchvalue = request.GET["search"]
@@ -424,62 +695,80 @@ def export_excel(request):
             result_queryset = result_queryset.filter(
                 Q(lat__icontains=latitude) | Q(long__icontains=longitude)
             )
-
-    response = HttpResponse(content_type="application/ms-excel")
-    response = HttpResponse()
+    response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = f"attachment;filename={model_name}.csv"
+
     writer = csv.writer(response)
-
-    if "cols" in request.GET:
-        cols = request.GET["cols"]
-        cols_list = cols.split(",")
-
-        all = {}
-        for i in cols_list:
-            info = Model.objects.only(i)
-            all[i] = info
-
-        writer.writerow(cols_list)
-        for i, j in all.items():
-            for obj in j:
-                columns_dict = {}
-                for field in cols_list:
-
-                    if field == "profile_image":
-                        if getattr(obj, field):
-                            columns_dict[field] = "http://127.0.0.1:8001/media/" + str(
-                                getattr(obj, field)
-                            )
-                        else:
-                            columns_dict[field] = getattr(obj, field)
-                    else:
-                        columns_dict[field] = getattr(obj, field)
-                writer.writerow(list(columns_dict.values()))
-            break
-        return response
-
-    # if 'users' in request.GET:
-    #     users = request.GET['users']
-    #     users_list = users.split(",")
-    #     res = [int(i) for i in users_list]
-    #     result_queryset = Profile.objects.filter(pk__in = res)
-
-    opts = result_queryset.model._meta
-    field_names = [field.name for field in opts.fields]
+    field_names = [
+        "id",
+        "username",
+        "first_name",
+        "last_name",
+        "email",
+        "social_media_site",
+        "name",
+        "mobile",
+        "gender",
+        "profile_image",
+        "created_at",
+        "pass_update",
+        "pass_forgot",
+        "updated_at",
+        "dob",
+        "city",
+        "country",
+        "lat",
+        "long",
+        "snap",
+        "fb",
+        "insta",
+        "website",
+        "avatar",
+        "bitmoji",
+        "delete_account",
+        "expiration_date",
+        "count_for_forgot_pass",
+        "time_for_forgot_pass",
+        "is_social",
+    ]
     writer.writerow(field_names)
-    for obj in result_queryset:
-        temp_list = []
-        for field in field_names:
-            if field == "profile_image":
-                if getattr(obj, field):
-                    temp_list.append(
-                        "http://127.0.0.1:8001/media/" + str(getattr(obj, field))
-                    )
-                else:
-                    temp_list.append(getattr(obj, field))
-            else:
-                temp_list.append(getattr(obj, field))
+
+    for profile in Profile.objects.all():
+        custom_user = profile.username
+        temp_list = [
+            profile.uid,
+            custom_user.username,
+            custom_user.first_name,
+            custom_user.last_name,
+            custom_user.email,
+            custom_user.social_media_site,
+            profile.name,
+            profile.mobile,
+            profile.gender,
+            "http://127.0.0.1:8001/media/" + str(profile.profile_image) if profile.profile_image else None,
+            profile.created_at,
+            profile.pass_update,
+            profile.pass_forgot,
+            profile.updated_at,
+            profile.dob,
+            profile.city,
+            profile.country,
+            profile.lat,
+            profile.long,
+            profile.snap,
+            profile.fb,
+            profile.insta,
+            profile.website,
+            "http://127.0.0.1:8001/media/" + str(profile.avatar) if profile.avatar else None,
+            "http://127.0.0.1:8001/media/" + str(profile.bitmoji) if profile.bitmoji else None,
+            profile.delete_account,
+            profile.expiration_date,
+            profile.count_for_forgot_pass,
+            profile.time_for_forgot_pass,
+            profile.is_social,
+        ]
         writer.writerow(temp_list)
+
     return response
 
 # profile model data
@@ -1412,6 +1701,7 @@ def app_data_edit(request, para):
     if request.user.is_authenticated:
 
         if request.method == "POST":
+            print("REQUEST.POST")
             username = request.POST["username"]
             UID = request.POST["UID"]
             inApp_Products = request.POST["inApp_Products"]
@@ -1504,7 +1794,7 @@ def no_auth_app_data_edit(request, para):
 
     if request.user.is_authenticated:
         if request.method == "POST":
-
+            print("POST METHOD")
             UID = request.POST["UID"]
             inApp_Products = request.POST["inApp_Products"]
             Purchase_date = request.POST["Purchase_date"]
@@ -1612,6 +1902,8 @@ def no_auth_app_data_edit(request, para):
             res = []
             for i in data:
                 res.append(i["fields"])
+                
+            print(res)
             return render(
                 request, "admin_site/no_auth_app_data_edit.html", {"result": res}
             )
