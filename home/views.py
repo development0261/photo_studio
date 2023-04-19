@@ -364,6 +364,8 @@ def social_media_registration(request):
 						profile_obj.profile_image = profile_image
 					profile_obj.save()
 					serializer_class = SocialSerializer(profile_obj)
+					print(serializer_class)
+					
 					result["value"] = True
 					result['message']='success'
 					result["data"] = serializer_class.data
@@ -376,7 +378,6 @@ def social_media_registration(request):
 					else:
 						user_obj.auth_token = "{"+str(result['data']['token'])+"}"
 					user_obj.save()
-
 					return Response(result, status=status.HTTP_200_OK)
 				else:
 					user_obj = User.objects.get(token=token)
@@ -399,12 +400,10 @@ def social_media_registration(request):
 					else:
 						user_obj.auth_token = "{"+str(result['data']['token'])+"}"
 					user_obj.save()
-
 					return Response(result, status=status.HTTP_200_OK)
 
 			elif social_media_site.lower()=="google":
 				url = f'https://oauth2.googleapis.com/tokeninfo?id_token={token}'
-				print(url)
 				r = requests.get(url = url)
 				data = r.json()
 
@@ -412,7 +411,6 @@ def social_media_registration(request):
 					result["value"] = False
 					result["message"] = "Please check your token!"
 					result["data"]=None
-     
 					return Response(result, status=status.HTTP_200_OK)
 				social_id = data['sub']
 			elif social_media_site.lower()=="facebook":
@@ -477,7 +475,6 @@ def social_media_registration(request):
 				else:
 					user_obj.auth_token = "{"+str(result['data']['token'])+"}"
 				user_obj.save()
-				print(result)
 				return Response(result, status=status.HTTP_200_OK)
 
 	else:
@@ -599,7 +596,6 @@ def send_link(request):
 # reset-password 
 @api_view(['GET'])
 def reset_password(request):
-	print("hiiiiiiiii")
 	result = dict()
 	token = request.GET.get('token')
 	if request.method == "GET":
@@ -778,7 +774,6 @@ def profile(request):
 		result["message"] = "Please enter auth token!"
 		result['data']=None
      	# result['data']=None
-		print("result###-----",result)
 		return Response(result, status=status.HTTP_200_OK)
 	# try:
 	
@@ -894,7 +889,6 @@ def profile(request):
 		profile_obj.avatar = avatar_image
 		profile_obj.bitmoji = bitmoji
 		profile_obj.updated_at = datetime.now()
-		print(country_code)
 		if country_code:
 			profile_obj.country_code = country_code
 		else:

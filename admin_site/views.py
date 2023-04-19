@@ -1264,7 +1264,6 @@ def view_app_data(request, info):
         obj = application_data.objects.filter(UID=infolist[2])
         data = serializers.serialize("json", obj)
         data = json.loads(data[1:-1])
-        print(data)
         return JsonResponse({"res": data})
     else:
         return redirect("login")
@@ -1437,7 +1436,6 @@ def admin_edit(request, para):
 
         elif request.method == "GET":
             modal_id = para.split(" ")
-            print("->", modal_id)
             obj = custom_user.objects.filter(username=modal_id[0])
             data = serializers.serialize("json", obj)
             data = json.loads(data)
@@ -1698,10 +1696,10 @@ def preferences_edit(request, para):
         return redirect("login")
 
 def app_data_edit(request, para):
+    print("app_data_edit")
     if request.user.is_authenticated:
 
         if request.method == "POST":
-            print("REQUEST.POST")
             username = request.POST["username"]
             UID = request.POST["UID"]
             inApp_Products = request.POST["inApp_Products"]
@@ -1779,14 +1777,16 @@ def app_data_edit(request, para):
 
         elif request.method == "GET":
             modal_id = para.split(" ")
-            print(modal_id)
             obj = application_data.objects.filter(aid=modal_id[1])
+            print(obj)
+            print(modal_id[-1])
             data = serializers.serialize("json", obj)
             data = json.loads(data)
+            # print(data)
             res = []
             for i in data:
                 res.append(i["fields"])
-            return render(request, "admin_site/app_data_edit.html", {"result": res})
+            return render(request, "admin_site/app_data_edit.html", {"result": res,"user__":modal_id[-1]})
     else:
         return redirect("login")
 
@@ -1902,8 +1902,6 @@ def no_auth_app_data_edit(request, para):
             res = []
             for i in data:
                 res.append(i["fields"])
-                
-            print(res)
             return render(
                 request, "admin_site/no_auth_app_data_edit.html", {"result": res}
             )
@@ -2204,7 +2202,6 @@ def filter(request):
                 | Q(long__icontains=searchvalue)
                 | Q(dob__icontains=searchvalue)
             )
-            print(total_profiles)
         
         
         if "filter_mobile" in request.GET:
@@ -2352,9 +2349,6 @@ def filter(request):
             p = Paginator(total_profiles, 10)
         page_number = request.GET.get("page")
         page_obj = p.get_page(page_number)
-        print(page_obj)
-        print(serializers.serialize(queryset=page_obj, format="json"))
-
         return HttpResponse(serializers.serialize(queryset=page_obj, format="json"))
         # return JsonResponse({"total_profiles": page_obj})
 

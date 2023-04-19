@@ -1,0 +1,1136 @@
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+app_data_edit
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+SocialSerializer(<Profile: AhmadWahbeh9482150 - >):
+    uid = IntegerField(read_only=True)
+    token = SerializerMethodField(read_only=True)
+    user = SerializerMethodField(read_only=True, source='username')
+    name = CharField(allow_blank=True, allow_null=True, max_length=50, required=False)
+    mobile = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    gender = ChoiceField(allow_blank=True, allow_null=True, choices=(('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')), required=False)
+    profile_image = ImageField(allow_null=True, max_length=100, required=False)
+    created_at = DateTimeField(read_only=True)
+    pass_update = DateField(allow_null=True, required=False)
+    pass_forgot = DateField(allow_null=True, required=False)
+    updated_at = DateTimeField(allow_null=True, required=False)
+    dob = DateField(allow_null=True, required=False)
+    city = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country_code = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    lat = FloatField(allow_null=True, required=False)
+    long = FloatField(allow_null=True, required=False)
+    snap = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    fb = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    insta = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    website = CharField(allow_blank=True, allow_null=True, max_length=100, required=False)
+    avatar = ImageField(allow_null=True, max_length=100, required=False)
+    bitmoji = ImageField(allow_null=True, max_length=100, required=False)
+    delete_account = BooleanField(required=False)
+    expiration_date = DateTimeField(allow_null=True, required=False)
+    count_for_forgot_pass = IntegerField(max_value=32767, min_value=0, required=False)
+    time_for_forgot_pass = DateTimeField(allow_null=True, required=False)
+    is_social = BooleanField(required=False)
+{'value': True, 'message': 'success', 'data': {'uid': 23422, 'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzEzNDM4MDM5LCJpYXQiOjE2ODE5MDIwMzksImp0aSI6Ijg5MDgzZTg1NWRiOTQwNTI4ZWRmN2Q1ZTg5NGZlZTVhIiwidXNlcl9pZCI6MjE3MTR9.v-HNtwjlVkYgel09DoGaACwWWUApe4fAcfYm3XjrqD8', 'user': {'first_name': 'Ahmad', 'last_name': 'Wahbeh', 'token': '001237.2dfe45cd0d5b473084c9574d4b2507f7.1100', 'email': '', 'username': 'AhmadWahbeh9482150', 'social_media_site': 'Apple', 'social_id': None}, 'name': '', 'mobile': None, 'gender': None, 'profile_image': None, 'created_at': '2023-04-19T11:00:39.040911Z', 'pass_update': None, 'pass_forgot': None, 'updated_at': None, 'dob': None, 'city': '', 'country_code': None, 'country': '', 'lat': None, 'long': None, 'snap': None, 'fb': None, 'insta': None, 'website': None, 'avatar': None, 'bitmoji': None, 'delete_account': False, 'expiration_date': None, 'count_for_forgot_pass': 0, 'time_for_forgot_pass': None, 'is_social': True, 'InAppPurchaseHistory': None}}
+[2023-04-19 11:00:51 +0000] [2638929] [INFO] Worker exiting (pid: 2638929)
+[2023-04-19 11:00:51 +0000] [2638927] [INFO] Handling signal: term
+[2023-04-19 11:00:52 +0000] [2638927] [INFO] Shutting down: Master
+[2023-04-19 11:00:57 +0000] [2644002] [INFO] Starting gunicorn 20.1.0
+[2023-04-19 11:00:57 +0000] [2644002] [INFO] Listening at: http://127.0.0.1:8000 (2644002)
+[2023-04-19 11:00:57 +0000] [2644002] [INFO] Using worker: sync
+[2023-04-19 11:00:57 +0000] [2644004] [INFO] Booting worker with pid: 2644004
+app_data_edit======
+<WSGIRequest: GET '/admin-site/EditAppData/application_data%2069%20Testing12'>
+<QuerySet [<application_data: Testing12 - 23>]>
+Testing12
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+[2023-04-19 11:05:43 +0000] [2644004] [INFO] Worker exiting (pid: 2644004)
+[2023-04-19 11:05:43 +0000] [2644002] [INFO] Handling signal: term
+[2023-04-19 11:05:43 +0000] [2644002] [INFO] Shutting down: Master
+[2023-04-19 11:05:47 +0000] [2645058] [INFO] Starting gunicorn 20.1.0
+[2023-04-19 11:05:47 +0000] [2645058] [INFO] Listening at: http://127.0.0.1:8000 (2645058)
+[2023-04-19 11:05:47 +0000] [2645058] [INFO] Using worker: sync
+[2023-04-19 11:05:47 +0000] [2645060] [INFO] Booting worker with pid: 2645060
+app_data_edit
+<QuerySet [<application_data: Testing12 - 23>]>
+Testing12
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+[2023-04-19 11:06:37 +0000] [2645060] [INFO] Worker exiting (pid: 2645060)
+[2023-04-19 11:06:37 +0000] [2645058] [INFO] Handling signal: term
+[2023-04-19 11:06:37 +0000] [2645058] [INFO] Shutting down: Master
+[2023-04-19 11:06:40 +0000] [2645270] [INFO] Starting gunicorn 20.1.0
+[2023-04-19 11:06:40 +0000] [2645270] [INFO] Listening at: http://127.0.0.1:8000 (2645270)
+[2023-04-19 11:06:40 +0000] [2645270] [INFO] Using worker: sync
+[2023-04-19 11:06:40 +0000] [2645272] [INFO] Booting worker with pid: 2645272
+profile_model
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+RakanEnazi2574407
+/root/Photo_Studio/photo_studio/admin_site/views.py:2349: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'home.models.Profile'> QuerySet.
+  p = Paginator(total_profiles, 10)
+profile_model
+/root/Photo_Studio/photo_studio/admin_site/views.py:949: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'home.models.Profile'> QuerySet.
+  p = Paginator(total_profiles, 10)
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+AhmadWahbeh9482150
+profile_model
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+SocialSerializer(<Profile: BaselAladwan1147862 - >):
+    uid = IntegerField(read_only=True)
+    token = SerializerMethodField(read_only=True)
+    user = SerializerMethodField(read_only=True, source='username')
+    name = CharField(allow_blank=True, allow_null=True, max_length=50, required=False)
+    mobile = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    gender = ChoiceField(allow_blank=True, allow_null=True, choices=(('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')), required=False)
+    profile_image = ImageField(allow_null=True, max_length=100, required=False)
+    created_at = DateTimeField(read_only=True)
+    pass_update = DateField(allow_null=True, required=False)
+    pass_forgot = DateField(allow_null=True, required=False)
+    updated_at = DateTimeField(allow_null=True, required=False)
+    dob = DateField(allow_null=True, required=False)
+    city = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country_code = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    lat = FloatField(allow_null=True, required=False)
+    long = FloatField(allow_null=True, required=False)
+    snap = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    fb = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    insta = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    website = CharField(allow_blank=True, allow_null=True, max_length=100, required=False)
+    avatar = ImageField(allow_null=True, max_length=100, required=False)
+    bitmoji = ImageField(allow_null=True, max_length=100, required=False)
+    delete_account = BooleanField(required=False)
+    expiration_date = DateTimeField(allow_null=True, required=False)
+    count_for_forgot_pass = IntegerField(max_value=32767, min_value=0, required=False)
+    time_for_forgot_pass = DateTimeField(allow_null=True, required=False)
+    is_social = BooleanField(required=False)
+SocialSerializer(<Profile: HUSSEINALHAMADI3478753 - >):
+    uid = IntegerField(read_only=True)
+    token = SerializerMethodField(read_only=True)
+    user = SerializerMethodField(read_only=True, source='username')
+    name = CharField(allow_blank=True, allow_null=True, max_length=50, required=False)
+    mobile = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    gender = ChoiceField(allow_blank=True, allow_null=True, choices=(('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')), required=False)
+    profile_image = ImageField(allow_null=True, max_length=100, required=False)
+    created_at = DateTimeField(read_only=True)
+    pass_update = DateField(allow_null=True, required=False)
+    pass_forgot = DateField(allow_null=True, required=False)
+    updated_at = DateTimeField(allow_null=True, required=False)
+    dob = DateField(allow_null=True, required=False)
+    city = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country_code = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    lat = FloatField(allow_null=True, required=False)
+    long = FloatField(allow_null=True, required=False)
+    snap = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    fb = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    insta = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    website = CharField(allow_blank=True, allow_null=True, max_length=100, required=False)
+    avatar = ImageField(allow_null=True, max_length=100, required=False)
+    bitmoji = ImageField(allow_null=True, max_length=100, required=False)
+    delete_account = BooleanField(required=False)
+    expiration_date = DateTimeField(allow_null=True, required=False)
+    count_for_forgot_pass = IntegerField(max_value=32767, min_value=0, required=False)
+    time_for_forgot_pass = DateTimeField(allow_null=True, required=False)
+    is_social = BooleanField(required=False)
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+/root/Photo_Studio/photo_studio/admin_site/views.py:205: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'home.models.custom_user'> QuerySet.
+  p = Paginator(locals, 10)
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+view_profile
+View Purchase
+SocialSerializer(<Profile: ueqiwrhbnkmqebr2945446 - >):
+    uid = IntegerField(read_only=True)
+    token = SerializerMethodField(read_only=True)
+    user = SerializerMethodField(read_only=True, source='username')
+    name = CharField(allow_blank=True, allow_null=True, max_length=50, required=False)
+    mobile = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    gender = ChoiceField(allow_blank=True, allow_null=True, choices=(('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')), required=False)
+    profile_image = ImageField(allow_null=True, max_length=100, required=False)
+    created_at = DateTimeField(read_only=True)
+    pass_update = DateField(allow_null=True, required=False)
+    pass_forgot = DateField(allow_null=True, required=False)
+    updated_at = DateTimeField(allow_null=True, required=False)
+    dob = DateField(allow_null=True, required=False)
+    city = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country_code = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    lat = FloatField(allow_null=True, required=False)
+    long = FloatField(allow_null=True, required=False)
+    snap = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    fb = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    insta = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    website = CharField(allow_blank=True, allow_null=True, max_length=100, required=False)
+    avatar = ImageField(allow_null=True, max_length=100, required=False)
+    bitmoji = ImageField(allow_null=True, max_length=100, required=False)
+    delete_account = BooleanField(required=False)
+    expiration_date = DateTimeField(allow_null=True, required=False)
+    count_for_forgot_pass = IntegerField(max_value=32767, min_value=0, required=False)
+    time_for_forgot_pass = DateTimeField(allow_null=True, required=False)
+    is_social = BooleanField(required=False)
+profile_model
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+SocialSerializer(<Profile: SS5799239 - >):
+    uid = IntegerField(read_only=True)
+    token = SerializerMethodField(read_only=True)
+    user = SerializerMethodField(read_only=True, source='username')
+    name = CharField(allow_blank=True, allow_null=True, max_length=50, required=False)
+    mobile = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    gender = ChoiceField(allow_blank=True, allow_null=True, choices=(('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')), required=False)
+    profile_image = ImageField(allow_null=True, max_length=100, required=False)
+    created_at = DateTimeField(read_only=True)
+    pass_update = DateField(allow_null=True, required=False)
+    pass_forgot = DateField(allow_null=True, required=False)
+    updated_at = DateTimeField(allow_null=True, required=False)
+    dob = DateField(allow_null=True, required=False)
+    city = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country_code = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    lat = FloatField(allow_null=True, required=False)
+    long = FloatField(allow_null=True, required=False)
+    snap = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    fb = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    insta = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    website = CharField(allow_blank=True, allow_null=True, max_length=100, required=False)
+    avatar = ImageField(allow_null=True, max_length=100, required=False)
+    bitmoji = ImageField(allow_null=True, max_length=100, required=False)
+    delete_account = BooleanField(required=False)
+    expiration_date = DateTimeField(allow_null=True, required=False)
+    count_for_forgot_pass = IntegerField(max_value=32767, min_value=0, required=False)
+    time_for_forgot_pass = DateTimeField(allow_null=True, required=False)
+    is_social = BooleanField(required=False)
+profile_model
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+Odai ALI1
+profile_model
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+profile_model
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+SS5799239
+profile_model
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+profile_model
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+profile_model
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+SocialSerializer(<Profile: LatifahAlhajery5196064 - >):
+    uid = IntegerField(read_only=True)
+    token = SerializerMethodField(read_only=True)
+    user = SerializerMethodField(read_only=True, source='username')
+    name = CharField(allow_blank=True, allow_null=True, max_length=50, required=False)
+    mobile = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    gender = ChoiceField(allow_blank=True, allow_null=True, choices=(('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')), required=False)
+    profile_image = ImageField(allow_null=True, max_length=100, required=False)
+    created_at = DateTimeField(read_only=True)
+    pass_update = DateField(allow_null=True, required=False)
+    pass_forgot = DateField(allow_null=True, required=False)
+    updated_at = DateTimeField(allow_null=True, required=False)
+    dob = DateField(allow_null=True, required=False)
+    city = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country_code = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    lat = FloatField(allow_null=True, required=False)
+    long = FloatField(allow_null=True, required=False)
+    snap = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    fb = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    insta = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    website = CharField(allow_blank=True, allow_null=True, max_length=100, required=False)
+    avatar = ImageField(allow_null=True, max_length=100, required=False)
+    bitmoji = ImageField(allow_null=True, max_length=100, required=False)
+    delete_account = BooleanField(required=False)
+    expiration_date = DateTimeField(allow_null=True, required=False)
+    count_for_forgot_pass = IntegerField(max_value=32767, min_value=0, required=False)
+    time_for_forgot_pass = DateTimeField(allow_null=True, required=False)
+    is_social = BooleanField(required=False)
+SocialSerializer(<Profile: HamadAlkaabi5550679 - >):
+    uid = IntegerField(read_only=True)
+    token = SerializerMethodField(read_only=True)
+    user = SerializerMethodField(read_only=True, source='username')
+    name = CharField(allow_blank=True, allow_null=True, max_length=50, required=False)
+    mobile = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    gender = ChoiceField(allow_blank=True, allow_null=True, choices=(('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')), required=False)
+    profile_image = ImageField(allow_null=True, max_length=100, required=False)
+    created_at = DateTimeField(read_only=True)
+    pass_update = DateField(allow_null=True, required=False)
+    pass_forgot = DateField(allow_null=True, required=False)
+    updated_at = DateTimeField(allow_null=True, required=False)
+    dob = DateField(allow_null=True, required=False)
+    city = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country_code = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    lat = FloatField(allow_null=True, required=False)
+    long = FloatField(allow_null=True, required=False)
+    snap = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    fb = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    insta = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    website = CharField(allow_blank=True, allow_null=True, max_length=100, required=False)
+    avatar = ImageField(allow_null=True, max_length=100, required=False)
+    bitmoji = ImageField(allow_null=True, max_length=100, required=False)
+    delete_account = BooleanField(required=False)
+    expiration_date = DateTimeField(allow_null=True, required=False)
+    count_for_forgot_pass = IntegerField(max_value=32767, min_value=0, required=False)
+    time_for_forgot_pass = DateTimeField(allow_null=True, required=False)
+    is_social = BooleanField(required=False)
+SocialSerializer(<Profile: AlaaMohammed5297374 - >):
+    uid = IntegerField(read_only=True)
+    token = SerializerMethodField(read_only=True)
+    user = SerializerMethodField(read_only=True, source='username')
+    name = CharField(allow_blank=True, allow_null=True, max_length=50, required=False)
+    mobile = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    gender = ChoiceField(allow_blank=True, allow_null=True, choices=(('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')), required=False)
+    profile_image = ImageField(allow_null=True, max_length=100, required=False)
+    created_at = DateTimeField(read_only=True)
+    pass_update = DateField(allow_null=True, required=False)
+    pass_forgot = DateField(allow_null=True, required=False)
+    updated_at = DateTimeField(allow_null=True, required=False)
+    dob = DateField(allow_null=True, required=False)
+    city = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country_code = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    lat = FloatField(allow_null=True, required=False)
+    long = FloatField(allow_null=True, required=False)
+    snap = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    fb = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    insta = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    website = CharField(allow_blank=True, allow_null=True, max_length=100, required=False)
+    avatar = ImageField(allow_null=True, max_length=100, required=False)
+    bitmoji = ImageField(allow_null=True, max_length=100, required=False)
+    delete_account = BooleanField(required=False)
+    expiration_date = DateTimeField(allow_null=True, required=False)
+    count_for_forgot_pass = IntegerField(max_value=32767, min_value=0, required=False)
+    time_for_forgot_pass = DateTimeField(allow_null=True, required=False)
+    is_social = BooleanField(required=False)
+[2023-04-19 11:42:26 +0000] [2645272] [INFO] Worker exiting (pid: 2645272)
+[2023-04-19 11:42:26 +0000] [2645270] [INFO] Handling signal: term
+[2023-04-19 11:42:26 +0000] [2645270] [INFO] Shutting down: Master
+[2023-04-19 11:42:34 +0000] [2651445] [INFO] Starting gunicorn 20.1.0
+[2023-04-19 11:42:34 +0000] [2651445] [INFO] Listening at: http://127.0.0.1:8000 (2651445)
+[2023-04-19 11:42:34 +0000] [2651445] [INFO] Using worker: sync
+[2023-04-19 11:42:34 +0000] [2651453] [INFO] Booting worker with pid: 2651453
+[2023-04-19 11:45:35 +0000] [2651453] [INFO] Worker exiting (pid: 2651453)
+[2023-04-19 11:45:35 +0000] [2651445] [INFO] Handling signal: term
+[2023-04-19 11:45:35 +0000] [2651445] [INFO] Shutting down: Master
+[2023-04-19 11:45:43 +0000] [2652066] [INFO] Starting gunicorn 20.1.0
+[2023-04-19 11:45:43 +0000] [2652066] [INFO] Listening at: http://127.0.0.1:8000 (2652066)
+[2023-04-19 11:45:43 +0000] [2652066] [INFO] Using worker: sync
+[2023-04-19 11:45:43 +0000] [2652068] [INFO] Booting worker with pid: 2652068
+/root/Photo_Studio/photo_studio/admin_site/views.py:205: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'home.models.custom_user'> QuerySet.
+  p = Paginator(locals, 10)
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+[2023-04-19 11:47:46 +0000] [2652068] [INFO] Worker exiting (pid: 2652068)
+[2023-04-19 11:47:46 +0000] [2652066] [INFO] Handling signal: term
+[2023-04-19 11:47:47 +0000] [2652066] [INFO] Shutting down: Master
+[2023-04-19 11:47:54 +0000] [2652353] [INFO] Starting gunicorn 20.1.0
+[2023-04-19 11:47:54 +0000] [2652353] [INFO] Listening at: http://127.0.0.1:8000 (2652353)
+[2023-04-19 11:47:54 +0000] [2652353] [INFO] Using worker: sync
+[2023-04-19 11:47:54 +0000] [2652355] [INFO] Booting worker with pid: 2652355
+/root/Photo_Studio/photo_studio/admin_site/views.py:205: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'home.models.custom_user'> QuerySet.
+  p = Paginator(locals, 10)
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+[2023-04-19 11:53:34 +0000] [2652355] [INFO] Worker exiting (pid: 2652355)
+[2023-04-19 11:53:34 +0000] [2652353] [INFO] Handling signal: term
+[2023-04-19 11:53:34 +0000] [2652353] [INFO] Shutting down: Master
+[2023-04-19 11:53:37 +0000] [2653213] [INFO] Starting gunicorn 20.1.0
+[2023-04-19 11:53:37 +0000] [2653213] [INFO] Listening at: http://127.0.0.1:8000 (2653213)
+[2023-04-19 11:53:37 +0000] [2653213] [INFO] Using worker: sync
+[2023-04-19 11:53:37 +0000] [2653215] [INFO] Booting worker with pid: 2653215
+SocialSerializer(<Profile: KhuloodAlmarri3462449 - >):
+    uid = IntegerField(read_only=True)
+    token = SerializerMethodField(read_only=True)
+    user = SerializerMethodField(read_only=True, source='username')
+    name = CharField(allow_blank=True, allow_null=True, max_length=50, required=False)
+    mobile = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    gender = ChoiceField(allow_blank=True, allow_null=True, choices=(('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')), required=False)
+    profile_image = ImageField(allow_null=True, max_length=100, required=False)
+    created_at = DateTimeField(read_only=True)
+    pass_update = DateField(allow_null=True, required=False)
+    pass_forgot = DateField(allow_null=True, required=False)
+    updated_at = DateTimeField(allow_null=True, required=False)
+    dob = DateField(allow_null=True, required=False)
+    city = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country_code = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    lat = FloatField(allow_null=True, required=False)
+    long = FloatField(allow_null=True, required=False)
+    snap = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    fb = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    insta = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    website = CharField(allow_blank=True, allow_null=True, max_length=100, required=False)
+    avatar = ImageField(allow_null=True, max_length=100, required=False)
+    bitmoji = ImageField(allow_null=True, max_length=100, required=False)
+    delete_account = BooleanField(required=False)
+    expiration_date = DateTimeField(allow_null=True, required=False)
+    count_for_forgot_pass = IntegerField(max_value=32767, min_value=0, required=False)
+    time_for_forgot_pass = DateTimeField(allow_null=True, required=False)
+    is_social = BooleanField(required=False)
+/root/Photo_Studio/photo_studio/admin_site/views.py:205: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'home.models.custom_user'> QuerySet.
+  p = Paginator(locals, 10)
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+SocialSerializer(<Profile: RamiZeboun2270173 - >):
+    uid = IntegerField(read_only=True)
+    token = SerializerMethodField(read_only=True)
+    user = SerializerMethodField(read_only=True, source='username')
+    name = CharField(allow_blank=True, allow_null=True, max_length=50, required=False)
+    mobile = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    gender = ChoiceField(allow_blank=True, allow_null=True, choices=(('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')), required=False)
+    profile_image = ImageField(allow_null=True, max_length=100, required=False)
+    created_at = DateTimeField(read_only=True)
+    pass_update = DateField(allow_null=True, required=False)
+    pass_forgot = DateField(allow_null=True, required=False)
+    updated_at = DateTimeField(allow_null=True, required=False)
+    dob = DateField(allow_null=True, required=False)
+    city = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country_code = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    lat = FloatField(allow_null=True, required=False)
+    long = FloatField(allow_null=True, required=False)
+    snap = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    fb = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    insta = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    website = CharField(allow_blank=True, allow_null=True, max_length=100, required=False)
+    avatar = ImageField(allow_null=True, max_length=100, required=False)
+    bitmoji = ImageField(allow_null=True, max_length=100, required=False)
+    delete_account = BooleanField(required=False)
+    expiration_date = DateTimeField(allow_null=True, required=False)
+    count_for_forgot_pass = IntegerField(max_value=32767, min_value=0, required=False)
+    time_for_forgot_pass = DateTimeField(allow_null=True, required=False)
+    is_social = BooleanField(required=False)
+[2023-04-19 11:59:51 +0000] [2653215] [INFO] Worker exiting (pid: 2653215)
+[2023-04-19 11:59:51 +0000] [2653213] [INFO] Handling signal: term
+[2023-04-19 11:59:51 +0000] [2653213] [INFO] Shutting down: Master
+[2023-04-19 11:59:55 +0000] [2654177] [INFO] Starting gunicorn 20.1.0
+[2023-04-19 11:59:55 +0000] [2654177] [INFO] Listening at: http://127.0.0.1:8000 (2654177)
+[2023-04-19 11:59:55 +0000] [2654177] [INFO] Using worker: sync
+[2023-04-19 11:59:55 +0000] [2654179] [INFO] Booting worker with pid: 2654179
+/root/Photo_Studio/photo_studio/admin_site/views.py:205: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'home.models.custom_user'> QuerySet.
+  p = Paginator(locals, 10)
+Internal Server Error: /admin-site/AppUsers/
+Traceback (most recent call last):
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/root/Photo_Studio/photo_studio/admin_site/views.py", line 210, in app_user
+    return render(request, "admin_site/user_model.html", {"locals": page_obj})
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/shortcuts.py", line 19, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/backends/django.py", line 34, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/engine.py", line 143, in get_template
+    template, origin = self.find_template(template_name)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/engine.py", line 125, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/loaders/base.py", line 29, in get_template
+    return Template(
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 193, in compile_nodelist
+    return parser.parse()
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 478, in parse
+    raise self.error(token, e)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 476, in parse
+    compiled_result = compile_func(self, token)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/loader_tags.py", line 278, in do_extends
+    nodelist = parser.parse()
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 478, in parse
+    raise self.error(token, e)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 476, in parse
+    compiled_result = compile_func(self, token)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/loader_tags.py", line 216, in do_block
+    nodelist = parser.parse(('endblock',))
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 478, in parse
+    raise self.error(token, e)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 476, in parse
+    compiled_result = compile_func(self, token)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/defaulttags.py", line 817, in do_for
+    nodelist_loop = parser.parse(('empty', 'endfor',))
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 449, in parse
+    raise self.error(token, e)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 447, in parse
+    filter_expression = self.compile_filter(token.contents)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 563, in compile_filter
+    return FilterExpression(token, self)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 662, in __init__
+    raise TemplateSyntaxError("Could not parse the remainder: '%s' "
+django.template.exceptions.TemplateSyntaxError: Could not parse the remainder: '% if not i.application_data %}False{% else %} {{ i.application_data' from '% if not i.application_data %}False{% else %} {{ i.application_data'
+Internal Server Error: /admin-site/AppUsers/
+Traceback (most recent call last):
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/root/Photo_Studio/photo_studio/admin_site/views.py", line 210, in app_user
+    return render(request, "admin_site/user_model.html", {"locals": page_obj})
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/shortcuts.py", line 19, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/backends/django.py", line 34, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/engine.py", line 143, in get_template
+    template, origin = self.find_template(template_name)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/engine.py", line 125, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/loaders/base.py", line 29, in get_template
+    return Template(
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 193, in compile_nodelist
+    return parser.parse()
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 478, in parse
+    raise self.error(token, e)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 476, in parse
+    compiled_result = compile_func(self, token)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/loader_tags.py", line 278, in do_extends
+    nodelist = parser.parse()
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 478, in parse
+    raise self.error(token, e)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 476, in parse
+    compiled_result = compile_func(self, token)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/loader_tags.py", line 216, in do_block
+    nodelist = parser.parse(('endblock',))
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 478, in parse
+    raise self.error(token, e)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 476, in parse
+    compiled_result = compile_func(self, token)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/defaulttags.py", line 817, in do_for
+    nodelist_loop = parser.parse(('empty', 'endfor',))
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 449, in parse
+    raise self.error(token, e)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 447, in parse
+    filter_expression = self.compile_filter(token.contents)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 563, in compile_filter
+    return FilterExpression(token, self)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/template/base.py", line 662, in __init__
+    raise TemplateSyntaxError("Could not parse the remainder: '%s' "
+django.template.exceptions.TemplateSyntaxError: Could not parse the remainder: '% if not i.application_data %}False{% else %} {{ i.application_data' from '% if not i.application_data %}False{% else %} {{ i.application_data'
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+[2023-04-19 12:00:45 +0000] [2654179] [INFO] Worker exiting (pid: 2654179)
+[2023-04-19 12:00:45 +0000] [2654177] [INFO] Handling signal: term
+[2023-04-19 12:00:45 +0000] [2654177] [INFO] Shutting down: Master
+[2023-04-19 12:00:48 +0000] [2654483] [INFO] Starting gunicorn 20.1.0
+[2023-04-19 12:00:48 +0000] [2654483] [INFO] Listening at: http://127.0.0.1:8000 (2654483)
+[2023-04-19 12:00:48 +0000] [2654483] [INFO] Using worker: sync
+[2023-04-19 12:00:48 +0000] [2654485] [INFO] Booting worker with pid: 2654485
+/root/Photo_Studio/photo_studio/admin_site/views.py:205: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'home.models.custom_user'> QuerySet.
+  p = Paginator(locals, 10)
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+Not Found: /favicon.ico
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+view_profile
+[2023-04-19 12:07:57 +0000] [2654485] [INFO] Worker exiting (pid: 2654485)
+[2023-04-19 12:07:57 +0000] [2654483] [INFO] Handling signal: term
+[2023-04-19 12:07:57 +0000] [2654483] [INFO] Shutting down: Master
+[2023-04-19 12:08:00 +0000] [2655642] [INFO] Starting gunicorn 20.1.0
+[2023-04-19 12:08:00 +0000] [2655642] [INFO] Listening at: http://127.0.0.1:8000 (2655642)
+[2023-04-19 12:08:00 +0000] [2655642] [INFO] Using worker: sync
+[2023-04-19 12:08:00 +0000] [2655644] [INFO] Booting worker with pid: 2655644
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+SocialSerializer(<Profile: IssamHawar5816938 - >):
+    uid = IntegerField(read_only=True)
+    token = SerializerMethodField(read_only=True)
+    user = SerializerMethodField(read_only=True, source='username')
+    name = CharField(allow_blank=True, allow_null=True, max_length=50, required=False)
+    mobile = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    gender = ChoiceField(allow_blank=True, allow_null=True, choices=(('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')), required=False)
+    profile_image = ImageField(allow_null=True, max_length=100, required=False)
+    created_at = DateTimeField(read_only=True)
+    pass_update = DateField(allow_null=True, required=False)
+    pass_forgot = DateField(allow_null=True, required=False)
+    updated_at = DateTimeField(allow_null=True, required=False)
+    dob = DateField(allow_null=True, required=False)
+    city = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country_code = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    country = CharField(allow_blank=True, allow_null=True, max_length=20, required=False)
+    lat = FloatField(allow_null=True, required=False)
+    long = FloatField(allow_null=True, required=False)
+    snap = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    fb = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    insta = CharField(allow_blank=True, allow_null=True, max_length=30, required=False)
+    website = CharField(allow_blank=True, allow_null=True, max_length=100, required=False)
+    avatar = ImageField(allow_null=True, max_length=100, required=False)
+    bitmoji = ImageField(allow_null=True, max_length=100, required=False)
+    delete_account = BooleanField(required=False)
+    expiration_date = DateTimeField(allow_null=True, required=False)
+    count_for_forgot_pass = IntegerField(max_value=32767, min_value=0, required=False)
+    time_for_forgot_pass = DateTimeField(allow_null=True, required=False)
+    is_social = BooleanField(required=False)
+Internal Server Error: /admin-site/application_data/application_data - i.application_data
+Traceback (most recent call last):
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/root/Photo_Studio/photo_studio/admin_site/views.py", line 1264, in view_app_data
+    obj = application_data.objects.filter(UID=infolist[2])
+IndexError: list index out of range
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+Internal Server Error: /admin-site/application_data/application_data - i.application_data
+Traceback (most recent call last):
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/root/Photo_Studio/photo_studio/admin_site/views.py", line 1264, in view_app_data
+    obj = application_data.objects.filter(UID=infolist[2])
+IndexError: list index out of range
+Internal Server Error: /admin-site/application_data/application_data - i.application_data
+Traceback (most recent call last):
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/root/Photo_Studio/photo_studio/admin_site/views.py", line 1264, in view_app_data
+    obj = application_data.objects.filter(UID=infolist[2])
+IndexError: list index out of range
+Internal Server Error: /admin-site/application_data/application_data - i.application_data
+Traceback (most recent call last):
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/root/Photo_Studio/photo_studio/admin_site/views.py", line 1264, in view_app_data
+    obj = application_data.objects.filter(UID=infolist[2])
+IndexError: list index out of range
+Internal Server Error: /admin-site/application_data/application_data - i.application_data
+Traceback (most recent call last):
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/root/Photo_Studio/photo_studio/admin_site/views.py", line 1264, in view_app_data
+    obj = application_data.objects.filter(UID=infolist[2])
+IndexError: list index out of range
+Internal Server Error: /admin-site/application_data/application_data - i.application_data
+Traceback (most recent call last):
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/root/Photo_Studio/photo_studio/admin_site/views.py", line 1264, in view_app_data
+    obj = application_data.objects.filter(UID=infolist[2])
+IndexError: list index out of range
+Internal Server Error: /admin-site/application_data/application_data - i.application_data
+Traceback (most recent call last):
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/root/Photo_Studio/photo_studio/admin_site/views.py", line 1264, in view_app_data
+    obj = application_data.objects.filter(UID=infolist[2])
+IndexError: list index out of range
+Internal Server Error: /admin-site/application_data/application_data - i.application_data
+Traceback (most recent call last):
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/root/Photo_Studio/photo_env/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/root/Photo_Studio/photo_studio/admin_site/views.py", line 1264, in view_app_data
+    obj = application_data.objects.filter(UID=infolist[2])
+IndexError: list index out of range
+[2023-04-19 12:10:47 +0000] [2655644] [INFO] Worker exiting (pid: 2655644)
+[2023-04-19 12:10:47 +0000] [2655642] [INFO] Handling signal: term
+[2023-04-19 12:10:48 +0000] [2655642] [INFO] Shutting down: Master
+[2023-04-19 12:10:53 +0000] [2656232] [INFO] Starting gunicorn 20.1.0
+[2023-04-19 12:10:53 +0000] [2656232] [INFO] Listening at: http://127.0.0.1:8000 (2656232)
+[2023-04-19 12:10:53 +0000] [2656232] [INFO] Using worker: sync
+[2023-04-19 12:10:53 +0000] [2656234] [INFO] Booting worker with pid: 2656234
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg
+/root/Photo_Studio/photo_studio/admin_site/views.py:205: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'home.models.custom_user'> QuerySet.
+  p = Paginator(locals, 10)
+Not Found: /static/assets/css/dark-style.css
+Not Found: /static/assets/css/transparent-style.css
+Not Found: /static/assets/iconfonts/bootstrapicons/bootstrap-icons.css
+Not Found: /static/assets/iconfonts/glyphicons/glyphicon.css
+Not Found: /static/assets/iconfonts/ionicons/ionicons.css
+Not Found: /static/assets/iconfonts/linearicons/Linearicons.css
+Not Found: /static/assets/iconfonts/materialdesignicons/materialdesignicons.css
+Not Found: /static/assets/iconfonts/pe-icon-7-stroke/Pe-icon-7.css
+Not Found: /static/assets/iconfonts/themify/themify.css
+Not Found: /static/assets/iconfonts/typicons/typicons.css
+Not Found: /static/assets/iconfonts/weathericons/weathericons.css
+Not Found: /static/assets/iconfonts/remixicon/remixicon.css
+Not Found: /static/assets/images/media/bg-img1.jpg
+Not Found: /static/assets/images/media/bg-img2.jpg
+Not Found: /static/assets/images/media/bg-img3.jpg
+Not Found: /static/assets/images/media/bg-img4.jpg

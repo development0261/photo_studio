@@ -111,5 +111,6 @@ class SocialSerializer(serializers.ModelSerializer):
         if latest_purchase:
             response['InAppPurchaseHistory'] = PurchaseSerializer(latest_purchase,many=False).data
         else:
-            response['InAppPurchaseHistory'] = "Didn't purchase anything yet."
+            response['InAppPurchaseHistory'] = None
+            
         return response

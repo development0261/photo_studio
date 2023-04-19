@@ -15,7 +15,6 @@
             <div class="row">
                 <div class="col-lg-12 col-sm-12">
                     {% for row in result %}
-                    {% comment %} <p>{{result}}</p> {% endcomment %}
                     <input type="hidden" id="username" name="username" value="{{ row.username }}">
                     <div class="col-lg-6">
                         <div class="profile_field">
@@ -29,7 +28,7 @@
                         <div class="profile_field">
                             <strong>Username</strong>
                             <div class="name">
-                                <input type="text" name="UID" value="{{ row.username }}" disabled>
+                                <input type="text" name="UID" value="{{ user__ }}" disabled>
                             </div>
                         </div>
                     </div>
@@ -48,8 +47,6 @@
                             <strong>Purchase_date</strong>
                             <div class="datetime">
                                 <input type="text" id="Purchase_date" name="Purchase_date" value="{{ row.Purchase_date }}">
-                                {% comment %} currently : <input type="text" name="Purchase_date" value="{{ row.Purchase_date }}"><br>
-                                change : <input type="datetime-local" name="Purchase_date_change"> {% endcomment %}
                             </div>
                         </div>
                     </div>
