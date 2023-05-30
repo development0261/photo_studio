@@ -184,10 +184,11 @@
                                                         </td> {% endcomment %}
                                                         <td>
                                                             <div class="d-flex">
+                                                                <p>{{i.app_data}}</p>
                                                                 <div class="mt-0 mt-sm-2 d-block">
                                                                     <h6 class="mb-0 fs-14 fw-semibold view"
-                                                                        id="application_data - {% if not i.application_data %}False{% else %} {{ i.application_data }} {% endif %}">
-                                                                        <i class="fa fa-eye" id="{{ i.username }}"
+                                                                        id="application_data - {% if not i %}False{% else %} {{ i }} {% endif %}">
+                                                                        <i class="fa fa-eye " id="{{ i.username }}"
                                                                             aria-hidden="true"></i>
                                                                     </h6>
                                                                 </div>
@@ -454,16 +455,13 @@
     <script>
         $(".view").click(function () {
             id = $(this).attr('id')
-            if (id.substring(id.length - 5) == 'False') {
-                alert("There is no data!!");
-            }
-            else {
                 if (id.substring(0, 7) == 'Profile') {
                     $.ajax({
                         type: "GET",
                         url: `/admin-site/Profile/${id}`,
                         success: function (profileresult) {
                             var data = profileresult.res.fields;
+                            console.log(data)
                             $("#largeModalLabel").append(`Profile`)
                             $(".modalbody").append(`
                                     <div class="row">
@@ -634,6 +632,9 @@
                                     </div>
                                     `)
                             $("#Modal").modal('show');
+                        },
+                        error: function(response) {
+                            alert('There is no data.');
                         }
                     })
                 } 
@@ -701,6 +702,9 @@
                             }else{
                                 alert('There is no data!!!')
                             }
+                        },
+                        error: function(response) {
+                            alert('There is no data.');
                         }
                     })
                 } 
@@ -726,6 +730,9 @@
                                     </div>
                                     `)
                             $("#Modal").modal('show');
+                        },
+                        error: function(response) {
+                            alert('There is no data.');
                         }
                     })
                 } 
@@ -943,6 +950,9 @@
                                     </div>
                                     `)
                             $("#Modal").modal('show');
+                        },
+                        error: function(response) {
+                            alert('There is no data.');
                         }
                     })
                 } 
@@ -1030,18 +1040,22 @@
                                     </div>
                                     `)
                             $("#Modal").modal('show');
+                        },
+                        error: function(response) {
+                            alert('There is no data.');
                         }
                     })
                 } 
                 else if (id.substring(0, 3) == 'app') {
                     $.ajax({
                         type: "GET",
-                        url: `/admin-site/application_data/${id}`,
+                        url: `/admin-site/application_data/${id.split("-")[1]}`,
                         success: function (profileresult) {
+                          
                             var data = profileresult.res.fields;
                             $("#largeModalLabel").append(`Application Data`)
                             $(".modalbody").append(`
-                                    <div class="row">
+                                      <div class="row">
                                         <div class="col-lg-6">
                                             <div class="profile-field">
                                                 <strong>UID</strong>
@@ -1221,10 +1235,13 @@
                                     </div>
                                     `)
                             $("#Modal").modal('show');
+                        },
+                        error: function(response) {
+                            alert('There is no data.');
                         }
                     })
                 }
-            }
+            
         });
     </script>
 

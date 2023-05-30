@@ -1,4 +1,5 @@
 from datetime import date, datetime, timedelta
+from django.forms.models import model_to_dict
 import copy
 from urllib import response
 from django.http import HttpResponseRedirect, HttpResponse
@@ -78,6 +79,7 @@ def loginprocess(request):
         otp = request.POST["otp"]
         email = request.POST["email"]
         obj = custom_user.objects.get(email=email)
+        print("obj: ",obj.email," ",obj.confirm_token)
         if obj.confirm_token == otp:
             login(request, obj)
             messages.success(request, "Login Successfully.")
@@ -159,6 +161,7 @@ def admin_user(request):
 
 # app users
 def app_user(request):
+    print("app_user")
     if request.user.is_authenticated:
         locals = custom_user.objects.filter(is_superuser=False).order_by("-date_joined")
 
@@ -170,7 +173,7 @@ def app_user(request):
                 | Q(last_name__icontains=searchvalue)
                 | Q(email__icontains=searchvalue)
             )
-
+            
         if "datefilter" in request.GET:
             val = request.GET["datefilter"]
             if val == "today":
@@ -223,7 +226,6 @@ def app_user(request):
 #     filter_mobile_val = ""
 #     latitude = ""
 #     longitude = ""
-
 #     result_queryset = Model.objects.all().order_by("-created_at")
 
 #     if "search" in request.GET:
@@ -488,7 +490,6 @@ def export_excel(request):
     if "data" in request.GET:
         model_name = request.GET["data"]
         Model = apps.get_model("home", model_name)
-        print("model_name", model_name)
 
     smallest_age_record = ""
     biggest_age_record = ""
@@ -1021,7 +1022,6 @@ def app_data_model(request):
         total_app_datas = application_data.objects.filter(no_auth='False').order_by(
             "-created_at"
         )
-
         if "search" in request.GET:
             searchvalue = request.GET["search"]
             total_app_datas = application_data.objects.filter(
@@ -1260,37 +1260,32 @@ def view_product(request, info):
 
 def view_app_data(request, info):
     if request.user.is_authenticated:
-        infolist = info.replace(" ", "").split("-")
-        obj = application_data.objects.filter(UID=infolist[2])
-        data = serializers.serialize("json", obj)
-        data = json.loads(data[1:-1])
-        return JsonResponse({"res": data})
+        info = info.replace(" ", "")
+        user = custom_user.objects.get(username=info)
+        print(user)
+        data = application_data.objects.filter(username=user) 
+        print(data)
+        app_data = [model_to_dict(item) for item in data]
+        # data = serializers.serialize("json", obj)
+        # data = json.loads(data[1:-1])
+        # print(data)
+        return JsonResponse({"res": app_data})
     else:
         return redirect("login")
-
-
-# def view_app_data_no_auth(request, info):
-#     if request.user.is_authenticated:
-#         infolist = info.replace(" ", "").split('-')
-#         obj = application_data_noauth.objects.filter(UID=infolist[1])
-#         data = serializers.serialize("json", obj)
-#         data = json.loads(data[1:-1])
-#         return JsonResponse({"res": data})
-#     else:
-#         return redirect("login")
 
 def view_app_data_without_auth(request, info):
     if request.user.is_authenticated:
         infolist = info.replace(" ", "").split("-")
-        obj = application_data.objects.filter(UID=infolist[1])
-        data = serializers.serialize("json", obj)
-        data = json.loads(data[1:-1])
+        data = application_data.objects.filter(UID=infolist[1])
+        # data = serializers.serialize("json", obj)
+        # data = json.loads(data[1:-1])
         return JsonResponse({"res": data})
     else:
         return redirect("login")
 
 
 # View specific model data end---------/
+
 
 # delete specific model data start---------\
 def delete_user(request, para=None):
@@ -1778,11 +1773,8 @@ def app_data_edit(request, para):
         elif request.method == "GET":
             modal_id = para.split(" ")
             obj = application_data.objects.filter(aid=modal_id[1])
-            print(obj)
-            print(modal_id[-1])
             data = serializers.serialize("json", obj)
             data = json.loads(data)
-            # print(data)
             res = []
             for i in data:
                 res.append(i["fields"])
@@ -1811,7 +1803,6 @@ def no_auth_app_data_edit(request, para):
             App_Last_Opened = request.POST.get("App_Last_Opened")
             # App_Last_Opened_change = request.POST['App_Last_Opened_change']
             Purchase_attempts = request.POST.get("Purchase_attempts")
-            print("<===", Lunch_count, "===>")
             Grace_Period = request.POST["Grace_Period"]
             Remaining_grace_period_days = request.POST["Remaining_grace_period_days"]
             Number_of_projects = request.POST["Number_of_projects"]
@@ -2305,8 +2296,6 @@ def filter(request):
                 start_age = 0
 
             if len(end_age) == 0:
-
-                print(timedelta(days=(365 * int(start_age))))
                 total_profiles = total_profiles.filter(
                     dob__lt=datetime.now() - timedelta(days=(365 * int(start_age)))
                 )
@@ -2327,8 +2316,8 @@ def filter(request):
 
             format_data = "%Y-%m-%d %H:%M:%S"
             data = Profile.objects.all()
-            for i in data:
-                print(i.created_at)
+            # for i in data:
+            #     print(i.created_at)
             start_date = datetime.strptime(start_date + " 00:00:00", format_data)
             end_date = datetime.strptime(end_date + " 23:59:59", format_data)
             total_profiles = Profile.objects.filter(

@@ -144,7 +144,7 @@ class CustomDetails(admin.ModelAdmin):
 
 
 class CustomApps(admin.ModelAdmin):
-    list_display = ("username", 'UID')
+    list_display = ("username", 'UID','no_auth')
     search_fields = ("Carrier", "Device_Model", "Device_Storage", "Grace_Period", "Latest_Geolocation",
                      "Purchased_product", "Remaining_grace_period_days", "Total_time_spent", "UID", "aid", "iOS", "inApp_Products")
 

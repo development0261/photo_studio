@@ -363,9 +363,7 @@ def social_media_registration(request):
 					if 'profile_image' in request.FILES:
 						profile_obj.profile_image = profile_image
 					profile_obj.save()
-					serializer_class = SocialSerializer(profile_obj)
-					print(serializer_class)
-					
+					serializer_class = SocialSerializer(profile_obj)					
 					result["value"] = True
 					result['message']='success'
 					result["data"] = serializer_class.data
